@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.javarush.khmelov</groupId>
-    <artifactId>project-gorillaz</artifactId>
+    <artifactId>project-Led Zeppelin</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>ProjectGorillaz</name>
+    <name>ProjectLed Zeppelin</name>
     <packaging>war</packaging>
 
     <properties>
