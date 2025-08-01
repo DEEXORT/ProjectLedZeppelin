@@ -32,7 +32,7 @@
                 </svg>
             </li>
         </ul>
-        <p class="text-muted mb-0">Copyright&nbsp; &nbsp;© 2024 JRU Company, Inc. Led Zeppelin Group.&nbsp;</p>
+        <p class="text-muted mb-0">Copyright&nbsp; &nbsp;© 2024 JRU Company, Inc. Gorillaz Group.&nbsp;</p>
     </div>
 </footer>
 </body>
