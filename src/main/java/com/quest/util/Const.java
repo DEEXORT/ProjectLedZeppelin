@@ -31,7 +31,7 @@ public class Const {
     public static final String ROUTE_REGISTER = "/register";
     public static final String ROUTE_PROFILE = "/profile";
     public static final String ROUTE_LOGOUT = "/logout";
-    public static final String ROUTE_BATTLE = "/battle"; // true - если на прошлом этапе было сражение
+    public static final String ROUTE_BATTLE = "/battle";
     public static final String ROUTE_END = "/end";
     public static final String ROUTE_LEADER_BOARD = "/leaderboard";
 
