@@ -9,16 +9,16 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ActionRepository implements Repository<Action> {
     private static AtomicLong id = new AtomicLong();
-    private Map<Long, Action> choiceMap = new ConcurrentHashMap<>();
+    private Map<Long, Action> repository = new ConcurrentHashMap<>();
 
     @Override
     public Collection<Action> getAll() {
-        return choiceMap.values();
+        return repository.values();
     }
 
     @Override
     public Action get(long id) {
-        return choiceMap.get(id);
+        return repository.get(id);
     }
 
     @Override
@@ -29,11 +29,11 @@ public class ActionRepository implements Repository<Action> {
 
     @Override
     public void update(Action action) {
-        choiceMap.put(action.getId(), action);
+        repository.put(action.getId(), action);
     }
 
     @Override
     public void delete(long id) {
-        choiceMap.remove(id);
+        repository.remove(id);
     }
 }

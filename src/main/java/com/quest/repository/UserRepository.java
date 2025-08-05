@@ -9,16 +9,16 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class UserRepository implements Repository<User> {
     private final AtomicLong id = new AtomicLong();
-    private final Map<Long, User> users = new ConcurrentHashMap<>();
+    private final Map<Long, User> repository = new ConcurrentHashMap<>();
 
     @Override
     public Collection<User> getAll() {
-        return users.values();
+        return repository.values();
     }
 
     @Override
     public User get(long id) {
-        return users.get(id);
+        return repository.get(id);
     }
 
     @Override
@@ -29,15 +29,15 @@ public class UserRepository implements Repository<User> {
 
     @Override
     public void update(User user) {
-        users.put(user.getId(), user);
+        repository.put(user.getId(), user);
     }
 
     public User find(String login) {
-        return users.values().stream().filter(user -> user.getLogin().equals(login)).findFirst().orElse(null);
+        return repository.values().stream().filter(user -> user.getLogin().equals(login)).findFirst().orElse(null);
     }
 
     @Override
     public void delete(long id) {
-        users.remove(id);
+        repository.remove(id);
     }
 }

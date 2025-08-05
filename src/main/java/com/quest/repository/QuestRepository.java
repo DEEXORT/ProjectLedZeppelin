@@ -8,17 +8,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class QuestRepository implements Repository<QuestScene> {
-    private final Map<Long, QuestScene> questSceneMap = new ConcurrentHashMap<>();
+    private final Map<Long, QuestScene> repository = new ConcurrentHashMap<>();
     private final AtomicLong id = new AtomicLong();
 
     @Override
     public Collection<QuestScene> getAll() {
-        return questSceneMap.values();
+        return repository.values();
     }
 
     @Override
     public QuestScene get(long questId) {
-        return questSceneMap.get(questId);
+        return repository.get(questId);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class QuestRepository implements Repository<QuestScene> {
 
     @Override
     public void update(QuestScene quest) {
-        questSceneMap.put(quest.getId(), quest);
+        repository.put(quest.getId(), quest);
     }
 
     @Override
     public void delete(long questId) {
-        questSceneMap.remove(questId);
+        repository.remove(questId);
     }
 
 }
