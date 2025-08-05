@@ -20,8 +20,7 @@ import java.util.Optional;
 
 import static com.quest.util.Const.ROUTE_QUEST;
 
-// Выдает JSP файл пользователю
-@WebServlet(name = "GameController", value = Const.ROUTE_GAME)
+@WebServlet(Const.ROUTE_GAME)
 public class GameController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(GameController.class);
 

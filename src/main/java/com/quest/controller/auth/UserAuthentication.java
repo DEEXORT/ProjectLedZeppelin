@@ -33,7 +33,7 @@ public class UserAuthentication extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Если пользователь есть в сессии, то перейти в профиль
-        User user = (User) req.getSession().getAttribute(KeyAttribute.USER);
+        User user = (User) req.getSession().getAttribute(KeyAttribute.USER); // TODO: Заменить на Object
         if (user != null) {
             resp.sendRedirect(ROUTE_PROFILE);
         } else {
@@ -54,12 +54,12 @@ public class UserAuthentication extends HttpServlet {
             } else {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 req.setAttribute(KeyAttribute.ERROR, "Неверный логин или пароль");
-                req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp);
+                req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp); // TODO: Заменить на redirect
             }
         } catch (UserEmptyException | UserNotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             req.setAttribute(KeyAttribute.ERROR, e.getMessage());
-            req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp);
+            req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp); // TODO: заменить на redirect
         }
     }
 

@@ -5,9 +5,10 @@ import lombok.SneakyThrows;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ServiceLocator {
-    private static final Map<Class<?>, Object> components = new HashMap<>();
+    private static final Map<Class<?>, Object> components = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")
     @SneakyThrows

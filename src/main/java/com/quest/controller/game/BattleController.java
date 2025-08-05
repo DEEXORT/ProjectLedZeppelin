@@ -37,8 +37,9 @@ public class BattleController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Monster monster = (Monster) req.getSession().getAttribute(KeyAttribute.MONSTER);
-        Player player = (Player) req.getSession().getAttribute(KeyAttribute.PLAYER);
+        HttpSession session = req.getSession();
+        Monster monster = (Monster) session.getAttribute(KeyAttribute.MONSTER);
+        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
 
         // Имитация сражения
         CombatResolver resolver = ServiceLocator.getService(CombatResolver.class);
