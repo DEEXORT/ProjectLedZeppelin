@@ -58,7 +58,7 @@ class UserAuthenticationIT extends ConfigIT {
     }
 
     @Test
-    void doPost_ShouldForwardToLogin_WhenUserIsNotAuthenticated() throws IOException, ServletException {
+    void doPost_ShouldRedirectToLogin_WhenUserIsNotAuthenticated() throws IOException, ServletException {
         // given
         userAuthentication.init(servletConfig);
         when(request.getParameter(PASSWORD)).thenReturn("");
@@ -69,7 +69,7 @@ class UserAuthenticationIT extends ConfigIT {
         userAuthentication.doPost(request, response);
 
         // then
-        verify(requestDispatcher).forward(request, response);
+        verify(response).sendRedirect(ROUTE_LOGIN);
     }
 
 }

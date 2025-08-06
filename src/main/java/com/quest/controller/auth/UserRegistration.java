@@ -38,6 +38,7 @@ public class UserRegistration extends HttpServlet {
             resp.sendRedirect(ROUTE_PROFILE);
         } else {
             req.getRequestDispatcher(PATH_REGISTER_JSP).forward(req, resp);
+            req.getSession().removeAttribute(KeyAttribute.ERROR);
         }
     }
 
@@ -57,8 +58,8 @@ public class UserRegistration extends HttpServlet {
             resp.sendRedirect(ROUTE_GAME);
         } catch (UserAlreadyExistsException | UserEmptyException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            req.setAttribute(KeyAttribute.ERROR, e.getMessage());
-            req.getRequestDispatcher(PATH_REGISTER_JSP).forward(req, resp);
+            req.getSession().setAttribute(KeyAttribute.ERROR, e.getMessage());
+            resp.sendRedirect(ROUTE_REGISTER);
         }
     }
 }

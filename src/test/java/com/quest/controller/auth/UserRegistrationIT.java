@@ -57,7 +57,7 @@ class UserRegistrationIT extends ConfigIT {
     }
 
     @Test
-    void doPost_ShouldForwardToRegister_WhenInvalidateCredentials() throws ServletException, IOException {
+    void doPost_ShouldRedirectToRegister_WhenInvalidateCredentials() throws ServletException, IOException {
         userRegistration.init(servletConfig);
         when(request.getParameter(USERNAME)).thenReturn("");
         when(request.getParameter(PASSWORD)).thenReturn("");
@@ -67,6 +67,6 @@ class UserRegistrationIT extends ConfigIT {
         userRegistration.doPost(request, response);
 
         // then
-        verify(requestDispatcher).forward(request, response);
+        verify(response).sendRedirect(ROUTE_REGISTER);
     }
 }

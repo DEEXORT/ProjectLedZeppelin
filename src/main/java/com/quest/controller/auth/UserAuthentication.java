@@ -32,12 +32,13 @@ public class UserAuthentication extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Если пользователь есть в сессии, то перейти в профиль
-        User user = (User) req.getSession().getAttribute(KeyAttribute.USER); // TODO: Заменить на Object
+        // If user is in the session, then redirect to profile
+        Object user = req.getSession().getAttribute(KeyAttribute.USER);
         if (user != null) {
             resp.sendRedirect(ROUTE_PROFILE);
         } else {
             req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp);
+            req.getSession().removeAttribute(KeyAttribute.ERROR);
         }
     }
 
@@ -53,13 +54,13 @@ public class UserAuthentication extends HttpServlet {
                 resp.sendRedirect(ROUTE_GAME);
             } else {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                req.setAttribute(KeyAttribute.ERROR, "Неверный логин или пароль");
-                req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp); // TODO: Заменить на redirect
+                req.getSession().setAttribute(KeyAttribute.ERROR, "Неверный логин или пароль");
+                resp.sendRedirect(ROUTE_LOGIN);
             }
         } catch (UserEmptyException | UserNotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            req.setAttribute(KeyAttribute.ERROR, e.getMessage());
-            req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp); // TODO: заменить на redirect
+            req.getSession().setAttribute(KeyAttribute.ERROR, e.getMessage());
+            resp.sendRedirect(ROUTE_LOGIN);
         }
     }
 
