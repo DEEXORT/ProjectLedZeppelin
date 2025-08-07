@@ -32,12 +32,11 @@ public class UserAuthentication extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // If user is in the session, then redirect to profile
-        Object user = req.getSession().getAttribute(KeyAttribute.USER);
-        if (user != null) {
-            resp.sendRedirect(Route.PROFILE);
-        } else {
+        if (userService.isGuest(req)) {
             req.getRequestDispatcher(JspPath.LOGIN).forward(req, resp);
             req.getSession().removeAttribute(KeyAttribute.ERROR);
+        } else {
+            resp.sendRedirect(Route.PROFILE);
         }
     }
 

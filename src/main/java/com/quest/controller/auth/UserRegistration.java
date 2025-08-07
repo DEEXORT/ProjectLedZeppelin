@@ -32,12 +32,12 @@ public class UserRegistration extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute(KeyAttribute.USER);
-        if (user != null) {
-            resp.sendRedirect(Route.PROFILE);
-        } else {
+        // If user is in the session, then redirect to profile
+        if (userService.isGuest(req)) {
             req.getRequestDispatcher(JspPath.REGISTER).forward(req, resp);
             req.getSession().removeAttribute(KeyAttribute.ERROR);
+        } else {
+            resp.sendRedirect(Route.PROFILE);
         }
     }
 

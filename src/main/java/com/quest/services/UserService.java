@@ -5,7 +5,9 @@ import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.repository.UserRepository;
+import com.quest.util.KeyAttribute;
 import com.quest.util.MessageBundle;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -63,5 +65,9 @@ public class UserService {
         if (password == null || password.isEmpty()) {
             throw new UserEmptyException(MessageBundle.get("error.password_not_empty"));
         }
+    }
+
+    public boolean isGuest(HttpServletRequest req) {
+        return req.getSession().getAttribute(KeyAttribute.USER) == null;
     }
 }
