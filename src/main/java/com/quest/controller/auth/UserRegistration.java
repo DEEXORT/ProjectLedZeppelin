@@ -7,6 +7,7 @@ import com.quest.exception.UserEmptyException;
 import com.quest.services.UserService;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
 import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -55,8 +56,7 @@ public class UserRegistration extends HttpServlet {
             session.setAttribute(KeyAttribute.USER, user);
             resp.sendRedirect(Route.GAME);
         } catch (UserAlreadyExistsException | UserEmptyException e) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            req.getSession().setAttribute(KeyAttribute.ERROR, e.getMessage());
+            RequestHelper.createAuthorizationError(req, resp, e.getMessage());
             resp.sendRedirect(Route.REGISTER);
         }
     }

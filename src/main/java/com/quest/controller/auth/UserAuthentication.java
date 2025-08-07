@@ -7,6 +7,7 @@ import com.quest.exception.UserNotFoundException;
 import com.quest.services.UserService;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
 import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -59,10 +60,8 @@ public class UserAuthentication extends HttpServlet {
                 resp.sendRedirect(Route.LOGIN);
             }
         } catch (UserEmptyException | UserNotFoundException e) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            req.getSession().setAttribute(KeyAttribute.ERROR, e.getMessage());
+            RequestHelper.createAuthorizationError(req, resp, e.getMessage());
             resp.sendRedirect(Route.LOGIN);
         }
     }
-
 }
