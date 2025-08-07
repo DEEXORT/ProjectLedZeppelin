@@ -11,7 +11,7 @@ import java.io.IOException;
 
 
 @WebServlet(Route.LOGOUT)
-public class Logout extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -10,13 +10,13 @@ import java.io.IOException;
 
 import static org.mockito.Mockito.verify;
 
-class LogoutIT extends ConfigIT {
-    private final Logout logout = ServiceLocator.getService(Logout.class);
+class LogoutServletIT extends ConfigIT {
+    private final LogoutServlet logoutServlet = ServiceLocator.getService(LogoutServlet.class);
 
     @Test
     void doPost_ShouldInvalidateAndRedirectToLogin() throws ServletException, IOException {
         // given + when
-        logout.doPost(request, response);
+        logoutServlet.doPost(request, response);
 
         // then
         verify(session).invalidate();

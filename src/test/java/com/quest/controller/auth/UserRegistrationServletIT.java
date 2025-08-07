@@ -14,8 +14,8 @@ import static com.quest.util.KeyAttribute.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class UserRegistrationIT extends ConfigIT {
-    private final UserRegistration userRegistration = ServiceLocator.getService(UserRegistration.class);
+class UserRegistrationServletIT extends ConfigIT {
+    private final UserRegistrationServlet userRegistrationServlet = ServiceLocator.getService(UserRegistrationServlet.class);
 
     @Test
     void doGet_ShouldRedirectToProfile_WhenUserIsAuthenticated() throws ServletException, IOException {
@@ -24,7 +24,7 @@ class UserRegistrationIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.REGISTER)).thenReturn(requestDispatcher);
 
         // when
-        userRegistration.doGet(request, response);
+        userRegistrationServlet.doGet(request, response);
 
         // then
         verify(response).sendRedirect(Route.PROFILE);
@@ -37,7 +37,7 @@ class UserRegistrationIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.REGISTER)).thenReturn(requestDispatcher);
 
         // when
-        userRegistration.doGet(request, response);
+        userRegistrationServlet.doGet(request, response);
 
         // then
         verify(requestDispatcher).forward(request, response);
@@ -46,12 +46,12 @@ class UserRegistrationIT extends ConfigIT {
     @Test
     void doPost_ShouldRedirectToGame_AfterRegistration() throws ServletException, IOException {
         // given
-        userRegistration.init(servletConfig);
+        userRegistrationServlet.init(servletConfig);
         when(request.getParameter(KeyAttribute.USERNAME)).thenReturn("newUser");
         when(request.getParameter(KeyAttribute.PASSWORD)).thenReturn("newUser");
 
         // when
-        userRegistration.doPost(request, response);
+        userRegistrationServlet.doPost(request, response);
 
         // then
         verify(response).sendRedirect(Route.GAME);
@@ -59,13 +59,13 @@ class UserRegistrationIT extends ConfigIT {
 
     @Test
     void doPost_ShouldRedirectToRegister_WhenInvalidateCredentials() throws ServletException, IOException {
-        userRegistration.init(servletConfig);
+        userRegistrationServlet.init(servletConfig);
         when(request.getParameter(KeyAttribute.USERNAME)).thenReturn("");
         when(request.getParameter(KeyAttribute.PASSWORD)).thenReturn("");
         when(request.getRequestDispatcher(JspPath.REGISTER)).thenReturn(requestDispatcher);
 
         // when
-        userRegistration.doPost(request, response);
+        userRegistrationServlet.doPost(request, response);
 
         // then
         verify(response).sendRedirect(request.getRequestURI());

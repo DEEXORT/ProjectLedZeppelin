@@ -20,8 +20,8 @@ import java.util.Optional;
 
 
 @WebServlet(Route.GAME)
-public class GameController extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(GameController.class);
+public class GameServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(GameServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

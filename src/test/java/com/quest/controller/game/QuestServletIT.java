@@ -13,14 +13,14 @@ import java.util.Random;
 
 import static org.mockito.Mockito.*;
 
-class QuestControllerIT extends ConfigIT {
-    private final QuestController questController = ServiceLocator.getService(QuestController.class);
+class QuestServletIT extends ConfigIT {
+    private final QuestServlet questServlet = ServiceLocator.getService(QuestServlet.class);
 
     // Тестирование GET-запросов
     @Test
     void doGet_ShouldSetQuestAttributesAndForwardToJsp_WhenSceneExists() throws Exception {
         // given
-        questController.init(servletConfig);
+        questServlet.init(servletConfig);
         playerTest.setQuestSceneId(2L);
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
@@ -28,7 +28,7 @@ class QuestControllerIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.QUEST)).thenReturn(dispatcher);
 
         // when
-        questController.doGet(request, response);
+        questServlet.doGet(request, response);
 
         // then
         verify(dispatcher).forward(request, response);
@@ -38,19 +38,19 @@ class QuestControllerIT extends ConfigIT {
     @Test
     void doPost_ShouldRedirectToBattle_AfterQuest() throws Exception {
         // given
-        questController.init(servletConfig);
+        questServlet.init(servletConfig);
         when(request.getParameter(KeyAttribute.SCENE_ID)).thenReturn("2");
         when(session.getAttribute(KeyAttribute.BATTLE_FLAG)).thenReturn(false);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         // Подмена рандома (принудительное сражение) через рефлексию
         Random mockedRandom = mock(Random.class);
         when(mockedRandom.nextInt(100)).thenReturn(49);
-        Field randomField = QuestController.class.getDeclaredField("random");
+        Field randomField = QuestServlet.class.getDeclaredField("random");
         randomField.setAccessible(true);
-        randomField.set(questController, mockedRandom);
+        randomField.set(questServlet, mockedRandom);
 
         // when
-        questController.doPost(request, response);
+        questServlet.doPost(request, response);
 
         // then
         verify(response).sendRedirect(Route.QUEST);
@@ -59,19 +59,19 @@ class QuestControllerIT extends ConfigIT {
     @Test
     void doPost_ShouldRedirectToNextQuest_AfterQuest() throws Exception {
         // given
-        questController.init(servletConfig);
+        questServlet.init(servletConfig);
         when(request.getParameter(KeyAttribute.SCENE_ID)).thenReturn("2");
         when(session.getAttribute(KeyAttribute.BATTLE_FLAG)).thenReturn(false);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         // Подмена рандома (принудительное сражение) через рефлексию
         Random mockedRandom = mock(Random.class);
         when(mockedRandom.nextInt(100)).thenReturn(70);
-        Field randomField = QuestController.class.getDeclaredField("random");
+        Field randomField = QuestServlet.class.getDeclaredField("random");
         randomField.setAccessible(true);
-        randomField.set(questController, mockedRandom);
+        randomField.set(questServlet, mockedRandom);
 
         // when
-        questController.doPost(request, response);
+        questServlet.doPost(request, response);
 
         // then
         verify(response).sendRedirect(Route.QUEST);
@@ -80,13 +80,13 @@ class QuestControllerIT extends ConfigIT {
     @Test
     void doPost_ShouldRedirectToNextQuest_AfterBattle() throws Exception {
         // given
-        questController.init(servletConfig);
+        questServlet.init(servletConfig);
         when(request.getParameter(KeyAttribute.SCENE_ID)).thenReturn("2");
         when(session.getAttribute(KeyAttribute.BATTLE_FLAG)).thenReturn(true);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
 
         // when
-        questController.doPost(request, response);
+        questServlet.doPost(request, response);
 
         // then
         verify(response).sendRedirect(Route.QUEST);

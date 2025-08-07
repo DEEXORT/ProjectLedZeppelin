@@ -11,8 +11,8 @@ import java.io.IOException;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class ProfileIT extends ConfigIT {
-    private final Profile profile = ServiceLocator.getService(Profile.class);
+class ProfileServletIT extends ConfigIT {
+    private final ProfileServlet profileServlet = ServiceLocator.getService(ProfileServlet.class);
 
     @Test
     void doGet_ShouldForwardToProfileJsp() throws ServletException, IOException {
@@ -20,7 +20,7 @@ class ProfileIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.PROFILE)).thenReturn(requestDispatcher);
 
         // when
-        profile.doGet(request, response);
+        profileServlet.doGet(request, response);
 
         // then
         verify(requestDispatcher).forward(request, response);

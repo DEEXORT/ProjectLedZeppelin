@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 @WebServlet(Route.REGISTER)
-public class UserRegistration extends HttpServlet {
+public class UserRegistrationServlet extends HttpServlet {
 
     private UserService userService;
 

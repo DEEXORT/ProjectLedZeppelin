@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class EndGameIT extends ConfigIT {
-    private final EndGame endGame = ServiceLocator.getService(EndGame.class);
+class EndGameServletIT extends ConfigIT {
+    private final EndGameServlet endGameServlet = ServiceLocator.getService(EndGameServlet.class);
 
     @Test
     void doGet_ShouldEndGame_WhenGameIsOver() throws ServletException, IOException {
         // given
-        endGame.init(servletConfig);
+        endGameServlet.init(servletConfig);
         Player testPlayerEndGame = Player.builder()
                 .id(35L)
                 .name("testPlayerEndGame")
@@ -43,7 +43,7 @@ class EndGameIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.END_GAME)).thenReturn(requestDispatcher);
 
         // when
-        endGame.doGet(request, response);
+        endGameServlet.doGet(request, response);
 
         // then
         assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getPlayerId());
@@ -53,7 +53,7 @@ class EndGameIT extends ConfigIT {
     @Test
     void doGet_ShouldEndGame_WhenPlayerIsDeath() throws ServletException, IOException {
         // given
-        endGame.init(servletConfig);
+        endGameServlet.init(servletConfig);
         Player testPlayerEndGame = Player.builder()
                 .id(35L)
                 .userId(35L)
@@ -75,7 +75,7 @@ class EndGameIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.END_GAME)).thenReturn(requestDispatcher);
 
         // when
-        endGame.doGet(request, response);
+        endGameServlet.doGet(request, response);
 
         // then
         assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getPlayerId());

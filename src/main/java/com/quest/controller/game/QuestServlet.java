@@ -29,8 +29,8 @@ import java.util.Random;
 
 
 @WebServlet(Route.QUEST)
-public class QuestController extends HttpServlet {
-    private final Logger logger = LogManager.getLogger(QuestController.class);
+public class QuestServlet extends HttpServlet {
+    private final Logger logger = LogManager.getLogger(QuestServlet.class);
     private PlayerService playerService;
     private MonsterService monsterService;
     private final Random random = new Random();

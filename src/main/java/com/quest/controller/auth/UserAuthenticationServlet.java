@@ -22,7 +22,7 @@ import static com.quest.util.KeyAttribute.PASSWORD;
 import static com.quest.util.KeyAttribute.USERNAME;
 
 @WebServlet(Route.LOGIN)
-public class UserAuthentication extends HttpServlet {
+public class UserAuthenticationServlet extends HttpServlet {
     private UserService userService;
 
     @Override

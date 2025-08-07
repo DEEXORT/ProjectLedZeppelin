@@ -18,8 +18,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 
 @WebServlet(Route.BATTLE)
-public class BattleController extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(BattleController.class);
+public class BattleServlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(BattleServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -18,8 +18,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class GameControllerIT extends ConfigIT {
-    private final GameController gameController = ServiceLocator.getService(GameController.class);
+class GameServletIT extends ConfigIT {
+    private final GameServlet gameServlet = ServiceLocator.getService(GameServlet.class);
 
     @Test
     void doGet_ShouldCreateNewGame() throws ServletException, IOException {
@@ -33,7 +33,7 @@ class GameControllerIT extends ConfigIT {
         when(session.getAttribute(USER)).thenReturn(testUserGameController);
 
         // when
-        gameController.doGet(request, response);
+        gameServlet.doGet(request, response);
 
         // then
         verify(session).setAttribute(eq(PLAYER), any(Player.class));

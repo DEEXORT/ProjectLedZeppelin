@@ -17,18 +17,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class BattleControllerIT extends ConfigIT {
-    private final BattleController battleController = ServiceLocator.getService(BattleController.class);
+class BattleServletIT extends ConfigIT {
+    private final BattleServlet battleServlet = ServiceLocator.getService(BattleServlet.class);
 
     @Test
     void doGet_ShouldGenerateMonsterAndForwardToJsp() throws ServletException, IOException {
         // given
-        battleController.init(servletConfig);
+        battleServlet.init(servletConfig);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
 
         // when
-        battleController.doGet(request, response);
+        battleServlet.doGet(request, response);
 
         // then
         verify(session).setAttribute(eq(KeyAttribute.MONSTER), any(Monster.class));
@@ -39,7 +39,7 @@ class BattleControllerIT extends ConfigIT {
     @Test
     void doPost_ShouldRedirectToQuest_WhenMonsterWon() throws Exception {
         // given
-        battleController.init(servletConfig);
+        battleServlet.init(servletConfig);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         CombatResolver combatResolver = ServiceLocator.getService(CombatResolver.class);
@@ -51,7 +51,7 @@ class BattleControllerIT extends ConfigIT {
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
 
         // when
-        battleController.doPost(request, response);
+        battleServlet.doPost(request, response);
 
         // then
         assertEquals(0, playerTest.getHealth());
@@ -61,7 +61,7 @@ class BattleControllerIT extends ConfigIT {
     @Test
     void doPost_ShouldUpdateBattleJsp_WhenPlayerWon() throws Exception {
         // given
-        battleController.init(servletConfig);
+        battleServlet.init(servletConfig);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
@@ -73,7 +73,7 @@ class BattleControllerIT extends ConfigIT {
                 .thenReturn(70);  // for player
 
         // when
-        battleController.doPost(request, response);
+        battleServlet.doPost(request, response);
 
         // then
         assertEquals(0, monsterTest.getHealth());

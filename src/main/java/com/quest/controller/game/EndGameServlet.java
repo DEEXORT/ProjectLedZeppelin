@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @WebServlet(Route.END)
-public class EndGame extends HttpServlet {
+public class EndGameServlet extends HttpServlet {
     private QuestService questService;
     private UserService userService;
 

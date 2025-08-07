@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class IndexControllerIT extends ConfigIT {
-    private final IndexController controller = ServiceLocator.getService(IndexController.class);
+class IndexServletIT extends ConfigIT {
+    private final IndexServlet controller = ServiceLocator.getService(IndexServlet.class);
 
     @Test
     void doGet_ShouldShowStartPage() throws Exception {
