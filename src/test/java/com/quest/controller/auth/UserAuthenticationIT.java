@@ -2,16 +2,13 @@ package com.quest.controller.auth;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-
-import static com.quest.util.Const.*;
-import static com.quest.util.KeyAttribute.PASSWORD;
-import static com.quest.util.KeyAttribute.USERNAME;
-import static org.junit.jupiter.api.Assertions.*;
+import com.quest.util.Route;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,14 +24,14 @@ class UserAuthenticationIT extends ConfigIT {
         userAuthentication.doGet(request, response);
 
         // then
-        verify(response).sendRedirect(ROUTE_PROFILE);
+        verify(response).sendRedirect(Route.PROFILE);
     }
 
     @Test
     void doGet_ShouldForwardToLogin_WhenUserIsNotAuthenticated() throws IOException, ServletException {
         // given
         when(session.getAttribute(KeyAttribute.USER)).thenReturn(null);
-        when(request.getRequestDispatcher(PATH_LOGIN_JSP)).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher(JspPath.LOGIN)).thenReturn(requestDispatcher);
 
         // when
         userAuthentication.doGet(request, response);
@@ -47,29 +44,29 @@ class UserAuthenticationIT extends ConfigIT {
     void doPost_ShouldRedirectToGame_WhenUserIsAuthenticated() throws IOException, ServletException {
         // given
         userAuthentication.init(servletConfig);
-        when(request.getParameter(PASSWORD)).thenReturn("admin");
-        when(request.getParameter(USERNAME)).thenReturn("admin");
+        when(request.getParameter(KeyAttribute.PASSWORD)).thenReturn("admin");
+        when(request.getParameter(KeyAttribute.USERNAME)).thenReturn("admin");
 
         // when
         userAuthentication.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(ROUTE_GAME);
+        verify(response).sendRedirect(Route.GAME);
     }
 
     @Test
     void doPost_ShouldRedirectToLogin_WhenUserIsNotAuthenticated() throws IOException, ServletException {
         // given
         userAuthentication.init(servletConfig);
-        when(request.getParameter(PASSWORD)).thenReturn("");
-        when(request.getParameter(USERNAME)).thenReturn("notfoundusername");
-        when(request.getRequestDispatcher(PATH_LOGIN_JSP)).thenReturn(requestDispatcher);
+        when(request.getParameter(KeyAttribute.PASSWORD)).thenReturn("");
+        when(request.getParameter(KeyAttribute.USERNAME)).thenReturn("notfoundusername");
+        when(request.getRequestDispatcher(JspPath.LOGIN)).thenReturn(requestDispatcher);
 
         // when
         userAuthentication.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(ROUTE_LOGIN);
+        verify(response).sendRedirect(Route.LOGIN);
     }
 
 }

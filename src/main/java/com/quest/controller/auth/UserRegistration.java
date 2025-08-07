@@ -5,7 +5,9 @@ import com.quest.entity.User;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.services.UserService;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,11 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.quest.util.Const.*;
-import static com.quest.util.KeyAttribute.PASSWORD;
-import static com.quest.util.KeyAttribute.USERNAME;
-
-@WebServlet(ROUTE_REGISTER)
+@WebServlet(Route.REGISTER)
 public class UserRegistration extends HttpServlet {
 
     private UserService userService;
@@ -35,17 +33,17 @@ public class UserRegistration extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute(KeyAttribute.USER);
         if (user != null) {
-            resp.sendRedirect(ROUTE_PROFILE);
+            resp.sendRedirect(Route.PROFILE);
         } else {
-            req.getRequestDispatcher(PATH_REGISTER_JSP).forward(req, resp);
+            req.getRequestDispatcher(JspPath.REGISTER).forward(req, resp);
             req.getSession().removeAttribute(KeyAttribute.ERROR);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter(USERNAME);
-        String password = req.getParameter(PASSWORD);
+        String login = req.getParameter(KeyAttribute.USERNAME);
+        String password = req.getParameter(KeyAttribute.PASSWORD);
         User user = User.builder()
                 .login(login)
                 .password(password)
@@ -55,11 +53,11 @@ public class UserRegistration extends HttpServlet {
             userService.create(user);
             HttpSession session = req.getSession();
             session.setAttribute(KeyAttribute.USER, user);
-            resp.sendRedirect(ROUTE_GAME);
+            resp.sendRedirect(Route.GAME);
         } catch (UserAlreadyExistsException | UserEmptyException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             req.getSession().setAttribute(KeyAttribute.ERROR, e.getMessage());
-            resp.sendRedirect(ROUTE_REGISTER);
+            resp.sendRedirect(Route.REGISTER);
         }
     }
 }

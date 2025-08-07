@@ -8,6 +8,10 @@ import com.quest.entity.QuestScene;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.QuestService;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
+import com.quest.util.ParseConst;
+import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,10 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.quest.util.Const.*;
-import static com.quest.util.KeyAttribute.*;
 
-@WebServlet(ROUTE_QUEST)
+@WebServlet(Route.QUEST)
 public class QuestController extends HttpServlet {
     private final Logger logger = LogManager.getLogger(QuestController.class);
     private PlayerService playerService;
@@ -42,14 +44,14 @@ public class QuestController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Чистка атрибута после сражения
-        req.getSession().removeAttribute(MONSTER);
+        req.getSession().removeAttribute(KeyAttribute.MONSTER);
 
         Optional<QuestScene> questScene = getQuestScene(req);
         if (questScene.isPresent()) {
             // Если сцена - концовка
             Long questId = questScene.get().getId();
-            if (questId >= ID_END_MIN && questId < ID_END_MAX) {
-                resp.sendRedirect(ROUTE_END);
+            if (questId >= ParseConst.ID_END_MIN && questId < ParseConst.ID_END_MAX) {
+                resp.sendRedirect(Route.END);
                 return;
             }
 
@@ -58,51 +60,51 @@ public class QuestController extends HttpServlet {
                 // Если есть монстр в сцене, то редирект на сражение
                 Optional<Monster> monster = monsterService.get(monsterId);
                 if (monster.isPresent()) {
-                    req.getSession().setAttribute(MONSTER, monster.get());
+                    req.getSession().setAttribute(KeyAttribute.MONSTER, monster.get());
 
                     // Сохранение id следующей сцены для player
                     List<Action> actions = questScene.get().getActions();
                     updatePlayer(req.getSession(), actions.get(0).getNextQuestSceneId());
 
-                    resp.sendRedirect(ROUTE_BATTLE);
+                    resp.sendRedirect(Route.BATTLE);
                 }
             } else {
                 // Запись сцены в атрибуты для отображения в JSP.
-                req.getSession().setAttribute(BATTLE_FLAG, false);
+                req.getSession().setAttribute(KeyAttribute.BATTLE_FLAG, false);
                 setQuestSceneToRequestAttributes(req, questScene.get());
-                req.getRequestDispatcher(PATH_QUEST_JSP).forward(req, resp);
+                req.getRequestDispatcher(JspPath.QUEST).forward(req, resp);
             }
         } else {
             logger.error("Quest scene not found");
             // TODO: Сделать неожиданную концовку с несчастным случаем :)
-            req.setAttribute(ERROR, "Quest scene not found");
-            req.getRequestDispatcher(PATH_ERROR_JSP).forward(req, resp);
+            req.setAttribute(KeyAttribute.ERROR, "Quest scene not found");
+            req.getRequestDispatcher(JspPath.ERROR).forward(req, resp);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        long nextQuestSceneId = Long.parseLong(req.getParameter(SCENE_ID));
+        long nextQuestSceneId = Long.parseLong(req.getParameter(KeyAttribute.SCENE_ID));
         HttpSession session = req.getSession();
 
         // Сохранение процесса игры (id следующей сцены) в БД
         updatePlayer(session, nextQuestSceneId);
 
         // Генерация события с монстром. Если повезло, то редирект на след квест
-        if (!((boolean) session.getAttribute(BATTLE_FLAG))
+        if (!((boolean) session.getAttribute(KeyAttribute.BATTLE_FLAG))
                 && (random.nextInt(100) < 40)) {
             // Неудача. Сражение с монстром
             setMonster(session);
-            resp.sendRedirect(ROUTE_BATTLE);
+            resp.sendRedirect(Route.BATTLE);
         }
         // Переход на следующую сцену
         else {
-            resp.sendRedirect(ROUTE_QUEST);
+            resp.sendRedirect(Route.QUEST);
         }
     }
 
     private void updatePlayer(HttpSession session, long nextQuestSceneId) {
-        Player player = (Player) session.getAttribute(PLAYER);
+        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
         player.setQuestSceneId(nextQuestSceneId);
         playerService.update(player);
     }
@@ -111,20 +113,20 @@ public class QuestController extends HttpServlet {
         // Получение случайного монстра
         Monster monster = monsterService.getRandomMonster();
         monster.setHealth(monster.getMaxHealth()); // TODO: заменить на удаление монстра из сессии
-        session.setAttribute(MONSTER, monster);
+        session.setAttribute(KeyAttribute.MONSTER, monster);
     }
 
     private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) throws ServletException, IOException {
         questScene.getActions().forEach(action -> {
             logger.debug("QuestScene found. Actions: {}", action.getActionText());
         });
-        req.setAttribute(QUEST_DESCRIPTION, questScene.getDescriptionScene());
-        req.setAttribute(QUEST_ACTIONS, questScene.getActions());
+        req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
+        req.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }
 
     private static Optional<QuestScene> getQuestScene(HttpServletRequest req) {
         HttpSession session = req.getSession();
-        Player player = (Player) session.getAttribute(PLAYER);
+        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
         QuestService questService = ServiceLocator.getService(QuestService.class);
         return questService.get(player.getQuestSceneId());
     }

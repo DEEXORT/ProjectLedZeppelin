@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.quest.util.Const.*;
 
 
 @Data
@@ -44,13 +43,13 @@ public class QuestParser {
 
     public void parseText(String questText) {
         // Разделяем текст сценария квеста на отдельные сцены
-        String[] questScenes = questText.split(SCENE_DELIMITER);
+        String[] questScenes = questText.split(ParseConst.SCENE_DELIMITER);
         for (int i = 1; i < questScenes.length; i++) {
 
             // Делим на составляющие: (questId + questScene) / (action + nextQuestId)
-            String[] questSceneContent = questScenes[i].split(ACTION_DELIMITER);
+            String[] questSceneContent = questScenes[i].split(ParseConst.ACTION_DELIMITER);
             // Извлекаем текст сцены и создаем объект: questId / questScene / (action + nextQuestId)
-            String[] idAndDescription = questSceneContent[0].split(SCENE_TEXT_DELIMITER);
+            String[] idAndDescription = questSceneContent[0].split(ParseConst.SCENE_TEXT_DELIMITER);
             Long questSceneId = Long.parseLong(idAndDescription[0].trim());
 
             logger.info("Создание сцены id = {}", questSceneId);
@@ -63,21 +62,21 @@ public class QuestParser {
                     .build();
 
             // Если есть достижение в сцене, то сохранить в БД
-            if (questSceneDescription.contains(ACHIEVEMENT_DELIMITER_START) ||
-                    questSceneDescription.contains(ACHIEVEMENT_DELIMITER_END)) {
+            if (questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_START) ||
+                    questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_END)) {
                 logger.info("Создание достижения...");
                 Achievement achievement = saveAchievement(questSceneDescription, questSceneId);
                 String updatedQuestSceneDescription =
                         questSceneDescription
-                                .replace(ACHIEVEMENT_DELIMITER_START, "")
-                                .replace(ACHIEVEMENT_DELIMITER_END, "");
+                                .replace(ParseConst.ACHIEVEMENT_DELIMITER_START, "")
+                                .replace(ParseConst.ACHIEVEMENT_DELIMITER_END, "");
                 scene.setDescriptionScene(updatedQuestSceneDescription);
                 scene.setAchievement(achievement);
             }
 
             // Извлекаем действия и создаем для них объекты
             for (int j = 1; j < questSceneContent.length; j++) {
-                String[] actionLine = questSceneContent[j].split(TARGET_SCENE_DELIMITER);
+                String[] actionLine = questSceneContent[j].split(ParseConst.TARGET_SCENE_DELIMITER);
                 String actionText = actionLine[0];
                 Long nextQuestSceneId = Long.parseLong(actionLine[1].trim());
                 Action action = Action.builder()

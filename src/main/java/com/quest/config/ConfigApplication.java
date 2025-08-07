@@ -7,6 +7,7 @@ import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.UserService;
 import com.quest.util.QuestParser;
+import com.quest.util.ResourcePath;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,8 +22,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
-
-import static com.quest.util.Const.RESOURCE_QUEST;
 
 @AllArgsConstructor
 public class ConfigApplication {
@@ -54,7 +53,7 @@ public class ConfigApplication {
         QuestParser questParser = ServiceLocator.getService(QuestParser.class);
         try {
             URL resource = Objects.requireNonNull(
-                    getClass().getResource(RESOURCE_QUEST));
+                    getClass().getResource(ResourcePath.QUEST));
             Path pathQuestFile = Paths.get(resource.toURI());
             String dataQuest = Files.readString(pathQuestFile, StandardCharsets.UTF_8);
             questParser.parseText(dataQuest);

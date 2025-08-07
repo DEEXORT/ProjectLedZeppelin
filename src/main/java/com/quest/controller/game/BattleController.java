@@ -3,7 +3,9 @@ package com.quest.controller.game;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Monster;
 import com.quest.entity.Player;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,9 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-import static com.quest.util.Const.*;
-
-@WebServlet(ROUTE_BATTLE)
+@WebServlet(Route.BATTLE)
 public class BattleController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(BattleController.class);
 
@@ -32,7 +32,7 @@ public class BattleController extends HttpServlet {
         session.setAttribute(KeyAttribute.MONSTER, monster);
 
         req.setAttribute(KeyAttribute.ACTION, "throwDice");
-        req.getRequestDispatcher(PATH_BATTLE_JSP).forward(req, resp);
+        req.getRequestDispatcher(JspPath.BATTLE).forward(req, resp);
     }
 
     @Override
@@ -47,10 +47,10 @@ public class BattleController extends HttpServlet {
 
         if (player.getHealth() <= 0) {
             player.setQuestSceneId(991L);
-            resp.sendRedirect(ROUTE_QUEST);
+            resp.sendRedirect(Route.QUEST);
         } else {
             req.setAttribute(KeyAttribute.ACTION, "left");
-            req.getRequestDispatcher(PATH_BATTLE_JSP).forward(req, resp);
+            req.getRequestDispatcher(JspPath.BATTLE).forward(req, resp);
         }
     }
 }

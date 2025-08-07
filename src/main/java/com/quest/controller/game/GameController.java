@@ -4,8 +4,8 @@ import com.quest.config.ServiceLocator;
 import com.quest.entity.Player;
 import com.quest.entity.User;
 import com.quest.services.PlayerService;
-import com.quest.util.Const;
 import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,9 +18,8 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.quest.util.Const.ROUTE_QUEST;
 
-@WebServlet(Const.ROUTE_GAME)
+@WebServlet(Route.GAME)
 public class GameController extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(GameController.class);
 
@@ -57,7 +56,7 @@ public class GameController extends HttpServlet {
 
         session.setAttribute(KeyAttribute.PLAYER, player);
         session.setAttribute(KeyAttribute.BATTLE_FLAG, false);
-        resp.sendRedirect(ROUTE_QUEST);
+        resp.sendRedirect(Route.QUEST);
     }
 
 }

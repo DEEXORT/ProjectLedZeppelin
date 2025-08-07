@@ -4,16 +4,15 @@ import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Player;
 import com.quest.entity.User;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.quest.util.Const.ROUTE_QUEST;
 import static com.quest.util.KeyAttribute.PLAYER;
 import static com.quest.util.KeyAttribute.USER;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -38,7 +37,7 @@ class GameControllerIT extends ConfigIT {
 
         // then
         verify(session).setAttribute(eq(PLAYER), any(Player.class));
-        verify(response).sendRedirect(ROUTE_QUEST);
+        verify(response).sendRedirect(Route.QUEST);
     }
 
     @Test

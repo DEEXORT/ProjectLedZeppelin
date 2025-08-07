@@ -5,7 +5,9 @@ import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.services.UserService;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -17,11 +19,10 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.quest.util.Const.*;
 import static com.quest.util.KeyAttribute.PASSWORD;
 import static com.quest.util.KeyAttribute.USERNAME;
 
-@WebServlet(ROUTE_LOGIN)
+@WebServlet(Route.LOGIN)
 public class UserAuthentication extends HttpServlet {
     private UserService userService;
 
@@ -35,9 +36,9 @@ public class UserAuthentication extends HttpServlet {
         // If user is in the session, then redirect to profile
         Object user = req.getSession().getAttribute(KeyAttribute.USER);
         if (user != null) {
-            resp.sendRedirect(ROUTE_PROFILE);
+            resp.sendRedirect(Route.PROFILE);
         } else {
-            req.getRequestDispatcher(PATH_LOGIN_JSP).forward(req, resp);
+            req.getRequestDispatcher(JspPath.LOGIN).forward(req, resp);
             req.getSession().removeAttribute(KeyAttribute.ERROR);
         }
     }
@@ -51,16 +52,16 @@ public class UserAuthentication extends HttpServlet {
             if (user.isPresent()) {
                 HttpSession session = req.getSession();
                 session.setAttribute(KeyAttribute.USER, user.get());
-                resp.sendRedirect(ROUTE_GAME);
+                resp.sendRedirect(Route.GAME);
             } else {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 req.getSession().setAttribute(KeyAttribute.ERROR, "Неверный логин или пароль");
-                resp.sendRedirect(ROUTE_LOGIN);
+                resp.sendRedirect(Route.LOGIN);
             }
         } catch (UserEmptyException | UserNotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             req.getSession().setAttribute(KeyAttribute.ERROR, e.getMessage());
-            resp.sendRedirect(ROUTE_LOGIN);
+            resp.sendRedirect(Route.LOGIN);
         }
     }
 

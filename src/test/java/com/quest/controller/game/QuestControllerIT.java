@@ -2,16 +2,15 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
-import com.quest.util.Const;
+import com.quest.util.Route;
 import jakarta.servlet.RequestDispatcher;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.Random;
 
-import static com.quest.util.Const.PATH_QUEST_JSP;
 import static org.mockito.Mockito.*;
 
 class QuestControllerIT extends ConfigIT {
@@ -26,7 +25,7 @@ class QuestControllerIT extends ConfigIT {
         RequestDispatcher dispatcher = mock(RequestDispatcher.class);
 
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
-        when(request.getRequestDispatcher(PATH_QUEST_JSP)).thenReturn(dispatcher);
+        when(request.getRequestDispatcher(JspPath.QUEST)).thenReturn(dispatcher);
 
         // when
         questController.doGet(request, response);
@@ -54,7 +53,7 @@ class QuestControllerIT extends ConfigIT {
         questController.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(Const.ROUTE_QUEST);
+        verify(response).sendRedirect(Route.QUEST);
     }
 
     @Test
@@ -75,7 +74,7 @@ class QuestControllerIT extends ConfigIT {
         questController.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(Const.ROUTE_QUEST);
+        verify(response).sendRedirect(Route.QUEST);
     }
 
     @Test
@@ -90,6 +89,6 @@ class QuestControllerIT extends ConfigIT {
         questController.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(Const.ROUTE_QUEST);
+        verify(response).sendRedirect(Route.QUEST);
     }
 }

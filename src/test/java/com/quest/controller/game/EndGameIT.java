@@ -2,19 +2,16 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Achievement;
 import com.quest.entity.Player;
 import com.quest.entity.User;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.quest.util.Const.PATH_END_GAME_JSP;
-import static com.quest.util.KeyAttribute.PLAYER;
-import static com.quest.util.KeyAttribute.USER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -41,15 +38,15 @@ class EndGameIT extends ConfigIT {
                 .achievements(new ArrayList<>())
                 .playerId(35L)
                 .build();
-        when(session.getAttribute(PLAYER)).thenReturn(testPlayerEndGame);
-        when(session.getAttribute(USER)).thenReturn(testUserEndGame);
-        when(request.getRequestDispatcher(PATH_END_GAME_JSP)).thenReturn(requestDispatcher);
+        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(testPlayerEndGame);
+        when(session.getAttribute(KeyAttribute.USER)).thenReturn(testUserEndGame);
+        when(request.getRequestDispatcher(JspPath.END_GAME)).thenReturn(requestDispatcher);
 
         // when
         endGame.doGet(request, response);
 
         // then
-        assertNull(((User) request.getSession().getAttribute(USER)).getPlayerId());
+        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getPlayerId());
         verify(requestDispatcher).forward(request, response);
     }
 
@@ -73,15 +70,15 @@ class EndGameIT extends ConfigIT {
                 .achievements(new ArrayList<>())
                 .playerId(35L)
                 .build();
-        when(session.getAttribute(PLAYER)).thenReturn(testPlayerEndGame);
-        when(session.getAttribute(USER)).thenReturn(testUserEndGame);
-        when(request.getRequestDispatcher(PATH_END_GAME_JSP)).thenReturn(requestDispatcher);
+        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(testPlayerEndGame);
+        when(session.getAttribute(KeyAttribute.USER)).thenReturn(testUserEndGame);
+        when(request.getRequestDispatcher(JspPath.END_GAME)).thenReturn(requestDispatcher);
 
         // when
         endGame.doGet(request, response);
 
         // then
-        assertNull(((User) request.getSession().getAttribute(USER)).getPlayerId());
+        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getPlayerId());
         verify(requestDispatcher).forward(request, response);
     }
 }

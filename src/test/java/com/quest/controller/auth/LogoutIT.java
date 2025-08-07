@@ -2,13 +2,12 @@ package com.quest.controller.auth;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static com.quest.util.Const.ROUTE_LOGIN;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
 class LogoutIT extends ConfigIT {
@@ -21,6 +20,6 @@ class LogoutIT extends ConfigIT {
 
         // then
         verify(session).invalidate();
-        verify(response).sendRedirect(ROUTE_LOGIN);
+        verify(response).sendRedirect(Route.LOGIN);
     }
 }

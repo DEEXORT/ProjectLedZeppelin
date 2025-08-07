@@ -1,6 +1,7 @@
 package com.quest.filters;
 
 import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -13,9 +14,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.quest.util.Const.*;
-
-@WebFilter({ROUTE_QUEST, ROUTE_GAME, ROUTE_PROFILE, ROUTE_LOGOUT})
+@WebFilter({Route.QUEST, Route.GAME, Route.PROFILE, Route.LOGOUT})
 public class SessionAuthFilter extends HttpFilter {
 
     @Override
@@ -29,7 +28,7 @@ public class SessionAuthFilter extends HttpFilter {
             chain.doFilter(req, res);
         } else {
             // Иначе просим залогиниться
-            response.sendRedirect(ROUTE_LOGIN);
+            response.sendRedirect(Route.LOGIN);
         }
     }
 }

@@ -3,7 +3,9 @@ package com.quest.controller.game;
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Monster;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +13,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Random;
 
-import static com.quest.util.Const.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -23,7 +24,7 @@ class BattleControllerIT extends ConfigIT {
     void doGet_ShouldGenerateMonsterAndForwardToJsp() throws ServletException, IOException {
         // given
         battleController.init(servletConfig);
-        when(request.getRequestDispatcher(PATH_BATTLE_JSP)).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
 
         // when
@@ -47,14 +48,14 @@ class BattleControllerIT extends ConfigIT {
         random.set(combatResolver, mockedRandom);
         when(mockedRandom.nextInt(anyInt()))
                 .thenReturn(10);  // for player
-        when(request.getRequestDispatcher(PATH_BATTLE_JSP)).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
 
         // when
         battleController.doPost(request, response);
 
         // then
         assertEquals(0, playerTest.getHealth());
-        verify(response).sendRedirect(ROUTE_QUEST);
+        verify(response).sendRedirect(Route.QUEST);
     }
 
     @Test
@@ -63,7 +64,7 @@ class BattleControllerIT extends ConfigIT {
         battleController.init(servletConfig);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
-        when(request.getRequestDispatcher(PATH_BATTLE_JSP)).thenReturn(requestDispatcher);
+        when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
         CombatResolver combatResolver = ServiceLocator.getService(CombatResolver.class);
         Random mockedRandom = mock(Random.class);
         Field random = combatResolver.getClass().getDeclaredField("random");

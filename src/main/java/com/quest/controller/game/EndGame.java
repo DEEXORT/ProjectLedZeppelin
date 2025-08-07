@@ -6,7 +6,7 @@ import com.quest.entity.QuestScene;
 import com.quest.entity.User;
 import com.quest.services.QuestService;
 import com.quest.services.UserService;
-import com.quest.util.KeyAttribute;
+import com.quest.util.*;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,9 +18,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
-import static com.quest.util.Const.*;
-
-@WebServlet(ROUTE_END)
+@WebServlet(Route.END)
 public class EndGame extends HttpServlet {
     private QuestService questService;
     private UserService userService;
@@ -47,27 +45,27 @@ public class EndGame extends HttpServlet {
                 userService.update(user);
             }
             // Если сцена - сюжетная концовка
-            if (questId >= ID_END_MIN && questId < ID_END_MAX) {
+            if (questId >= ParseConst.ID_END_MIN && questId < ParseConst.ID_END_MAX) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
-                        RESOURCE_IMG_FINISH);
+                        ResourcePath.IMG_FINISH);
             }
             // Если игрок погиб
-            else if (questId >= ID_END_MIN && questId < ID_DEATH_MAX) {
+            else if (questId >= ParseConst.ID_END_MIN && questId < ParseConst.ID_DEATH_MAX) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
-                        RESOURCE_IMG_RIP);
+                        ResourcePath.IMG_RIP);
             }
         });
 
         // Сброс игрока у пользователя
         user.setPlayerId(null);
 
-        req.getRequestDispatcher(PATH_END_GAME_JSP).forward(req, resp);
+        req.getRequestDispatcher(JspPath.END_GAME).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.sendRedirect(ROUTE_GAME);
+        resp.sendRedirect(Route.GAME);
     }
 }

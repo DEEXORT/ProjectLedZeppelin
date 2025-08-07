@@ -2,6 +2,8 @@ package com.quest.filters;
 
 import com.quest.entity.Player;
 import com.quest.util.KeyAttribute;
+import com.quest.util.ResourcePath;
+import com.quest.util.Route;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -14,9 +16,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-import static com.quest.util.Const.*;
 
-@WebFilter({ROUTE_QUEST})
+@WebFilter({Route.QUEST})
 public class HealthPlayerFilter extends HttpFilter {
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -28,8 +29,8 @@ public class HealthPlayerFilter extends HttpFilter {
 
         if (player != null && player.getHealth() <= 0) {
             player.setQuestSceneId(951L);
-            session.setAttribute(KeyAttribute.IMG_END_GAME, RESOURCE_IMG_RIP);
-            response.sendRedirect(request.getContextPath() + ROUTE_END);
+            session.setAttribute(KeyAttribute.IMG_END_GAME, ResourcePath.IMG_RIP);
+            response.sendRedirect(request.getContextPath() + Route.END);
         } else {
             chain.doFilter(req, res);
         }
