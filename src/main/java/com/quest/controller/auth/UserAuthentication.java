@@ -3,6 +3,7 @@ package com.quest.controller.auth;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
+import com.quest.exception.UserInvalidPasswordException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.services.UserService;
 import com.quest.util.*;
@@ -50,12 +51,8 @@ public class UserAuthentication extends HttpServlet {
                 HttpSession session = req.getSession();
                 session.setAttribute(KeyAttribute.USER, user.get());
                 resp.sendRedirect(Route.GAME);
-            } else {
-                resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                req.getSession().setAttribute(KeyAttribute.ERROR, MessageBundle.get("error.invalid_credentials"));
-                resp.sendRedirect(Route.LOGIN);
             }
-        } catch (UserEmptyException | UserNotFoundException e) {
+        } catch (UserEmptyException | UserNotFoundException | UserInvalidPasswordException e) {
             RequestHelper.createAuthorizationError(req, resp, e.getMessage());
         }
     }

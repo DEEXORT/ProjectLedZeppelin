@@ -3,6 +3,7 @@ package com.quest.services;
 import com.quest.entity.User;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
+import com.quest.exception.UserInvalidPasswordException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.repository.UserRepository;
 import com.quest.util.KeyAttribute;
@@ -35,7 +36,7 @@ public class UserService {
         userRepository.create(user);
     }
 
-    public Optional<User> get(String login, String password) throws UserEmptyException, UserNotFoundException {
+    public Optional<User> get(String login, String password) throws UserEmptyException, UserNotFoundException, UserInvalidPasswordException {
         validateCredentials(login, password);
 
         User user = userRepository.find(login);
@@ -43,7 +44,7 @@ public class UserService {
             throw new UserNotFoundException(MessageBundle.get("error.user_not_found"));
         }
         if (!user.getPassword().equals(password)) {
-            return Optional.empty();
+            throw new UserInvalidPasswordException(MessageBundle.get("error.invalid_credentials"));
         } else {
             return Optional.of(user);
         }

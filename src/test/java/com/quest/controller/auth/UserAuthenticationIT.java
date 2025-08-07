@@ -30,6 +30,7 @@ class UserAuthenticationIT extends ConfigIT {
     @Test
     void doGet_ShouldForwardToLogin_WhenUserIsNotAuthenticated() throws IOException, ServletException {
         // given
+        userAuthentication.init(servletConfig);
         when(session.getAttribute(KeyAttribute.USER)).thenReturn(null);
         when(request.getRequestDispatcher(JspPath.LOGIN)).thenReturn(requestDispatcher);
 
