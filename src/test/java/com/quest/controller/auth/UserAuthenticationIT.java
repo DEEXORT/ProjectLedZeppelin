@@ -66,7 +66,7 @@ class UserAuthenticationIT extends ConfigIT {
         userAuthentication.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(Route.LOGIN);
+        verify(response).sendRedirect(request.getRequestURI());
     }
 
 }

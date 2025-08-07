@@ -68,6 +68,6 @@ class UserRegistrationIT extends ConfigIT {
         userRegistration.doPost(request, response);
 
         // then
-        verify(response).sendRedirect(Route.REGISTER);
+        verify(response).sendRedirect(request.getRequestURI());
     }
 }

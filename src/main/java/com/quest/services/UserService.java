@@ -5,6 +5,7 @@ import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.repository.UserRepository;
+import com.quest.util.MessageBundle;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -24,7 +25,9 @@ public class UserService {
         validateCredentials(user.getLogin(), user.getPassword());
         // Проверка на уже существующего пользователя
         if (userRepository.find(user.getLogin()) != null) {
-            throw new UserAlreadyExistsException("Пользователь с логином " + user.getLogin() + " уже существует");
+            throw new UserAlreadyExistsException(
+                    MessageBundle.get("error.user_already_exists").formatted(user.getLogin())
+            );
         }
         // Регистрация пользователя в БД
         userRepository.create(user);
@@ -35,7 +38,7 @@ public class UserService {
 
         User user = userRepository.find(login);
         if (user == null) {
-            throw new UserNotFoundException("Такого пользователя не существует");
+            throw new UserNotFoundException(MessageBundle.get("error.user_not_found"));
         }
         if (!user.getPassword().equals(password)) {
             return Optional.empty();
@@ -55,10 +58,10 @@ public class UserService {
 
     private void validateCredentials(String login, String password) throws UserEmptyException {
         if (login == null || login.isEmpty()) {
-            throw new UserEmptyException("Логин не может быть пустым");
+            throw new UserEmptyException(MessageBundle.get("error.login_not_empty"));
         }
         if (password == null || password.isEmpty()) {
-            throw new UserEmptyException("Пароль не может быть пустым");
+            throw new UserEmptyException(MessageBundle.get("error.password_not_empty"));
         }
     }
 }

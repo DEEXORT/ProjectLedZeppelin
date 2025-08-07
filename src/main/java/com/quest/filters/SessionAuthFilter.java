@@ -23,11 +23,12 @@ public class SessionAuthFilter extends HttpFilter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         HttpSession session = request.getSession(false);
-        // Если пользователь есть, допускаем переход
+        // If user is authorized, then grant permission
         if (session != null && session.getAttribute(KeyAttribute.USER) != null) {
             chain.doFilter(req, res);
         } else {
             // Иначе просим залогиниться
+            // Otherwise redirect to login
             response.sendRedirect(Route.LOGIN);
         }
     }

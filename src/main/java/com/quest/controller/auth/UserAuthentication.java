@@ -5,10 +5,7 @@ import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.services.UserService;
-import com.quest.util.JspPath;
-import com.quest.util.KeyAttribute;
-import com.quest.util.RequestHelper;
-import com.quest.util.Route;
+import com.quest.util.*;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -56,12 +53,11 @@ public class UserAuthentication extends HttpServlet {
                 resp.sendRedirect(Route.GAME);
             } else {
                 resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                req.getSession().setAttribute(KeyAttribute.ERROR, "Неверный логин или пароль");
+                req.getSession().setAttribute(KeyAttribute.ERROR, MessageBundle.get("error.invalid_credentials"));
                 resp.sendRedirect(Route.LOGIN);
             }
         } catch (UserEmptyException | UserNotFoundException e) {
             RequestHelper.createAuthorizationError(req, resp, e.getMessage());
-            resp.sendRedirect(Route.LOGIN);
         }
     }
 }

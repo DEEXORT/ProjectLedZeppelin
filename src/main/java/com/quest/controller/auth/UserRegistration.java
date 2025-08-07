@@ -57,7 +57,6 @@ public class UserRegistration extends HttpServlet {
             resp.sendRedirect(Route.GAME);
         } catch (UserAlreadyExistsException | UserEmptyException e) {
             RequestHelper.createAuthorizationError(req, resp, e.getMessage());
-            resp.sendRedirect(Route.REGISTER);
         }
     }
 }
