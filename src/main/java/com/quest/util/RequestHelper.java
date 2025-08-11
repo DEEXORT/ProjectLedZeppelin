@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
 
+import java.util.Optional;
+
 import java.io.IOException;
 
 @UtilityClass
@@ -16,5 +18,8 @@ public class RequestHelper {
         resp.sendRedirect(req.getRequestURI());
     }
 
+    public Optional<User> getUser(HttpServletRequest req) {
+        return Optional.ofNullable(req.getSession().getAttribute(KeyAttribute.USER)).map(User.class::cast);
+    }
 
 }

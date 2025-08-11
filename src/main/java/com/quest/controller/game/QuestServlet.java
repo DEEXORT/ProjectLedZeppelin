@@ -25,12 +25,14 @@ public class QuestServlet extends HttpServlet {
     private final Logger logger = LogManager.getLogger(QuestServlet.class);
     private PlayerService playerService;
     private MonsterService monsterService;
+    private QuestService questService;
     private final Random random = new Random();
 
     @Override
     public void init(ServletConfig config) {
         playerService = ServiceLocator.getService(PlayerService.class);
         monsterService = ServiceLocator.getService(MonsterService.class);
+        questService = ServiceLocator.getService(QuestService.class);
     }
 
     @Override
@@ -81,17 +83,16 @@ public class QuestServlet extends HttpServlet {
 
         if (handleEvent(req, resp, nextQuestSceneId)) return;
 
-        // Сохранение процесса игры (id следующей сцены) в БД
+        // Save game process to database
         updatePlayer(session, nextQuestSceneId);
 
-        // Генерация события с монстром. Если повезло, то редирект на след квест
-        if (!((boolean) session.getAttribute(KeyAttribute.BATTLE_FLAG))
-                && (random.nextInt(100) < 40)) {
-            // Неудача. Сражение с монстром
-            setMonster(session);
+        // Possible generation random event of battle
+        if (questService.isBattleEvent(req)) {
+            // Fail. Redirect to battle
+            session.setAttribute(KeyAttribute.MONSTER, monsterService.getRandomMonster());
             resp.sendRedirect(Route.BATTLE);
         }
-        // Переход на следующую сцену
+        // Otherwise redirect to next QuestScene
         else {
             resp.sendRedirect(Route.QUEST);
         }
@@ -103,15 +104,10 @@ public class QuestServlet extends HttpServlet {
         playerService.update(player);
     }
 
-    private void setMonster(HttpSession session) {
-        // Получение случайного монстра
-        Monster monster = monsterService.getRandomMonster();
-        monster.setHealth(monster.getMaxHealth()); // TODO: заменить на удаление монстра из сессии
-        session.setAttribute(KeyAttribute.MONSTER, monster);
-    }
-
-    private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) {
-        questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action.getActionText()));
+    private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) throws ServletException, IOException {
+        questScene.getActions().forEach(action -> {
+            logger.debug("QuestScene found. Actions: {}", action.getActionText());
+        });
         req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
         req.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }

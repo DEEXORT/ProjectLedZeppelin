@@ -31,9 +31,11 @@ public class MonsterService {
         Collection<Monster> monsterCollection = monsterRepository.getAll();
         if (monsterCollection.isEmpty()) {
             logger.error("No monsters found");
-            throw new NoSuchElementException("В репозитории нет монстров");
+            throw new NoSuchElementException("No monsters found in repository");
         }
         Monster[] monsters = monsterCollection.toArray(new Monster[0]);
-        return monsters[ThreadLocalRandom.current().nextInt(monsterCollection.size())];
+        Monster monster = monsters[ThreadLocalRandom.current().nextInt(monsterCollection.size())];
+        monster.setHealth(monster.getMaxHealth()); // in repository may be monster with health = 0
+        return monster;
     }
 }
