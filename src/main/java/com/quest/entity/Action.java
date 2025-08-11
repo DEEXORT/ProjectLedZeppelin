@@ -12,4 +12,5 @@ public class Action {
     private QuestScene questScene;
     private QuestScene nextQuestScene;
     private Long nextQuestSceneId;
+    private Event event;
 }

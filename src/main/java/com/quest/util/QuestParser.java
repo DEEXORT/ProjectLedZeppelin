@@ -112,4 +112,9 @@ public class QuestParser {
             throw new AchievementNotCreateException(errorMessage);
         }
     }
+
+    private int saveEvent(String encodedEvent) {
+
+        return 0;
+    }
 }

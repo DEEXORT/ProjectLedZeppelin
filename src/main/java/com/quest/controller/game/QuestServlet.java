@@ -1,17 +1,11 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Action;
-import com.quest.entity.Monster;
-import com.quest.entity.Player;
-import com.quest.entity.QuestScene;
+import com.quest.entity.*;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.QuestService;
-import com.quest.util.JspPath;
-import com.quest.util.KeyAttribute;
-import com.quest.util.ParseConst;
-import com.quest.util.Route;
+import com.quest.util.*;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,9 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 
 @WebServlet(Route.QUEST)
@@ -43,7 +35,7 @@ public class QuestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Чистка атрибута после сражения
+        // clear attribute after battle
         req.getSession().removeAttribute(KeyAttribute.MONSTER);
 
         Optional<QuestScene> questScene = getQuestScene(req);
@@ -87,6 +79,8 @@ public class QuestServlet extends HttpServlet {
         long nextQuestSceneId = Long.parseLong(req.getParameter(KeyAttribute.SCENE_ID));
         HttpSession session = req.getSession();
 
+        if (handleEvent(req, resp, nextQuestSceneId)) return;
+
         // Сохранение процесса игры (id следующей сцены) в БД
         updatePlayer(session, nextQuestSceneId);
 
@@ -116,19 +110,51 @@ public class QuestServlet extends HttpServlet {
         session.setAttribute(KeyAttribute.MONSTER, monster);
     }
 
-    private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) throws ServletException, IOException {
-        questScene.getActions().forEach(action -> {
-            logger.debug("QuestScene found. Actions: {}", action.getActionText());
-        });
+    private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) {
+        questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action.getActionText()));
         req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
         req.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }
 
-    private static Optional<QuestScene> getQuestScene(HttpServletRequest req) {
+    private Optional<QuestScene> getQuestScene(HttpServletRequest req) {
         HttpSession session = req.getSession();
         Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
         QuestService questService = ServiceLocator.getService(QuestService.class);
         return questService.get(player.getQuestSceneId());
     }
 
+    private boolean handleEvent(HttpServletRequest req, HttpServletResponse resp, long nextQuestSceneId) throws IOException {
+        HttpSession session = req.getSession();
+        Object attribute = session.getAttribute(KeyAttribute.EVENT);
+        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
+
+        if (attribute != null) {
+            Event event = (Event) attribute;
+            switch (event.getType()) {
+                case DAMAGE -> {
+                    // Change player stats
+                    player.setHealth(player.getHealth() - event.getValue());
+                    // Перезапись атрибута QUEST_DESCRIPTION с описанием полученного урона
+                    String questDescription = MessageBundle.get("quest.damage").formatted(event.getValue());
+                    session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questDescription);
+                    // Перезапись атрибута QUEST_ACTIONS (только кнопка "Дальше")
+                    Collection<Action> actions = new ArrayList<>();
+                    actions.add(Action.builder()
+                            .actionText(MessageBundle.get("quest.next"))
+                            .nextQuestSceneId(nextQuestSceneId)
+                            .build());
+                    session.setAttribute(KeyAttribute.QUEST_ACTIONS, actions);
+                    // Удаление атрибута EVENT
+                    session.removeAttribute(KeyAttribute.EVENT);
+                    // Редирект на /quest (GET)
+                    resp.sendRedirect(Route.QUEST);
+                    return true;
+                }
+                case BUFF -> {}
+                case HEAL -> {}
+                case DEBUFF -> {}
+            }
+        }
+        return false;
+    }
 }
