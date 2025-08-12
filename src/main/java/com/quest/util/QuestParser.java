@@ -2,9 +2,11 @@ package com.quest.util;
 
 import com.quest.entity.Achievement;
 import com.quest.entity.Action;
+import com.quest.entity.Event;
 import com.quest.entity.QuestScene;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.services.AchievementService;
+import com.quest.services.EventService;
 import com.quest.services.QuestService;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
@@ -20,11 +22,15 @@ import java.util.regex.Pattern;
 @Data
 public class QuestParser {
     private final QuestService questService;
+    private final EventService eventService;
     private final AchievementService achievementService;
     private Logger logger = LogManager.getLogger(QuestParser.class);
+    private final Pattern PATTERN_EVENT =
+            Pattern.compile("(?<id>\\d+)\\s*<event\\s*type=\"?<type>(\\S+)\"\\s*value=\"?<value>(\\d+)\">");
 
-    public QuestParser(QuestService questService, AchievementService achievementService) {
+    public QuestParser(QuestService questService, AchievementService achievementService, EventService eventService) {
         this.questService = questService;
+        this.eventService = eventService;
         this.achievementService = achievementService;
     }
 
@@ -113,8 +119,29 @@ public class QuestParser {
         }
     }
 
-    private int saveEvent(String encodedEvent) {
+    private long saveEvent(String encodedQuestSceneIdAndEvent) {
+        Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent);
+        if (matcher.find()) {
+            Long questSceneId = Long.parseLong(matcher.group("id"));
+            EventType eventType = EventType.valueOf(matcher.group("type").toUpperCase());
+            // TODO: Add other fields for Event
+            Event event = Event.builder()
+                    .type(eventType)
+                    .value(Integer.parseInt(matcher.group("value")))
+                    .build();
+            eventService.create(event);
+            return event.getId();
+        }
+        return 0;
+    }
 
+    private long getQuestSceneId(String encodedQuestSceneIdAndEvent) {
+        Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent);
+        if (matcher.find()) {
+            return Long.parseLong(matcher.group("id"));
+        } else {
+            logger.error("Not found quest scene id: {}", encodedQuestSceneIdAndEvent);
+        }
         return 0;
     }
 }

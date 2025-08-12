@@ -7,10 +7,10 @@ import lombok.Data;
 @Builder
 public class Action {
     private Long id;
-    private Long questSceneId;
+    private Long eventId;
+    private Long questSceneId; // TODO: Возможно лишнее поле
     private String actionText;
-    private QuestScene questScene;
-    private QuestScene nextQuestScene;
+    private QuestScene questScene; // TODO: Возможно лишнее поле
+    private QuestScene nextQuestScene; // TODO: Возможно лишнее поле
     private Long nextQuestSceneId;
-    private Event event;
 }

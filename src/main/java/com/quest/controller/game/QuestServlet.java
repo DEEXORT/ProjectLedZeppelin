@@ -6,6 +6,7 @@ import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.QuestService;
 import com.quest.util.*;
+import com.quest.util.ResourceBundle;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -103,10 +104,8 @@ public class QuestServlet extends HttpServlet {
         playerService.update(player);
     }
 
-    private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) throws ServletException, IOException {
-        questScene.getActions().forEach(action -> {
-            logger.debug("QuestScene found. Actions: {}", action.getActionText());
-        });
+    private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) {
+        questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action.getActionText()));
         req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
         req.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }
@@ -130,12 +129,12 @@ public class QuestServlet extends HttpServlet {
                     // Change player stats
                     player.setHealth(player.getHealth() - event.getValue());
                     // Перезапись атрибута QUEST_DESCRIPTION с описанием полученного урона
-                    String questDescription = MessageBundle.get("quest.damage").formatted(event.getValue());
+                    String questDescription = ResourceBundle.getMessage("quest.damage").formatted(event.getValue());
                     session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questDescription);
                     // Перезапись атрибута QUEST_ACTIONS (только кнопка "Дальше")
                     Collection<Action> actions = new ArrayList<>();
                     actions.add(Action.builder()
-                            .actionText(MessageBundle.get("quest.next"))
+                            .actionText(ResourceBundle.getMessage("quest.next"))
                             .nextQuestSceneId(nextQuestSceneId)
                             .build());
                     session.setAttribute(KeyAttribute.QUEST_ACTIONS, actions);

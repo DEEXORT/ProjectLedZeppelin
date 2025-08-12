@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 public class Event {
+    private Long id;
     private EventType type;
     private int value;
     private String stat; // for buff/debuff
