@@ -12,4 +12,5 @@ public interface Route {
     String BATTLE = "/battle";
     String END = "/end";
     String LEADER_BOARD = "/leaderboard";
+    String EVENT = "/event";
 }

@@ -2,6 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
 import com.quest.entity.*;
+import com.quest.services.EventService;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.QuestService;
@@ -27,12 +28,14 @@ public class QuestServlet extends HttpServlet {
     private PlayerService playerService;
     private MonsterService monsterService;
     private QuestService questService;
+    private EventService eventService;
 
     @Override
     public void init(ServletConfig config) {
         playerService = ServiceLocator.getService(PlayerService.class);
         monsterService = ServiceLocator.getService(MonsterService.class);
         questService = ServiceLocator.getService(QuestService.class);
+        eventService = ServiceLocator.getService(EventService.class);
     }
 
     @Override
@@ -106,8 +109,8 @@ public class QuestServlet extends HttpServlet {
 
     private void setQuestSceneToRequestAttributes(HttpServletRequest req, QuestScene questScene) {
         questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action.getActionText()));
-        req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
-        req.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
+        req.getSession().setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
+        req.getSession().setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }
 
     private Optional<QuestScene> getQuestScene(HttpServletRequest req) {
@@ -119,11 +122,12 @@ public class QuestServlet extends HttpServlet {
 
     private boolean handleEvent(HttpServletRequest req, HttpServletResponse resp, long nextQuestSceneId) throws IOException {
         HttpSession session = req.getSession();
-        Object attribute = session.getAttribute(KeyAttribute.EVENT);
+        Object attribute = req.getParameter(KeyAttribute.EVENT);
         Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
 
         if (attribute != null) {
-            Event event = (Event) attribute;
+            long eventId = Long.parseLong(attribute.toString());
+            Event event = eventService.get(eventId);
             switch (event.getType()) {
                 case DAMAGE -> {
                     // Change player stats
@@ -141,7 +145,7 @@ public class QuestServlet extends HttpServlet {
                     // Удаление атрибута EVENT
                     session.removeAttribute(KeyAttribute.EVENT);
                     // Редирект на /quest (GET)
-                    resp.sendRedirect(Route.QUEST);
+                    resp.sendRedirect(Route.EVENT);
                     return true;
                 }
                 case BUFF -> {}

@@ -9,30 +9,20 @@
     <%@ include file="character.jsp" %>
 
     <div class="card">
-        <p>${requestScope.questScene}</p>
+        <p>${sessionScope.questScene}</p>
 
-        <c:if test="${not empty monster}">
-            <form action="${pageContext.request.contextPath}/battle" method="post">
-                <c:forEach var="action" items="${requestScope.actions}">
-                    <button class="btn btn-quest" type="submit" name="sceneId" value="${action.nextQuestSceneId}">
-                            ${action.actionText}
-                    </button>
-                </c:forEach>
-            </form>
-        </c:if>
-
-        <c:if test="${empty monster}">
-            <form action="${pageContext.request.contextPath}/quest" method="post">
-                <c:forEach var="action" items="${requestScope.actions}">
-                    <button class="btn btn-quest" type="submit" name="sceneId" value="${action.nextQuestSceneId}">
-                            ${action.actionText}
-                    </button>
-                </c:forEach>
-            </form>
-        </c:if>
+        <form action="${pageContext.request.contextPath}/quest" method="post">
+            <c:forEach var="action" items="${sessionScope.actions}">
+                <c:if test="${not empty action.eventId}">
+                    <input type="hidden" name="event" value="${action.eventId}">
+                </c:if>
+                <button class="btn btn-quest" type="submit" name="sceneId" value="${action.nextQuestSceneId}">
+                        ${action.actionText}
+                </button>
+            </c:forEach>
+        </form>
 
     </div>
 
 </div>
 </body>
-</html>

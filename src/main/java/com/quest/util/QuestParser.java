@@ -5,6 +5,7 @@ import com.quest.entity.Action;
 import com.quest.entity.Event;
 import com.quest.entity.QuestScene;
 import com.quest.exception.AchievementNotCreateException;
+import com.quest.exception.QuestNotFoundException;
 import com.quest.services.AchievementService;
 import com.quest.services.EventService;
 import com.quest.services.QuestService;
@@ -26,7 +27,8 @@ public class QuestParser {
     private final AchievementService achievementService;
     private Logger logger = LogManager.getLogger(QuestParser.class);
     private final Pattern PATTERN_EVENT =
-            Pattern.compile("(?<id>\\d+)\\s*<event\\s*type=\"?<type>(\\S+)\"\\s*value=\"?<value>(\\d+)\">");
+            Pattern.compile("<event\\s*type=\"(?<type>\\S+)\"\\s*value=\"(?<value>\\d+)\">");
+    private final Pattern PATTERN_NEXT_QUEST_ID = Pattern.compile("(?<id>\\d+)");
 
     public QuestParser(QuestService questService, AchievementService achievementService, EventService eventService) {
         this.questService = questService;
@@ -84,11 +86,13 @@ public class QuestParser {
             for (int j = 1; j < questSceneContent.length; j++) {
                 String[] actionLine = questSceneContent[j].split(ParseConst.TARGET_SCENE_DELIMITER);
                 String actionText = actionLine[0];
-                Long nextQuestSceneId = Long.parseLong(actionLine[1].trim());
+                long nextQuestSceneId = getQuestSceneId(actionLine[1]);
+                long eventId = saveEvent(actionLine[1]);
                 Action action = Action.builder()
                         .actionText(actionText)
                         .questSceneId(questSceneId)
                         .nextQuestSceneId(nextQuestSceneId)
+                        .eventId(eventId == 0 ? null : eventId)
                         .build();
                 scene.getActions().add(action);
             }
@@ -120,9 +124,8 @@ public class QuestParser {
     }
 
     private long saveEvent(String encodedQuestSceneIdAndEvent) {
-        Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent);
+        Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent.trim());
         if (matcher.find()) {
-            Long questSceneId = Long.parseLong(matcher.group("id"));
             EventType eventType = EventType.valueOf(matcher.group("type").toUpperCase());
             // TODO: Add other fields for Event
             Event event = Event.builder()
@@ -130,18 +133,19 @@ public class QuestParser {
                     .value(Integer.parseInt(matcher.group("value")))
                     .build();
             eventService.create(event);
+            logger.info("Event created: {}", event);
             return event.getId();
         }
         return 0;
     }
 
     private long getQuestSceneId(String encodedQuestSceneIdAndEvent) {
-        Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent);
+        Matcher matcher = PATTERN_NEXT_QUEST_ID.matcher(encodedQuestSceneIdAndEvent);
         if (matcher.find()) {
             return Long.parseLong(matcher.group("id"));
         } else {
             logger.error("Not found quest scene id: {}", encodedQuestSceneIdAndEvent);
+            throw new QuestNotFoundException("Not found quest scene id: " + encodedQuestSceneIdAndEvent);
         }
-        return 0;
     }
 }

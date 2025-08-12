@@ -11,4 +11,8 @@ public class EventService {
     public void create(Event event) {
         eventRepository.create(event);
     }
+
+    public Event get(long eventId) {
+        return eventRepository.get(eventId);
+    }
 }
