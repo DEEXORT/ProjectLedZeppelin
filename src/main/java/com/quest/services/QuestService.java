@@ -6,6 +6,7 @@ import com.quest.entity.QuestScene;
 import com.quest.repository.ActionRepository;
 import com.quest.repository.QuestRepository;
 import com.quest.util.KeyAttribute;
+import com.quest.util.ResourceBundle;
 import com.quest.util.Route;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,8 @@ public class QuestService {
     private final QuestRepository questRepository;
     private final ActionRepository actionRepository;
     private final MonsterService monsterService;
+
+    // TODO: replace to const from properties
     private final int percentageChanceBattle = ThreadLocalRandom.current().nextInt(100);
 
     public QuestService(QuestRepository questRepository, ActionRepository actionRepository, MonsterService monsterService) {
@@ -47,6 +50,10 @@ public class QuestService {
 
     public boolean isBattleEvent(HttpServletRequest request) {
         return !((boolean) request.getSession().getAttribute(KeyAttribute.BATTLE_FLAG))
-                && (percentageChanceBattle < 100); // TODO: replace hard int to int from properties
+                && (percentageChanceBattle < getMaxBattleChance()); // TODO: replace hard int to int from properties
+    }
+
+    private int getMaxBattleChance() {
+        return Integer.parseInt(ResourceBundle.getSetting("event.max_chance_battle"));
     }
 }

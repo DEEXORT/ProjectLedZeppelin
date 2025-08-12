@@ -26,7 +26,6 @@ public class QuestServlet extends HttpServlet {
     private PlayerService playerService;
     private MonsterService monsterService;
     private QuestService questService;
-    private final Random random = new Random();
 
     @Override
     public void init(ServletConfig config) {
