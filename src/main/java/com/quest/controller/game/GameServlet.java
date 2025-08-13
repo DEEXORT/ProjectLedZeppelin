@@ -38,6 +38,7 @@ public class GameServlet extends HttpServlet {
                     .health(100)
                     .maxHealth(100)
                     .level(1)
+                    .attack(10)
                     .questSceneId(1L)
                     .name(user.getLogin())
                     .userId(user.getId())

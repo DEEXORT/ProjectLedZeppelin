@@ -29,6 +29,7 @@ class EndGameServletIT extends ConfigIT {
                 .level(35)
                 .health(70)
                 .maxHealth(100)
+                .attack(10)
                 .questSceneId(907L)
                 .build();
         User testUserEndGame = User.builder()
@@ -61,6 +62,7 @@ class EndGameServletIT extends ConfigIT {
                 .level(35)
                 .health(70)
                 .maxHealth(100)
+                .attack(10)
                 .questSceneId(951L)
                 .build();
         User testUserEndGame = User.builder()

@@ -44,6 +44,7 @@ public class ConfigApplication {
                         .health(100)
                         .maxHealth(100)
                         .level(999)
+                        .attack(10)
                         .questSceneId(902L)
                         .build());
     }
@@ -83,12 +84,14 @@ public class ConfigApplication {
                 .level(1)
                 .health(50)
                 .maxHealth(50)
+                .attack(10)
                 .build();
         Monster orc = Monster.builder()
                 .name("Orc")
                 .level(2)
                 .health(300)
                 .maxHealth(300)
+                .attack(10)
                 .build();
         monsterService.create(goblin);
         monsterService.create(orc);

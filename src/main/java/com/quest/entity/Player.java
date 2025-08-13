@@ -13,4 +13,5 @@ public class Player {
     private int level;
     private int health;
     private int maxHealth;
+    private int attack;
 }

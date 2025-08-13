@@ -12,5 +12,6 @@ public class Event {
     private int value;
     private String stat; // for buff/debuff
     private int chance;
+    private String description;
 }
 

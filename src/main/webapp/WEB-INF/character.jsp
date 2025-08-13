@@ -84,6 +84,7 @@
     <div class="character-stats">
         <p><strong>Уровень:</strong> ${player.level}</p>
         <p><strong>HP:</strong> ${player.health}/${player.maxHealth}</p>
+        <p><strong>Сила атаки:</strong> ${player.attack}</p>
     </div>
 </div>
 </body>

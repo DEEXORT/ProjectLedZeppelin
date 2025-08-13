@@ -19,15 +19,27 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 @Data
 public class QuestParser {
     private final QuestService questService;
     private final EventService eventService;
     private final AchievementService achievementService;
     private Logger logger = LogManager.getLogger(QuestParser.class);
-    private final Pattern PATTERN_EVENT =
-            Pattern.compile("<event\\s*type=\"(?<type>\\S+)\"\\s*value=\"(?<value>\\d+)\">");
+    //    private final Pattern PATTERN_EVENT =
+//            Pattern.compile("<event\\s*" +
+//                    "(?:" +
+//                    "type=\"(?<type>\\S+)\"\\s*" +
+//                    "|stat=\"(?<stat>\\S+)\"\\s*" +
+//                    "|value=\"(?<value>\\d+)\"\\s*" +
+//                    "|text=\"(?<text>.*)\"" +
+//                    ")" + "\\s*>");
+    private final Pattern PATTERN_EVENT = Pattern.compile(
+            "<event\\s+" +
+                    "(?:" +
+                    "(?:type=\"(?<type>[^\"]*)\"|stat=\"(?<stat>[^\"]*)\"|value=\"(?<value>\\d+)\"|text=\"(?<text>[^\"]*)\")\\s*" +
+                    ")+" + // "+" — требует минимум 1 атрибут
+                    ">"
+    );
     private final Pattern PATTERN_NEXT_QUEST_ID = Pattern.compile("(?<id>\\d+)");
 
     public QuestParser(QuestService questService, AchievementService achievementService, EventService eventService) {
@@ -126,11 +138,13 @@ public class QuestParser {
     private long saveEvent(String encodedQuestSceneIdAndEvent) {
         Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent.trim());
         if (matcher.find()) {
-            EventType eventType = EventType.valueOf(matcher.group("type").toUpperCase());
+            EventType eventType = EventType.valueOf(matcher.group(EventAttribute.TYPE).toUpperCase());
             // TODO: Add other fields for Event
             Event event = Event.builder()
                     .type(eventType)
-                    .value(Integer.parseInt(matcher.group("value")))
+                    .value(Integer.parseInt(matcher.group(EventAttribute.VALUE)))
+                    .stat(matcher.group(EventAttribute.STAT) == null ? "" : matcher.group(EventAttribute.STAT))
+                    .description(matcher.group(EventAttribute.TEXT))
                     .build();
             eventService.create(event);
             logger.info("Event created: {}", event);
