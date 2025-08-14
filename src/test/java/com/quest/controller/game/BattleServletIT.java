@@ -3,6 +3,7 @@ package com.quest.controller.game;
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Monster;
+import com.quest.services.resolver.CombatResolver;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;

@@ -1,4 +1,4 @@
-package com.quest.controller.game;
+package com.quest.services.resolver;
 
 import com.quest.entity.Monster;
 import com.quest.entity.Player;

@@ -35,7 +35,7 @@ public class QuestResolver {
     }
 
     private void setQuestSceneToSessionAttributes(HttpSession session, QuestScene questScene) {
-        questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action.getActionText()));
+        questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action));
         session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
         session.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }

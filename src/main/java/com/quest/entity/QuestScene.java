@@ -14,9 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestScene {
     private Long id;
-    private Long monsterId;
     private String nameScene;
     private String descriptionScene;
-    private List<Action> actions = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>(); // TODO: Need to get from ActionRepository instead of QuestRepository
     private Achievement achievement;
 }

@@ -11,16 +11,16 @@
     <div class="card">
         <p>${sessionScope.questScene}</p>
 
-        <form action="${pageContext.request.contextPath}/quest" method="post">
-            <c:forEach var="action" items="${sessionScope.actions}">
+        <c:forEach var="action" items="${sessionScope.actions}">
+            <form action="${pageContext.request.contextPath}/quest" method="post">
                 <c:if test="${not empty action.eventId}">
-                    <input type="hidden" name="event" value="${action.eventId}">
+                    <input type="hidden" name="eventId" value="${action.eventId}">
                 </c:if>
                 <button class="btn btn-quest" type="submit" name="sceneId" value="${action.nextQuestSceneId}">
                         ${action.actionText}
                 </button>
-            </c:forEach>
-        </form>
+            </form>
+        </c:forEach>
 
     </div>
 

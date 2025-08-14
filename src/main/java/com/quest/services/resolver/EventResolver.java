@@ -2,8 +2,10 @@ package com.quest.services.resolver;
 
 import com.quest.entity.Action;
 import com.quest.entity.Event;
+import com.quest.entity.Monster;
 import com.quest.entity.Player;
 import com.quest.services.EventService;
+import com.quest.services.MonsterService;
 import com.quest.util.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,16 +16,18 @@ import lombok.AllArgsConstructor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class EventResolver {
     private EventService eventService;
+    private MonsterService monsterService;
 
     public void resolve(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         HttpSession session = req.getSession();
         Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
 
-        long eventId = Long.parseLong(req.getParameter(KeyAttribute.EVENT));
+        long eventId = Long.parseLong(req.getParameter(KeyAttribute.EVENT_ID));
         long nextQuestSceneId = Long.parseLong(req.getParameter(KeyAttribute.SCENE_ID));
         Event event = eventService.get(eventId);
 
@@ -44,6 +48,14 @@ public class EventResolver {
                     player.setAttack(player.getAttack() - event.getValue());
                 }
             }
+            case BATTLE -> {
+                Optional<Monster> optionalMonster = monsterService.get(event.getMonsterId());
+                if (optionalMonster.isPresent()) {
+                    session.setAttribute(KeyAttribute.MONSTER, optionalMonster.get());
+                    resp.sendRedirect(Route.BATTLE);
+                }
+                return;
+            }
         }
         setEventAttributes(event, session, nextQuestSceneId);
         req.getRequestDispatcher(JspPath.QUEST).forward(req, resp);
@@ -52,15 +64,13 @@ public class EventResolver {
     private static void setEventAttributes(Event event, HttpSession session, long nextQuestSceneId) {
         String questDescription = event.getDescription().formatted(event.getValue());
         session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questDescription);
-        // Перезапись атрибута QUEST_ACTIONS (только кнопка "Дальше")
+        // Rewrite attribute QUEST_ACTIONS (only button "Next")
         Collection<Action> actions = new ArrayList<>();
         actions.add(Action.builder()
                 .actionText(ResourceBundle.getMessage("quest.next"))
                 .nextQuestSceneId(nextQuestSceneId)
                 .build());
         session.setAttribute(KeyAttribute.QUEST_ACTIONS, actions);
-        // Delete Event attribute
-        session.removeAttribute(KeyAttribute.EVENT);
     }
 
 }

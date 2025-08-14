@@ -8,7 +8,6 @@ import com.quest.services.QuestService;
 import com.quest.services.resolver.EventResolver;
 import com.quest.services.resolver.QuestResolver;
 import com.quest.util.*;
-import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -95,7 +94,7 @@ public class QuestServlet extends HttpServlet {
     }
 
     private boolean handleEvent(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        if (req.getParameter(KeyAttribute.EVENT) != null) {
+        if (req.getParameter(KeyAttribute.EVENT_ID) != null) {
             EventResolver eventResolver = ServiceLocator.getService(EventResolver.class);
             eventResolver.resolve(req, resp);
             return true;
