@@ -1,13 +1,11 @@
 package com.quest.util;
 
-import com.quest.entity.Achievement;
-import com.quest.entity.Action;
-import com.quest.entity.Event;
-import com.quest.entity.QuestScene;
+import com.quest.entity.*;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.exception.QuestNotFoundException;
 import com.quest.services.AchievementService;
 import com.quest.services.EventService;
+import com.quest.services.MonsterService;
 import com.quest.services.QuestService;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
@@ -24,15 +22,8 @@ public class QuestParser {
     private final QuestService questService;
     private final EventService eventService;
     private final AchievementService achievementService;
+    private final MonsterService monsterService;
     private Logger logger = LogManager.getLogger(QuestParser.class);
-    //    private final Pattern PATTERN_EVENT =
-//            Pattern.compile("<event\\s*" +
-//                    "(?:" +
-//                    "type=\"(?<type>\\S+)\"\\s*" +
-//                    "|stat=\"(?<stat>\\S+)\"\\s*" +
-//                    "|value=\"(?<value>\\d+)\"\\s*" +
-//                    "|text=\"(?<text>.*)\"" +
-//                    ")" + "\\s*>");
     private final Pattern PATTERN_EVENT = Pattern.compile(
             "<event\\s+" +
                     "(?:" +
@@ -41,11 +32,27 @@ public class QuestParser {
                     ">"
     );
     private final Pattern PATTERN_NEXT_QUEST_ID = Pattern.compile("(?<id>\\d+)");
+    private final Pattern PATTERN_MONSTER_STAT = Pattern.compile(
+            "<event\\s+" +
+                    "type=\"battle\"\\s+" +
+                    // Проверка на обязательные атрибуты
+                    "(?=.*?name=\"[^\"]\")" +
+                    "(?=.*?level=\"[^\"]\")" +
+                    "(?=.*?health=\"[^\"]\")" +
+                    "(?=.*?attack=\"[^\"]\")" +
+                    "(?=.*?text=\"[^\"]\")" +
+                    // Захват атрибутов
+                    "(?:name=\"(?<name>[^\"]*)\")\\s+" +
+                    "(?:level=\"(?<level>\\d+)\")\\s+" +
+                    "(?:health=\"(?<health>\\d+)\")\\s+" +
+                    "(?:attack=\"(?<attack>\\d+)\")\\s+" +
+                    "(?:text=\"(?<text>\\d+)\")\\s*>\\s*");
 
-    public QuestParser(QuestService questService, AchievementService achievementService, EventService eventService) {
+    public QuestParser(QuestService questService, AchievementService achievementService, EventService eventService, MonsterService monsterService) {
         this.questService = questService;
         this.eventService = eventService;
         this.achievementService = achievementService;
+        this.monsterService = monsterService;
     }
 
     /*
@@ -139,7 +146,6 @@ public class QuestParser {
         Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent.trim());
         if (matcher.find()) {
             EventType eventType = EventType.valueOf(matcher.group(EventAttribute.TYPE).toUpperCase());
-            // TODO: Add other fields for Event
             Event event = Event.builder()
                     .type(eventType)
                     .value(Integer.parseInt(matcher.group(EventAttribute.VALUE)))
@@ -149,6 +155,25 @@ public class QuestParser {
             eventService.create(event);
             logger.info("Event created: {}", event);
             return event.getId();
+        }
+        return 0;
+    }
+
+    private long saveBattleEvent(String questSceneDescription) {
+        Matcher matcher = PATTERN_MONSTER_STAT.matcher(questSceneDescription);
+        if (matcher.find()) {
+            String nameMonster = matcher.group(EventAttribute.NAME);
+            int level = Integer.parseInt(matcher.group(EventAttribute.LEVEL));
+            int health = Integer.parseInt(matcher.group(EventAttribute.HEALTH));
+            int attack = Integer.parseInt(matcher.group(EventAttribute.ATTACK));
+            Monster monster = Monster.builder()
+                    .level(level)
+                    .name(nameMonster)
+                    .health(health)
+                    .attack(attack)
+                    .build();
+            monsterService.create(monster);
+            return monster.getId();
         }
         return 0;
     }

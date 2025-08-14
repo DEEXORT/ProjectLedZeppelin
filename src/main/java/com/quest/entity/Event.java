@@ -7,11 +7,15 @@ import lombok.Data;
 @Data
 @Builder
 public class Event {
+    // -------Required Fields---------
     private Long id;
     private EventType type;
-    private int value;
-    private String stat; // for buff/debuff
-    private int chance;
     private String description;
+    // -------------------------------
+    private String stat; // for buff/debuff
+    private Long monsterId; // for battle
+    private int value; // for damage/heal/buff/debuff
+
+    private int chance; // no usages
 }
 

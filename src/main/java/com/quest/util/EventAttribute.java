@@ -6,4 +6,7 @@ public interface EventAttribute {
     String VALUE = "value";
     String STAT = "stat";
     String TEXT = "text";
+    String NAME = "name";
+    String LEVEL = "level";
+    String HEALTH = "health";
 }
