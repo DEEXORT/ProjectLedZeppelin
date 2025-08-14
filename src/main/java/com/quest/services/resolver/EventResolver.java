@@ -34,30 +34,34 @@ public class EventResolver {
         switch (event.getType()) {
             case DAMAGE -> {
                 player.setHealth(player.getHealth() - event.getValue());
+                setEventAttributes(event, session, nextQuestSceneId);
             }
             case BUFF -> {
                 if (!event.getStat().isEmpty() && event.getStat().equals(EventAttribute.ATTACK)) {
                     player.setAttack(player.getAttack() + event.getValue());
+                    setEventAttributes(event, session, nextQuestSceneId);
                 }
             }
             case HEAL -> {
                 player.setHealth(Math.min(player.getHealth() + event.getValue(), player.getMaxHealth()));
+                setEventAttributes(event, session, nextQuestSceneId);
             }
             case DEBUFF -> {
                 if (!event.getStat().isEmpty() && event.getStat().equals(EventAttribute.ATTACK)) {
                     player.setAttack(player.getAttack() - event.getValue());
+                    setEventAttributes(event, session, nextQuestSceneId);
                 }
             }
             case BATTLE -> {
                 Optional<Monster> optionalMonster = monsterService.get(event.getMonsterId());
                 if (optionalMonster.isPresent()) {
                     session.setAttribute(KeyAttribute.MONSTER, optionalMonster.get());
+                    setEventAttributes(event, session, nextQuestSceneId);
                     resp.sendRedirect(Route.BATTLE);
                 }
                 return;
             }
         }
-        setEventAttributes(event, session, nextQuestSceneId);
         req.getRequestDispatcher(JspPath.QUEST).forward(req, resp);
     }
 

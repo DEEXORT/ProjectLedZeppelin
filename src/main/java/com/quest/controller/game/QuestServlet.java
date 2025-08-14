@@ -8,6 +8,7 @@ import com.quest.services.QuestService;
 import com.quest.services.resolver.EventResolver;
 import com.quest.services.resolver.QuestResolver;
 import com.quest.util.*;
+import com.quest.util.ResourceBundle;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -72,6 +73,7 @@ public class QuestServlet extends HttpServlet {
         if (questService.isBattleEvent(req)) {
             // Fail. Redirect to battle
             session.setAttribute(KeyAttribute.MONSTER, monsterService.getRandomMonster());
+            session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, ResourceBundle.getMessage("quest.description_random_event"));
             resp.sendRedirect(Route.BATTLE);
         }
         // Otherwise redirect to next QuestScene
