@@ -25,15 +25,20 @@ import java.util.*;
 @WebServlet(Route.QUEST)
 public class QuestServlet extends HttpServlet {
     private final Logger logger = LogManager.getLogger(QuestServlet.class);
-    private PlayerService playerService;
-    private MonsterService monsterService;
-    private QuestService questService;
+    private final PlayerService playerService;
+    private final MonsterService monsterService;
+    private final QuestService questService;
 
-    @Override
-    public void init(ServletConfig config) {
-        playerService = ServiceLocator.getService(PlayerService.class);
-        monsterService = ServiceLocator.getService(MonsterService.class);
-        questService = ServiceLocator.getService(QuestService.class);
+    public QuestServlet(PlayerService playerService, MonsterService monsterService, QuestService questService) {
+        this.playerService = playerService;
+        this.monsterService = monsterService;
+        this.questService = questService;
+    }
+
+    public QuestServlet() {
+        this(ServiceLocator.getService(PlayerService.class),
+                ServiceLocator.getService(MonsterService.class),
+                ServiceLocator.getService(QuestService.class));
     }
 
     @Override
