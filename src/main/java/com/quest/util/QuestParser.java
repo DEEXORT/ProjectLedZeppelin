@@ -149,6 +149,7 @@ public class QuestParser {
         Matcher matcher = PATTERN_EVENT.matcher(encodedQuestSceneIdAndEvent.trim());
         if (matcher.find()) {
             EventType eventType = EventType.valueOf(matcher.group(EventAttribute.TYPE).toUpperCase());
+            // TODO: Add other fields for Event
             Event event = Event.builder()
                     .type(eventType)
                     .value(Integer.parseInt(matcher.group(EventAttribute.VALUE)))
