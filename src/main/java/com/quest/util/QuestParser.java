@@ -1,6 +1,7 @@
 package com.quest.util;
 
 import com.quest.entity.*;
+import com.quest.entity.factory.MonsterFactory;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.exception.QuestNotFoundException;
 import com.quest.services.AchievementService;
@@ -171,16 +172,11 @@ public class QuestParser {
             int level = Integer.parseInt(matcher.group(EventAttribute.LEVEL));
             int health = Integer.parseInt(matcher.group(EventAttribute.HEALTH));
             int attack = Integer.parseInt(matcher.group(EventAttribute.ATTACK));
-            String questDescription = matcher.group(EventAttribute.TEXT);
-            Monster monster = Monster.builder()
-                    .level(level)
-                    .name(nameMonster)
-                    .health(health)
-                    .maxHealth(health)
-                    .attack(attack)
-                    .build();
+            Monster monster = MonsterFactory.createMonster(nameMonster, level, health, attack);
             monsterService.create(monster);
             logger.info("Monster created: {}", monster);
+
+            String questDescription = matcher.group(EventAttribute.TEXT);
             Event event = Event.builder()
                     .type(EventType.BATTLE)
                     .monsterId(monster.getId())

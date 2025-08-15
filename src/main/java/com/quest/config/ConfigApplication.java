@@ -3,6 +3,7 @@ package com.quest.config;
 import com.quest.entity.Monster;
 import com.quest.entity.Player;
 import com.quest.entity.User;
+import com.quest.entity.factory.MonsterFactory;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.UserService;
@@ -79,20 +80,8 @@ public class ConfigApplication {
     }
 
     private void fillMonsterRepository() {
-        Monster goblin = Monster.builder()
-                .name("Goblin")
-                .level(1)
-                .health(50)
-                .maxHealth(50)
-                .attack(10)
-                .build();
-        Monster orc = Monster.builder()
-                .name("Orc")
-                .level(2)
-                .health(300)
-                .maxHealth(300)
-                .attack(10)
-                .build();
+        Monster goblin = MonsterFactory.createGoblinMonster();
+        Monster orc = MonsterFactory.createOrcMonster();
         monsterService.create(goblin);
         monsterService.create(orc);
     }

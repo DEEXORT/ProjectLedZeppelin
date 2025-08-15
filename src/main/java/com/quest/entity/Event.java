@@ -12,10 +12,10 @@ public class Event {
     private EventType type;
     private String description;
     // -------------------------------
-    private String stat; // for buff/debuff
-    private Long monsterId; // for battle
-    private int value; // for damage/heal/buff/debuff
+    private String stat; // for type = buff/debuff
+    private Long monsterId; // for type = battle
+    private int value; // for type = damage/heal/buff/debuff
 
-    private int chance; // no usages
+    private int chance; // no usages (temp)
 }
 

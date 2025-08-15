@@ -5,6 +5,7 @@ import com.quest.config.ServiceLocator;
 import com.quest.entity.Monster;
 import com.quest.entity.Player;
 import com.quest.entity.User;
+import com.quest.entity.factory.MonsterFactory;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,17 +54,12 @@ public class ConfigIT {
                 .health(100)
                 .attack(10)
                 .build();
-        monsterTest = Monster.builder()
+        monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10)
+                .toBuilder()
                 .id(1L)
-                .name("monster")
-                .level(1)
-                .maxHealth(100)
-                .health(100)
-                .attack(10)
                 .build();
 
         // config mocks
         when(request.getSession()).thenReturn(session);
-//        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
     }
 }
