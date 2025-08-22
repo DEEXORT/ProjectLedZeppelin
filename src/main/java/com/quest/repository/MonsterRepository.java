@@ -1,6 +1,6 @@
 package com.quest.repository;
 
-import com.quest.entity.Monster;
+import com.quest.entity.character.Monster;
 
 import java.util.Collection;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package com.quest.repository;
 
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 
 import java.util.Collection;
 import java.util.Map;

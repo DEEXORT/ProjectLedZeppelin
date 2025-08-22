@@ -1,6 +1,6 @@
 package com.quest.services;
 
-import com.quest.entity.Monster;
+import com.quest.entity.character.Monster;
 import com.quest.repository.MonsterRepository;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;

@@ -1,7 +1,7 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.entity.QuestScene;
 import com.quest.entity.User;
 import com.quest.services.QuestService;

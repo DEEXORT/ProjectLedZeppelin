@@ -1,5 +1,6 @@
 package com.quest.entity;
 
+import com.quest.entity.character.Player;
 import com.quest.util.StatusPlayer;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,7 @@
 package com.quest.services;
 
 import com.quest.entity.User;
+import com.quest.entity.character.Player;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserInvalidPasswordException;
@@ -52,6 +53,13 @@ public class UserService {
 
     public Optional<User> get(long id) {
         return Optional.ofNullable(userRepository.get(id));
+    }
+
+    public Optional<User> getByPlayer(Player player) {
+        return userRepository.getAll()
+                .stream()
+                .filter(user -> user.getPlayerId() != null && user.getPlayerId().equals(player.getId()))
+                .findFirst();
     }
 
     public Optional<User> update(User user) {

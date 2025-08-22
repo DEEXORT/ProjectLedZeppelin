@@ -2,8 +2,8 @@ package com.quest.services.resolver;
 
 import com.quest.entity.Action;
 import com.quest.entity.Event;
-import com.quest.entity.Monster;
-import com.quest.entity.Player;
+import com.quest.entity.character.Monster;
+import com.quest.entity.character.Player;
 import com.quest.services.EventService;
 import com.quest.services.MonsterService;
 import com.quest.util.*;

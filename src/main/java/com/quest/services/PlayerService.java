@@ -1,6 +1,6 @@
 package com.quest.services;
 
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
 

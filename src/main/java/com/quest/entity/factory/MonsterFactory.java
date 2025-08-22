@@ -1,6 +1,7 @@
 package com.quest.entity.factory;
 
-import com.quest.entity.Monster;
+import com.quest.entity.Ability;
+import com.quest.entity.character.Monster;
 
 public class MonsterFactory {
 

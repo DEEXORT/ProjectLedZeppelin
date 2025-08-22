@@ -2,7 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;

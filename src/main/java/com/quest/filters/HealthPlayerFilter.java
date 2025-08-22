@@ -1,6 +1,6 @@
 package com.quest.filters;
 
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.util.KeyAttribute;
 import com.quest.util.ResourcePath;
 import com.quest.util.Route;

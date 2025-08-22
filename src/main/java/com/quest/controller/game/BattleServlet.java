@@ -1,9 +1,9 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Monster;
-import com.quest.entity.Player;
-import com.quest.services.resolver.CombatResolver;
+import com.quest.entity.character.Monster;
+import com.quest.entity.character.Player;
+import com.quest.services.resolver.BattleResolver;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
@@ -43,8 +43,8 @@ public class BattleServlet extends HttpServlet {
         Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
 
         // Имитация сражения
-        CombatResolver resolver = ServiceLocator.getService(CombatResolver.class);
-        resolver.resolveCombat(player, monster);
+        BattleResolver resolver = ServiceLocator.getService(BattleResolver.class);
+        resolver.resolveBattle(player, monster);
 
         if (player.getHealth() <= 0) {
             player.setQuestSceneId(991L);

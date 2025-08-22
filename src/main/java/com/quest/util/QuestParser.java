@@ -1,6 +1,7 @@
 package com.quest.util;
 
 import com.quest.entity.*;
+import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.exception.QuestNotFoundException;

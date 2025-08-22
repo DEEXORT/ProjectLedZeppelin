@@ -2,7 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
@@ -23,24 +23,9 @@ class EndGameServletIT extends ConfigIT {
     void doGet_ShouldEndGame_WhenGameIsOver() throws ServletException, IOException {
         // given
         endGameServlet.init(servletConfig);
-        Player testPlayerEndGame = Player.builder()
-                .id(35L)
-                .name("testPlayerEndGame")
-                .level(35)
-                .health(70)
-                .maxHealth(100)
-                .attack(10)
-                .questSceneId(907L)
-                .build();
-        User testUserEndGame = User.builder()
-                .login("testUserEndGame")
-                .password("testPassword")
-                .id(35L)
-                .achievements(new ArrayList<>())
-                .playerId(35L)
-                .build();
-        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(testPlayerEndGame);
-        when(session.getAttribute(KeyAttribute.USER)).thenReturn(testUserEndGame);
+        playerTest.setQuestSceneId(907L);
+        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
+        when(session.getAttribute(KeyAttribute.USER)).thenReturn(userTest);
         when(request.getRequestDispatcher(JspPath.END_GAME)).thenReturn(requestDispatcher);
 
         // when
@@ -55,25 +40,9 @@ class EndGameServletIT extends ConfigIT {
     void doGet_ShouldEndGame_WhenPlayerIsDeath() throws ServletException, IOException {
         // given
         endGameServlet.init(servletConfig);
-        Player testPlayerEndGame = Player.builder()
-                .id(35L)
-                .userId(35L)
-                .name("testPlayerEndGame")
-                .level(35)
-                .health(70)
-                .maxHealth(100)
-                .attack(10)
-                .questSceneId(951L)
-                .build();
-        User testUserEndGame = User.builder()
-                .login("testUserEndGame")
-                .password("testPassword")
-                .id(35L)
-                .achievements(new ArrayList<>())
-                .playerId(35L)
-                .build();
-        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(testPlayerEndGame);
-        when(session.getAttribute(KeyAttribute.USER)).thenReturn(testUserEndGame);
+        playerTest.setQuestSceneId(951L);
+        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
+        when(session.getAttribute(KeyAttribute.USER)).thenReturn(userTest);
         when(request.getRequestDispatcher(JspPath.END_GAME)).thenReturn(requestDispatcher);
 
         // when

@@ -2,8 +2,8 @@ package com.quest;
 
 import com.quest.config.ConfigApplication;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Monster;
-import com.quest.entity.Player;
+import com.quest.entity.character.Monster;
+import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.entity.factory.MonsterFactory;
 import jakarta.servlet.RequestDispatcher;
@@ -47,12 +47,15 @@ public class ConfigIT {
                 .build();
         playerTest = Player.builder()
                 .id(1L)
-                .userId(1L)
+                .userId(userTest.getId())
                 .name("player")
                 .level(1)
                 .maxHealth(100)
                 .health(100)
                 .attack(10)
+                .build();
+        userTest = userTest.toBuilder()
+                .playerId(playerTest.getId())
                 .build();
         monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10)
                 .toBuilder()

@@ -23,7 +23,6 @@ import java.util.Random;
 import static org.mockito.Mockito.*;
 
 class QuestServletIT extends ConfigIT {
-    //    private final QuestServlet questServlet = ServiceLocator.getService(QuestServlet.class);
     private QuestServlet questServlet;
 
     @Mock
@@ -83,11 +82,11 @@ class QuestServletIT extends ConfigIT {
         when(session.getAttribute(KeyAttribute.BATTLE_FLAG)).thenReturn(false);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(mockedQuestService.isBattleEvent(request)).thenReturn(false);
-        try (MockedStatic<ServiceLocator> serviceLocator = mockStatic(ServiceLocator.class)) {
-            serviceLocator
-                    .when(() -> ServiceLocator.getService(EventResolver.class))
-                    .thenReturn(mockedEventResolver);
-        }
+//        try (MockedStatic<ServiceLocator> serviceLocator = mockStatic(ServiceLocator.class)) {
+//            serviceLocator
+//                    .when(() -> ServiceLocator.getService(EventResolver.class))
+//                    .thenReturn(mockedEventResolver);
+//        }
 
         // when
         questServlet.doPost(request, response);

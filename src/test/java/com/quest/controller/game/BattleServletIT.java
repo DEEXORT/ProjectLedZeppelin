@@ -2,17 +2,21 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Monster;
-import com.quest.services.resolver.CombatResolver;
+import com.quest.entity.character.Monster;
+import com.quest.services.resolver.BattleResolver;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +24,22 @@ import static org.mockito.Mockito.*;
 
 class BattleServletIT extends ConfigIT {
     private final BattleServlet battleServlet = ServiceLocator.getService(BattleServlet.class);
+
+    @Mock
+    private MockedStatic<ServiceLocator> mockedServiceLocator;
+
+    @Mock
+    private ThreadLocalRandom mockedThreadLocalRandom;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mockedServiceLocator.close();
+    }
 
     @Test
     void doGet_ShouldGenerateMonsterAndForwardToJsp() throws ServletException, IOException {
@@ -43,13 +63,11 @@ class BattleServletIT extends ConfigIT {
         battleServlet.init(servletConfig);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
-        CombatResolver combatResolver = ServiceLocator.getService(CombatResolver.class);
-        Random mockedRandom = mock(Random.class);
-        Field random = combatResolver.getClass().getDeclaredField("random");
-        random.set(combatResolver, mockedRandom);
-        when(mockedRandom.nextInt(anyInt()))
-                .thenReturn(10);  // for player
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
+        when(mockedThreadLocalRandom.nextInt(100)).thenReturn(1);
+        mockedServiceLocator
+                .when(() -> ServiceLocator.getService(BattleResolver.class))
+                .thenReturn(new BattleResolver(mockedThreadLocalRandom));
 
         // when
         battleServlet.doPost(request, response);
@@ -66,12 +84,10 @@ class BattleServletIT extends ConfigIT {
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
-        CombatResolver combatResolver = ServiceLocator.getService(CombatResolver.class);
-        Random mockedRandom = mock(Random.class);
-        Field random = combatResolver.getClass().getDeclaredField("random");
-        random.set(combatResolver, mockedRandom);
-        when(mockedRandom.nextInt(anyInt()))
-                .thenReturn(70);  // for player
+        when(mockedThreadLocalRandom.nextInt(100)).thenReturn(100);
+        mockedServiceLocator
+                .when(() -> ServiceLocator.getService(BattleResolver.class))
+                .thenReturn(new BattleResolver(mockedThreadLocalRandom));
 
         // when
         battleServlet.doPost(request, response);

@@ -1,7 +1,7 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.services.PlayerService;
 import com.quest.util.KeyAttribute;
@@ -33,20 +33,20 @@ public class GameServlet extends HttpServlet {
         PlayerService playerService = ServiceLocator.getService(PlayerService.class);
         Player player = null;
         if (user.getPlayerId() == null) {
-            // Новая игра
+            // New game
             player = Player.builder()
                     .health(100)
                     .maxHealth(100)
                     .level(1)
                     .attack(10)
                     .questSceneId(1L)
-                    .name(user.getLogin())
                     .userId(user.getId())
+                    .name(user.getLogin())
                     .build();
             playerService.create(player);
             user.setPlayerId(player.getId());
         } else {
-            // Продолжение игры
+            // Continue game
             Optional<Player> optionalPlayer = playerService.get(user.getPlayerId());
             if (optionalPlayer.isPresent()) {
                 player = optionalPlayer.get();

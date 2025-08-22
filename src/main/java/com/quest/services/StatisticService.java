@@ -1,6 +1,6 @@
 package com.quest.services;
 
-import com.quest.entity.Player;
+import com.quest.entity.character.Player;
 import com.quest.entity.QuestScene;
 import com.quest.entity.User;
 import com.quest.entity.UserStat;
@@ -23,7 +23,7 @@ public class StatisticService {
         // Перебираем всех игроков из БД
         for (Player player : playerService.getAll()) {
             // Получаем пользователя, за которым закреплен игрок
-            Optional<User> user = userService.get(player.getUserId());
+            Optional<User> user = userService.getByPlayer(player);
             if (user.isPresent()) {
                 // Получаем сцену, на которой закончил игрок
                 Optional<QuestScene> questScene = questService.get(player.getQuestSceneId());

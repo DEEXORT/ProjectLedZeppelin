@@ -2,6 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
 import com.quest.entity.*;
+import com.quest.entity.character.Player;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.QuestService;

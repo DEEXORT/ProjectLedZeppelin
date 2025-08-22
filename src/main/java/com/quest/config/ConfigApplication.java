@@ -1,7 +1,7 @@
 package com.quest.config;
 
-import com.quest.entity.Monster;
-import com.quest.entity.Player;
+import com.quest.entity.character.Monster;
+import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.services.MonsterService;
@@ -34,19 +34,18 @@ public class ConfigApplication {
     public void initApplication() {
         fillQuestRepository();
         fillUserRepository();
-        fillPlayerRepository();
         fillMonsterRepository();
     }
 
-    private void fillPlayerRepository() {
+    private void fillPlayerRepository(User user) {
         playerService.create(Player.builder()
-                        .userId(1L)
                         .name("Lukas")
                         .health(100)
                         .maxHealth(100)
                         .level(999)
                         .attack(10)
                         .questSceneId(902L)
+                        .userId(user.getId())
                         .build());
     }
 
@@ -76,6 +75,7 @@ public class ConfigApplication {
                     .id(1L)
                     .build();
             userService.create(user);
+            fillPlayerRepository(user);
         }
     }
 
