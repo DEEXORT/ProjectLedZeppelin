@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1756099341339-1" author="d.gimaldinov">
+        <createTable tableName="events">
+            <column name="id" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
+            <column name="type" type="varchar(30)"><constraints nullable="false"/></column>
+            <column name="description" type="text"><constraints nullable="false"/></column>
+            <column name="stat" type="varchar(30)"/>
+            <column name="monster_id" type="bigint"/>
+            <column name="value" type="bigint"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="events" baseColumnNames="monster_id"
+                                 constraintName="fk_events_monster_id"
+                                 referencedTableName="monsters"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1756101305778-1" author="d.gimaldinov">
+        <createTable tableName="abilities">
+            <column name="id" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
+            <column name="name" type="varchar(30)"><constraints nullable="false"/></column>
+            <column name="description" type="text"><constraints nullable="false"/></column>
+
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

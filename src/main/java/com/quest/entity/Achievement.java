@@ -7,6 +7,6 @@ import lombok.Data;
 @Builder
 public class Achievement {
     private Long id;
-    private Long questSceneId;
+    private Long questSceneId; // TODO: Delete this field
     private String text;
 }
