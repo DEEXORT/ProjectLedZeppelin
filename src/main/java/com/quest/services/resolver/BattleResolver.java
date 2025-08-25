@@ -33,6 +33,7 @@ public class BattleResolver {
     }
 
     public void attack(Player player, Monster monster, Ability abilityPlayer) {
-        player.useAbility(abilityPlayer, monster);
+        boolean isUsedAbility = player.useAbility(abilityPlayer, monster);
+
     }
 }

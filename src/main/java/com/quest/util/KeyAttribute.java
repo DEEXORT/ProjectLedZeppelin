@@ -16,4 +16,5 @@ public class KeyAttribute {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String EVENT_ID = "eventId";
+    public static final String ABILITY = "ability";
 }
