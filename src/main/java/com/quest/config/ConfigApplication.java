@@ -1,13 +1,17 @@
 package com.quest.config;
 
+import com.quest.entity.Ability;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
 import com.quest.entity.User;
+import com.quest.entity.factory.AbilityFactory;
 import com.quest.entity.factory.MonsterFactory;
+import com.quest.services.AbilityService;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.UserService;
 import com.quest.util.QuestParser;
+import com.quest.util.ResourceBundleManager;
 import com.quest.util.ResourcePath;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -29,9 +33,11 @@ public class ConfigApplication {
     private final UserService userService;
     private final MonsterService monsterService;
     private final PlayerService playerService;
+    private final AbilityService abilityService;
     private static final Logger logger = LogManager.getLogger(ConfigApplication.class);
 
     public void initApplication() {
+        fillAbilitiesRepository();
         fillQuestRepository();
         fillUserRepository();
         fillMonsterRepository();
@@ -86,4 +92,13 @@ public class ConfigApplication {
         monsterService.create(orc);
     }
 
+    private void fillAbilitiesRepository() {
+        Ability baseAttack = AbilityFactory
+                .createDamageAbility(ResourceBundleManager.getSetting("ability.base_attack_name"),
+                        "Наносит базовый урон",
+                        1,
+                        100,
+                        0);
+        abilityService.create(baseAttack);
+    }
 }

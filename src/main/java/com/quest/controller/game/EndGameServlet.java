@@ -1,9 +1,9 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.character.Player;
 import com.quest.entity.QuestScene;
 import com.quest.entity.User;
+import com.quest.entity.character.Player;
 import com.quest.services.QuestService;
 import com.quest.services.UserService;
 import com.quest.util.*;
@@ -13,7 +13,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -31,9 +30,8 @@ public class EndGameServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
-        User user = (User) session.getAttribute(KeyAttribute.USER);
+        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+        User user = RequestHelper.getValueAttr(req, KeyAttribute.USER, User.class);
 
         // Получение сцены с концовкой и сохранение достижения
         Optional<QuestScene> questScene = questService.get(player.getQuestSceneId());

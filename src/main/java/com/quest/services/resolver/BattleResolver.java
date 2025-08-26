@@ -1,39 +1,40 @@
 package com.quest.services.resolver;
 
 import com.quest.entity.Ability;
+import com.quest.entity.character.Character;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.concurrent.ThreadLocalRandom;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Data
-@NoArgsConstructor
 public class BattleResolver {
-    private ThreadLocalRandom randomLocal;
+    private static final Logger logger = LogManager.getLogger(BattleResolver.class);
 
-    public BattleResolver(ThreadLocalRandom randomLocal) {
-        this.randomLocal = randomLocal;
-    }
+    public void resolveBattle(Player player, Monster monster, Ability ability) {
+        attack(player, monster, ability);
 
-    public void resolveBattle(Player player, Monster monster) {
-        int chanceWinPlayer = randomLocal.nextInt(100);
-
-        if (chanceWinPlayer < 20) {
-            // Поражение. Игрок помер
-            player.setHealth(0);
+        if (monster.getHealth() > 0) {
+            attack(monster, player, monster.getBaseAttack());
+            if (player.getHealth() <= 0) {
+                player.setHealth(0);
+            }
         } else {
-            // Чем выше вероятность, тем меньше хп потеряет
-            player.setHealth(player.getHealth() - 10);
-            player.setLevel(player.getLevel() + 1);
-            // Победа. Монстр помер
             monster.setHealth(0);
         }
     }
 
-    public void attack(Player player, Monster monster, Ability abilityPlayer) {
-        boolean isUsedAbility = player.useAbility(abilityPlayer, monster);
-
+    public void attack(Character attacker, Character target, Ability attackAbility) {
+        logger.debug("{} attacking {} with ability {}", attacker.getName(), target.getName(), attackAbility.getName());
+        boolean isUsedAbility = attacker.useAbility(attackAbility, target);
+        if (isUsedAbility) {
+            // Update other abilities
+            attacker.getCooldowns().forEach((ability, cooldown) -> {
+                if (ability != attackAbility) attacker.updateCooldown(ability);
+            });
+        } else {
+            logger.error("Ability was not used");
+        }
     }
 }

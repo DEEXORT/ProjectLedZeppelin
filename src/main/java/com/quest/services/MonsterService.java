@@ -20,7 +20,9 @@ public class MonsterService {
         monsterRepository.create(monster);
     }
 
-    public void update(Monster monster) {monsterRepository.update(monster);}
+    public void update(Monster monster) {
+        monsterRepository.update(monster);
+    }
 
     public Optional<Monster> get(long id) {
         Monster monster = monsterRepository.get(id);
@@ -28,7 +30,10 @@ public class MonsterService {
     }
 
     public Monster getRandomMonster() {
-        Collection<Monster> monsterCollection = monsterRepository.getAll();
+        Collection<Monster> monsterCollection = monsterRepository.getAll()
+                .stream()
+                .filter(monster -> monster.getType().equals(Monster.MonsterType.COMMON))
+                .toList();
         if (monsterCollection.isEmpty()) {
             logger.error("No monsters found");
             throw new NoSuchElementException("No monsters found in repository");

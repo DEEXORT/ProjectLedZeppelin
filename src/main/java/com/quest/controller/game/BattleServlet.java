@@ -1,11 +1,14 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
+import com.quest.entity.Ability;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
+import com.quest.services.AbilityService;
 import com.quest.services.resolver.BattleResolver;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,37 +24,40 @@ import java.io.IOException;
 @WebServlet(Route.BATTLE)
 public class BattleServlet extends HttpServlet {
     private static final Logger logger = LogManager.getLogger(BattleServlet.class);
+    public final AbilityService abilityService;
+
+    public BattleServlet(AbilityService abilityService) {
+        this.abilityService = abilityService;
+    }
+
+    public BattleServlet() {
+        this(ServiceLocator.getService(AbilityService.class));
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
-        // Флаг для предотвращения повторного сражения
         session.setAttribute(KeyAttribute.BATTLE_FLAG, true);
-        // Получение монстра из сессии
-        Monster monster = (Monster) session.getAttribute(KeyAttribute.MONSTER);
-        monster.setHealth(monster.getMaxHealth());
-        session.setAttribute(KeyAttribute.MONSTER, monster);
-
-        req.setAttribute(KeyAttribute.ACTION, "throwDice");
         req.getRequestDispatcher(JspPath.BATTLE).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        HttpSession session = req.getSession();
-        Monster monster = (Monster) session.getAttribute(KeyAttribute.MONSTER);
-        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
+        Monster monster = RequestHelper.getValueAttr(req, KeyAttribute.MONSTER, Monster.class);
+        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+        long abilityId = Long.parseLong(req.getParameter(KeyAttribute.ABILITY_ID));
+        Ability ability = abilityService.get(abilityId);
 
-        // Имитация сражения
+        // Dealing damage
         BattleResolver resolver = ServiceLocator.getService(BattleResolver.class);
-        resolver.resolveBattle(player, monster);
+        resolver.resolveBattle(player, monster, ability);
 
         if (player.getHealth() <= 0) {
             player.setQuestSceneId(991L);
             resp.sendRedirect(Route.QUEST);
-        } else {
-            req.setAttribute(KeyAttribute.ACTION, "left");
-            req.getRequestDispatcher(JspPath.BATTLE).forward(req, resp);
+        }
+        else {
+            resp.sendRedirect(Route.BATTLE);
         }
     }
 }

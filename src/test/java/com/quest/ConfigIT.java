@@ -57,7 +57,7 @@ public class ConfigIT {
         userTest = userTest.toBuilder()
                 .playerId(playerTest.getId())
                 .build();
-        monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10)
+        monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10, Monster.MonsterType.COMMON)
                 .toBuilder()
                 .id(1L)
                 .build();

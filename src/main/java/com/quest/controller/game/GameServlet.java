@@ -5,6 +5,7 @@ import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.services.PlayerService;
 import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -27,7 +28,7 @@ public class GameServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Проверка аутентификации пользователя
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute(KeyAttribute.USER);
+        User user = RequestHelper.getValueAttr(req, KeyAttribute.USER, User.class);
 
         // Получить текущее состояние игры из репозитория или начать новую игру
         PlayerService playerService = ServiceLocator.getService(PlayerService.class);

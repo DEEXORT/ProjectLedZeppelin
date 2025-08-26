@@ -173,7 +173,7 @@ public class QuestParser {
             int level = Integer.parseInt(matcher.group(EventAttribute.LEVEL));
             int health = Integer.parseInt(matcher.group(EventAttribute.HEALTH));
             int attack = Integer.parseInt(matcher.group(EventAttribute.ATTACK));
-            Monster monster = MonsterFactory.createMonster(nameMonster, level, health, attack);
+            Monster monster = MonsterFactory.createMonster(nameMonster, level, health, attack, Monster.MonsterType.BOSS);
             monsterService.create(monster);
             logger.info("Monster created: {}", monster);
 

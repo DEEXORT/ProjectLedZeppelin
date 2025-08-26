@@ -1,14 +1,13 @@
 package com.quest.services;
 
 import com.quest.entity.User;
-import com.quest.entity.character.Player;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserInvalidPasswordException;
 import com.quest.exception.UserNotFoundException;
 import com.quest.repository.UserRepository;
 import com.quest.util.KeyAttribute;
-import com.quest.util.ResourceBundle;
+import com.quest.util.ResourceBundleManager;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collection;
@@ -30,7 +29,7 @@ public class UserService {
         // Проверка на уже существующего пользователя
         if (userRepository.find(user.getLogin()) != null) {
             throw new UserAlreadyExistsException(
-                    ResourceBundle.getMessage("error.user_already_exists").formatted(user.getLogin())
+                    ResourceBundleManager.getMessage("error.user_already_exists").formatted(user.getLogin())
             );
         }
         // Регистрация пользователя в БД
@@ -42,10 +41,10 @@ public class UserService {
 
         User user = userRepository.find(login);
         if (user == null) {
-            throw new UserNotFoundException(ResourceBundle.getMessage("error.user_not_found"));
+            throw new UserNotFoundException(ResourceBundleManager.getMessage("error.user_not_found"));
         }
         if (!user.getPassword().equals(password)) {
-            throw new UserInvalidPasswordException(ResourceBundle.getMessage("error.invalid_credentials"));
+            throw new UserInvalidPasswordException(ResourceBundleManager.getMessage("error.invalid_credentials"));
         } else {
             return Optional.of(user);
         }
@@ -55,13 +54,6 @@ public class UserService {
         return Optional.ofNullable(userRepository.get(id));
     }
 
-    public Optional<User> getByPlayer(Player player) {
-        return userRepository.getAll()
-                .stream()
-                .filter(user -> user.getPlayerId() != null && user.getPlayerId().equals(player.getId()))
-                .findFirst();
-    }
-
     public Optional<User> update(User user) {
         userRepository.update(user);
         return Optional.of(user);
@@ -69,10 +61,10 @@ public class UserService {
 
     private void validateCredentials(String login, String password) throws UserEmptyException {
         if (login == null || login.isEmpty()) {
-            throw new UserEmptyException(ResourceBundle.getMessage("error.login_not_empty"));
+            throw new UserEmptyException(ResourceBundleManager.getMessage("error.login_not_empty"));
         }
         if (password == null || password.isEmpty()) {
-            throw new UserEmptyException(ResourceBundle.getMessage("error.password_not_empty"));
+            throw new UserEmptyException(ResourceBundleManager.getMessage("error.password_not_empty"));
         }
     }
 

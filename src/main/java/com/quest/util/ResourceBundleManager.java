@@ -2,7 +2,7 @@ package com.quest.util;
 
 import java.util.Locale;
 
-public class ResourceBundle {
+public class ResourceBundleManager {
     private static final java.util.ResourceBundle messageBundle =
             java.util.ResourceBundle.getBundle("messages", new Locale("ru", "RU"));
     private static final java.util.ResourceBundle settingBundle =

@@ -25,7 +25,7 @@ public class EventResolver {
 
     public void resolve(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         HttpSession session = req.getSession();
-        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
+        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
 
         long eventId = Long.parseLong(req.getParameter(KeyAttribute.EVENT_ID));
         long nextQuestSceneId = Long.parseLong(req.getParameter(KeyAttribute.SCENE_ID));
@@ -55,7 +55,9 @@ public class EventResolver {
             case BATTLE -> {
                 Optional<Monster> optionalMonster = monsterService.get(event.getMonsterId());
                 if (optionalMonster.isPresent()) {
-                    session.setAttribute(KeyAttribute.MONSTER, optionalMonster.get());
+                    Monster monster = optionalMonster.get();
+                    monster.setHealth(monster.getMaxHealth());
+                    session.setAttribute(KeyAttribute.MONSTER, monster);
                     setEventAttributes(event, session, nextQuestSceneId);
                     resp.sendRedirect(Route.BATTLE);
                 }
@@ -71,7 +73,7 @@ public class EventResolver {
         // Rewrite attribute QUEST_ACTIONS (only button "Next")
         Collection<Action> actions = new ArrayList<>();
         actions.add(Action.builder()
-                .actionText(ResourceBundle.getMessage("quest.next"))
+                .actionText(ResourceBundleManager.getMessage("quest.next"))
                 .nextQuestSceneId(nextQuestSceneId)
                 .build());
         session.setAttribute(KeyAttribute.QUEST_ACTIONS, actions);

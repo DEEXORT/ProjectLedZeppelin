@@ -9,7 +9,7 @@ import com.quest.services.QuestService;
 import com.quest.services.resolver.EventResolver;
 import com.quest.services.resolver.QuestResolver;
 import com.quest.util.*;
-import com.quest.util.ResourceBundle;
+import com.quest.util.ResourceBundleManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -68,13 +68,13 @@ public class QuestServlet extends HttpServlet {
         if (handleEvent(req, resp)) return;
 
         // Save game process to database
-        saveGameProcess(session, nextQuestSceneId);
+        saveGameProcess(req, nextQuestSceneId);
 
         // Possible generation random event of battle
         if (questService.isBattleEvent(req)) {
             // Fail. Redirect to battle
             session.setAttribute(KeyAttribute.MONSTER, monsterService.getRandomMonster());
-            session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, ResourceBundle.getMessage("quest.description_random_event"));
+            session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, ResourceBundleManager.getMessage("quest.description_random_event"));
             resp.sendRedirect(Route.BATTLE);
         }
         // Otherwise redirect to next QuestScene
@@ -83,15 +83,14 @@ public class QuestServlet extends HttpServlet {
         }
     }
 
-    private void saveGameProcess(HttpSession session, long nextQuestSceneId) {
-        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
+    private void saveGameProcess(HttpServletRequest req, long nextQuestSceneId) {
+        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
         player.setQuestSceneId(nextQuestSceneId);
         playerService.update(player);
     }
 
     private Optional<QuestScene> getQuestScene(HttpServletRequest req) {
-        HttpSession session = req.getSession();
-        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
+        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
         QuestService questService = ServiceLocator.getService(QuestService.class);
         return questService.get(player.getQuestSceneId());
     }

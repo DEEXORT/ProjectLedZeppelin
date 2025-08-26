@@ -23,7 +23,7 @@ public class StatisticService {
         // Перебираем всех игроков из БД
         for (Player player : playerService.getAll()) {
             // Получаем пользователя, за которым закреплен игрок
-            Optional<User> user = userService.getByPlayer(player);
+            Optional<User> user = userService.get(player.getId());
             if (user.isPresent()) {
                 // Получаем сцену, на которой закончил игрок
                 Optional<QuestScene> questScene = questService.get(player.getQuestSceneId());

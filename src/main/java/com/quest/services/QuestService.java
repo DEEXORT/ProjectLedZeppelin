@@ -5,7 +5,7 @@ import com.quest.entity.QuestScene;
 import com.quest.repository.ActionRepository;
 import com.quest.repository.QuestRepository;
 import com.quest.util.KeyAttribute;
-import com.quest.util.ResourceBundle;
+import com.quest.util.ResourceBundleManager;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
@@ -14,15 +14,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class QuestService {
     private final QuestRepository questRepository;
     private final ActionRepository actionRepository;
-    private final MonsterService monsterService;
 
     // TODO: replace to const from properties
     private final int percentageChanceBattle = ThreadLocalRandom.current().nextInt(100);
 
-    public QuestService(QuestRepository questRepository, ActionRepository actionRepository, MonsterService monsterService) {
+    public QuestService(QuestRepository questRepository, ActionRepository actionRepository) {
         this.questRepository = questRepository;
         this.actionRepository = actionRepository;
-        this.monsterService = monsterService;
     }
 
     public Optional<QuestScene> create(QuestScene questScene) {
@@ -49,6 +47,6 @@ public class QuestService {
     }
 
     private int getMaxBattleChance() {
-        return Integer.parseInt(ResourceBundle.getSetting("event.max_chance_battle"));
+        return Integer.parseInt(ResourceBundleManager.getSetting("event.max_chance_battle"));
     }
 }

@@ -12,5 +12,8 @@ import java.util.Collection;
 @Data
 @SuperBuilder(toBuilder = true)
 public class Monster extends Character {
-
+    public enum MonsterType {
+        BOSS, MINI_BOSS, ELITE, COMMON
+    }
+    MonsterType type;
 }

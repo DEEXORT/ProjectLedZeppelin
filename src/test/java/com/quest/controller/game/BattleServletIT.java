@@ -2,47 +2,24 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.character.Monster;
-import com.quest.services.resolver.BattleResolver;
+import com.quest.entity.Ability;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
-import java.util.concurrent.ThreadLocalRandom;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class BattleServletIT extends ConfigIT {
     private final BattleServlet battleServlet = ServiceLocator.getService(BattleServlet.class);
 
-    @Mock
-    private MockedStatic<ServiceLocator> mockedServiceLocator;
-
-    @Mock
-    private ThreadLocalRandom mockedThreadLocalRandom;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterEach
-    void tearDown() {
-        mockedServiceLocator.close();
-    }
-
     @Test
-    void doGet_ShouldGenerateMonsterAndForwardToJsp() throws ServletException, IOException {
+    void doGet_ShouldForwardToJsp() throws ServletException, IOException {
         // given
         battleServlet.init(servletConfig);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
@@ -52,22 +29,24 @@ class BattleServletIT extends ConfigIT {
         battleServlet.doGet(request, response);
 
         // then
-        verify(session).setAttribute(eq(KeyAttribute.MONSTER), any(Monster.class));
-        verify(request).setAttribute(KeyAttribute.ACTION, "throwDice");
+        verify(session).setAttribute(KeyAttribute.BATTLE_FLAG, true);
         verify(requestDispatcher).forward(request, response);
     }
 
     @Test
     void doPost_ShouldRedirectToQuest_WhenMonsterWon() throws Exception {
         // given
-        battleServlet.init(servletConfig);
+//        battleServlet.init(servletConfig);
+        Ability baseAttack = playerTest.getBaseAttack();
+        when(request.getParameter(KeyAttribute.ABILITY_ID)).thenReturn(String.valueOf(baseAttack.getId()));
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
-        when(mockedThreadLocalRandom.nextInt(100)).thenReturn(1);
-        mockedServiceLocator
-                .when(() -> ServiceLocator.getService(BattleResolver.class))
-                .thenReturn(new BattleResolver(mockedThreadLocalRandom));
+        playerTest.setHealth(1);
+        monsterTest.setHealth(100000);
+//        mockedServiceLocator
+//                .when(() -> ServiceLocator.getService(BattleResolver.class))
+//                .thenReturn(new BattleResolver());
 
         // when
         battleServlet.doPost(request, response);
@@ -80,21 +59,20 @@ class BattleServletIT extends ConfigIT {
     @Test
     void doPost_ShouldUpdateBattleJsp_WhenPlayerWon() throws Exception {
         // given
-        battleServlet.init(servletConfig);
+//        battleServlet.init(servletConfig);
+        Ability baseAttack = playerTest.getBaseAttack();
+        when(request.getParameter(KeyAttribute.ABILITY_ID)).thenReturn(String.valueOf(baseAttack.getId()));
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
-        when(mockedThreadLocalRandom.nextInt(100)).thenReturn(100);
-        mockedServiceLocator
-                .when(() -> ServiceLocator.getService(BattleResolver.class))
-                .thenReturn(new BattleResolver(mockedThreadLocalRandom));
+        playerTest.setHealth(1000000);
+        monsterTest.setHealth(1);
 
-        // when
+        //when
         battleServlet.doPost(request, response);
 
         // then
         assertEquals(0, monsterTest.getHealth());
-        verify(request).setAttribute(KeyAttribute.ACTION, "left");
-        verify(requestDispatcher).forward(request, response);
+        verify(response).sendRedirect(Route.BATTLE);
     }
 }
