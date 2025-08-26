@@ -7,7 +7,9 @@
 
     <changeSet id="1756101305778-1" author="d.gimaldinov">
         <createTable tableName="abilities">
-            <column name="id" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
             <column name="name" type="varchar(30)"><constraints nullable="false"/></column>
             <column name="description" type="text"><constraints nullable="false"/></column>
 

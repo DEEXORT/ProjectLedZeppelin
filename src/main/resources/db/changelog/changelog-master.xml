@@ -13,4 +13,9 @@
     <include file="db/changelog/history/2025/08/006-create-actions-table.xml"/>
     <include file="db/changelog/history/2025/08/007-create-events-table.xml"/>
     <include file="db/changelog/history/2025/08/008-create-monsters-table.xml"/>
+    <include file="db/changelog/history/2025/08/009-create-abilities-table.xml"/>
+    <include file="db/changelog/history/2025/08/010-add-fk-users-table.xml"/>
+    <include file="db/changelog/history/2025/08/011-add-fk-players-table.xml"/>
+    <include file="db/changelog/history/2025/08/012-add-fk-scenes-table.xml"/>
+    <include file="db/changelog/history/2025/08/013-add-fk-events-table.xml"/>
 </databaseChangeLog>

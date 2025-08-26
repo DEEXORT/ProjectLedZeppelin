@@ -7,7 +7,9 @@
 
     <changeSet id="1756098135750-1" author="d.gimaldinov">
         <createTable tableName="actions">
-            <column name="id" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
             <column name="event_id" type="bigint"/>
             <column name="text" type="varchar(100)"><constraints nullable="false"/></column>
             <column name="next_scene_id" type="bigint"/>

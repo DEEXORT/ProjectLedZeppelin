@@ -8,17 +8,12 @@
     <changeSet id="1756097273312-1" author="d.gimaldinov">
         <createTable tableName="scenes">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
             <column name="description" type="text">
                 <constraints nullable="false"/>
             </column>
             <column name="achievement_id" type="bigint"/>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="scenes" baseColumnNames="achievement_id"
-                                 constraintName="fk_scenes_achievement_id"
-                                 referencedTableName="achievements"
-                                 referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

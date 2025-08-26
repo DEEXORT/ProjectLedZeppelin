@@ -8,21 +8,21 @@
     <changeSet id="1755941928461-1" author="d.gimaldinov">
         <createTable tableName="characters">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true"/>
+                <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
-            <column name="name">
+            <column name="name" type="varchar(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="level">
+            <column name="level" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="health">
+            <column name="health" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="maxHealth">
+            <column name="maxHealth" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="attack">
+            <column name="attack" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>

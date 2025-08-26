@@ -7,7 +7,9 @@
 
     <changeSet id="1756100788331-1" author="d.gimaldinov">
         <createTable tableName="monsters">
-            <column name="id" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
             <column name="character_id" type="bigint"><constraints nullable="false"/></column>
             <column name="type" type="varchar(30)"><constraints nullable="false"/></column>
         </createTable>

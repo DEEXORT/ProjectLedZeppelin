@@ -8,7 +8,7 @@
     <changeSet id="1755942050219-1" author="d.gimaldinov">
         <createTable tableName="players">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true"/>
+                <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
             <column name="character_id" type="bigint">
                 <constraints nullable="false"/>
@@ -18,16 +18,5 @@
             </column>
             <column name="scene_id" type="bigint"/>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="players" baseColumnNames="character_id"
-                                 constraintName="fk_players_character_id"
-                                 referencedTableName="characters"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="players" baseColumnNames="user_id" constraintName="fk_players_user_id"
-                                 referencedTableName="users"
-                                 referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="players" baseColumnNames="scene_id" constraintName="fk_players_scene_id"
-                                 referencedTableName="scenes"
-                                 referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

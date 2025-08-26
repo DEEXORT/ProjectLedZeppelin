@@ -7,17 +7,14 @@
 
     <changeSet id="1756099341339-1" author="d.gimaldinov">
         <createTable tableName="events">
-            <column name="id" type="bigint" autoIncrement="true"><constraints nullable="false"/></column>
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true" unique="true"/>
+            </column>
             <column name="type" type="varchar(30)"><constraints nullable="false"/></column>
             <column name="description" type="text"><constraints nullable="false"/></column>
             <column name="stat" type="varchar(30)"/>
             <column name="monster_id" type="bigint"/>
             <column name="value" type="bigint"/>
         </createTable>
-
-        <addForeignKeyConstraint baseTableName="events" baseColumnNames="monster_id"
-                                 constraintName="fk_events_monster_id"
-                                 referencedTableName="monsters"
-                                 referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>
