@@ -1,9 +1,11 @@
 package com.quest.services.resolver;
 
 import com.quest.entity.Ability;
+import com.quest.entity.BattleHistory;
 import com.quest.entity.character.Character;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
+import com.quest.util.ResourceBundleManager;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,11 +14,11 @@ import org.apache.logging.log4j.Logger;
 public class BattleResolver {
     private static final Logger logger = LogManager.getLogger(BattleResolver.class);
 
-    public void resolveBattle(Player player, Monster monster, Ability ability) {
-        attack(player, monster, ability);
+    public void resolveBattle(Player player, Monster monster, Ability ability, BattleHistory history) {
+        attack(player, monster, ability, history);
 
         if (monster.getHealth() > 0) {
-            attack(monster, player, monster.getBaseAttack());
+            attack(monster, player, monster.getBaseAttack(), history);
             if (player.getHealth() <= 0) {
                 player.setHealth(0);
             }
@@ -25,9 +27,9 @@ public class BattleResolver {
         }
     }
 
-    public void attack(Character attacker, Character target, Ability attackAbility) {
+    public void attack(Character attacker, Character target, Ability attackAbility, BattleHistory history) {
         logger.debug("{} attacking {} with ability {}", attacker.getName(), target.getName(), attackAbility.getName());
-        boolean isUsedAbility = attacker.useAbility(attackAbility, target);
+        boolean isUsedAbility = attacker.useAbility(attackAbility, target, history);
         if (isUsedAbility) {
             // Update other abilities
             attacker.getCooldowns().forEach((ability, cooldown) -> {
@@ -35,6 +37,14 @@ public class BattleResolver {
             });
         } else {
             logger.error("Ability was not used");
+        }
+    }
+
+    public void handleMonsterDefeat(Player player, Monster monster) {
+        if (monster.getHealth() <= 0) {
+            int deltaExperience = Integer.parseInt(ResourceBundleManager.getSetting("player.increase_experience_after_battle"));
+            player.increaseExperience(monster.getLevel() + deltaExperience);
+            player.resetCooldowns();
         }
     }
 }

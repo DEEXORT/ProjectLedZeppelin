@@ -16,4 +16,5 @@ public class Ability {
     int level;
     int value;
     int cooldown;
+    int levelRequirement;
 }

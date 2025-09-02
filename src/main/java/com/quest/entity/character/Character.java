@@ -2,6 +2,7 @@ package com.quest.entity.character;
 
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
+import com.quest.entity.BattleHistory;
 import com.quest.services.AbilityService;
 import com.quest.util.ResourceBundleManager;
 import lombok.Builder;
@@ -35,14 +36,18 @@ public abstract class Character {
         return abilities;
     }
 
-    public boolean useAbility(Ability ability, Character target) {
+    public boolean isAbilityAvailable(Ability ability) {
+        return !(cooldowns.getOrDefault(ability, 0) > 0);
+    }
+
+    public boolean useAbility(Ability ability, Character target, BattleHistory history) {
         if (cooldowns.getOrDefault(ability, 0) > 0) {
             return false; // unavailable ability
         }
 
         switch (ability.getType()) {
-            case DAMAGE -> this.useDamage(ability, target);
-            case HEAL -> this.useHeal(ability, this);
+            case DAMAGE -> this.useDamage(ability, target, history);
+            case HEAL -> this.useHeal(ability, this, history);
             case DEFENSE -> this.useDefense(ability);
             default -> {
                 return false;
@@ -63,14 +68,16 @@ public abstract class Character {
 
     }
 
-    private void useHeal(Ability ability, Character character) {
-
+    private void useHeal(Ability ability, Character character, BattleHistory history) {
+        character.setHealth(Math.min(character.getHealth() + ability.getValue(), character.getMaxHealth()));
+        history.saveAction(this, character, ability);
     }
 
-    private void useDamage(Ability ability, Character target) {
+    private void useDamage(Ability ability, Character target, BattleHistory history) {
         int damage = calculateDamage(ability);
         logger.debug("{} damage", damage);
         target.setHealth(target.getHealth() - damage);
+        history.saveAction(this, target, ability);
     }
 
     private int calculateDamage(Ability ability) {
@@ -80,5 +87,9 @@ public abstract class Character {
     public Ability getBaseAttack() {
         logger.debug("Size abilities: {}", abilities.size());
         return abilities.get(0);
+    }
+
+    public void resetCooldowns() {
+        cooldowns.clear();
     }
 }

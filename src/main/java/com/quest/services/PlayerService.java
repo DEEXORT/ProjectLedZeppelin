@@ -27,4 +27,7 @@ public class PlayerService {
     public void update(Player player) {
         playerRepository.update(player);
     }
+
+    public void delete(Player player) { playerRepository.delete(player.getId()); }
+
 }

@@ -10,7 +10,7 @@
                 <constraints nullable="false" primaryKey="true" unique="true"/>
             </column>
             <column name="login" type="varchar(30)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
             <column name="password" type="varchar(30)">
                 <constraints nullable="false"/>

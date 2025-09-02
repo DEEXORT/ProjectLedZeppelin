@@ -12,9 +12,6 @@
         <label for="password">Пароль:</label>
         <input type="password" id="password" name="password">
 
-<%--        <label for="playerName">Имя персонажа</label>--%>
-<%--        <input type="text" id="playerName" name="playerName">--%>
-
         <button type="submit" class="btn-success">Зарегистрироваться</button>
         <c:if test="${not empty error}">
             <div style="color: red">${error}</div>

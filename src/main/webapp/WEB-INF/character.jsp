@@ -85,6 +85,7 @@
         <p><strong>Уровень:</strong> ${player.level}</p>
         <p><strong>HP:</strong> ${player.health}/${player.maxHealth}</p>
         <p><strong>Сила атаки:</strong> ${player.attack}</p>
+        <p><strong>Опыт:</strong> ${player.experiencePoints}/${player.experienceLevel}</p>
     </div>
 </div>
 </body>

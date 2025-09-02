@@ -4,8 +4,9 @@
 <head>
     <title>Проклятое подземелье</title>
 <%--    Fonts--%>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ruslan+Display&amp;display=swap">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/fonts.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/ability.scss">
 
     <style>
         * {
@@ -50,12 +51,11 @@
             position: relative;
             align-items: center;
             justify-content: center;
-            margin-top: 30vh;
+            margin-top: 10vh;
         }
 
         .quest-container {
             position: relative;
-            /*transform: translateY(50%);*/
             justify-content: space-around;
             display: flex;
             align-items: center;

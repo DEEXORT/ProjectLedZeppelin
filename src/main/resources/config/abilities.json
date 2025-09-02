@@ -1,0 +1,59 @@
+{
+  "abilities": [
+    {
+      "id": 1,
+      "unikey": "baseAttack",
+      "name": "Базовая атака",
+      "description": "Наносит базовый урон",
+      "type": "damage",
+      "level": 1,
+      "value": 100,
+      "cooldown": 0,
+      "levelRequirement": 1
+    },
+    {
+      "id": 2,
+      "unikey": "heal",
+      "name": "Лечение",
+      "description": "Восстанавливает здоровье",
+      "type": "heal",
+      "level": 1,
+      "value": 50,
+      "cooldown": 3,
+      "levelRequirement": 1
+    },
+    {
+      "id": 3,
+      "unikey": "hadouken",
+      "name": "Хадууукен!",
+      "description": "Заклинание неизвестных технологий",
+      "type": "damage",
+      "level": 1,
+      "value": 1000,
+      "cooldown": 2,
+      "levelRequirement": 2
+    },
+    {
+      "id": 4,
+      "unikey": "fus_ro_dah",
+      "name": "Фус Ро Дах",
+      "description": "Используй силу голоса, но не перестарайся",
+      "type": "damage",
+      "level": 1,
+      "value": 500,
+      "cooldown": 2,
+      "levelRequirement": 2
+    },
+    {
+      "id": 5,
+      "unikey": "expeliarmus",
+      "name": "Экспеллиармус",
+      "description": "Защита от тёмных искусств и надоедливых мух",
+      "type": "damage",
+      "level": 1,
+      "value": 200,
+      "cooldown": 1,
+      "levelRequirement": 1
+    }
+  ]
+}

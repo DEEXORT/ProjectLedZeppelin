@@ -1,0 +1,106 @@
+.ability-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 30px;
+  margin: 20px 0;
+  font-family: 'Arial', sans-serif;
+}
+
+.ability-container > div:first-child {
+  border-right: 2px solid #ecf0f1;
+  padding-right: 30px;
+}
+
+.ability-container > div:last-child {
+  padding-left: 30px;
+}
+
+.ability-container h4 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 1.3em;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.abilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.ability-card {
+  position: relative;
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  border: 2px solid #3498db;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  text-align: center;
+  min-height: 80px;
+  max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ability-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+  border-color: #2980b9;
+}
+
+.ability-card.selected {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  border-color: #27ae60;
+}
+
+.ability-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ability-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 8px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.ability-stats {
+  display: flex;
+  justify-content: space-around;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.ability-tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  width: 180px;
+  font-size: 11px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.ability-card:hover .ability-tooltip {
+  visibility: visible;
+  opacity: 1;
+}

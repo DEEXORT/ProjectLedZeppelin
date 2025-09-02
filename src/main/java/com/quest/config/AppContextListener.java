@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-@WebListener
 public class AppContextListener implements ServletContextListener {
     private final Logger logger = LogManager.getLogger(AppContextListener.class);
 

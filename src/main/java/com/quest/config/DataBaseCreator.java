@@ -3,7 +3,7 @@ import liquibase.Scope;
 import liquibase.command.CommandScope;
 import liquibase.resource.ClassLoaderResourceAccessor;
 
-public class MyLiquibaseRunner {
+public class DataBaseCreator {
 
     public static void main(String[] args) throws Exception {
         runLiquibase();

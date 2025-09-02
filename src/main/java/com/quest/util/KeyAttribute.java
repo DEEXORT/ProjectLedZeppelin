@@ -16,4 +16,7 @@ public class KeyAttribute {
     public static final String PASSWORD = "password";
     public static final String EVENT_ID = "eventId";
     public static final String ABILITY_ID = "abilityId";
+    public static final String ALL_ABILITIES = "allAbilities";
+    public static final String ABILITIES_IDS = "abilityIds";
+    public static final String BATTLE_HISTORY = "battleHistory";
 }

@@ -3,6 +3,7 @@ package com.quest.controller.game;
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
+import com.quest.entity.BattleHistory;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
@@ -24,6 +25,8 @@ class BattleServletIT extends ConfigIT {
         battleServlet.init(servletConfig);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
+        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
+        when(session.getAttribute(KeyAttribute.BATTLE_FLAG)).thenReturn(false);
 
         // when
         battleServlet.doGet(request, response);
@@ -42,11 +45,9 @@ class BattleServletIT extends ConfigIT {
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
+        when(session.getAttribute(KeyAttribute.BATTLE_HISTORY)).thenReturn(new BattleHistory());
         playerTest.setHealth(1);
         monsterTest.setHealth(100000);
-//        mockedServiceLocator
-//                .when(() -> ServiceLocator.getService(BattleResolver.class))
-//                .thenReturn(new BattleResolver());
 
         // when
         battleServlet.doPost(request, response);
@@ -64,6 +65,7 @@ class BattleServletIT extends ConfigIT {
         when(request.getParameter(KeyAttribute.ABILITY_ID)).thenReturn(String.valueOf(baseAttack.getId()));
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
+        when(session.getAttribute(KeyAttribute.BATTLE_HISTORY)).thenReturn(new BattleHistory());
         when(request.getRequestDispatcher(JspPath.BATTLE)).thenReturn(requestDispatcher);
         playerTest.setHealth(1000000);
         monsterTest.setHealth(1);

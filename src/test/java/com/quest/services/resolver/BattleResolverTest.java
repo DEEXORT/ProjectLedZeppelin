@@ -1,6 +1,7 @@
 package com.quest.services.resolver;
 
 import com.quest.entity.Ability;
+import com.quest.entity.BattleHistory;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
 import com.quest.entity.factory.AbilityFactory;
@@ -24,10 +25,11 @@ class BattleResolverTest {
         Monster monster = MonsterFactory.createGoblinMonster();
         Ability ability = AbilityFactory
                 .createDamageAbility("Hadoooken", "Hadoooken", 1, 100, 3);
+        BattleHistory history = new BattleHistory();
+        BattleResolver battleResolver = new BattleResolver();
 
         // when
-        BattleResolver battleResolver = new BattleResolver();
-        battleResolver.attack(player, monster, ability);
+        battleResolver.attack(player, monster, ability, history);
 
         // then
         assertTrue(monster.getHealth() < monster.getMaxHealth());
