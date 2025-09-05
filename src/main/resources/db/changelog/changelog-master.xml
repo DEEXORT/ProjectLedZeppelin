@@ -18,4 +18,5 @@
     <include file="db/changelog/history/2025/08/011-add-fk-players-table.xml"/>
     <include file="db/changelog/history/2025/08/012-add-fk-scenes-table.xml"/>
     <include file="db/changelog/history/2025/08/013-add-fk-events-table.xml"/>
+    <include file="db/changelog/history/2025/09/001-alter-actions-table.xml"/>
 </databaseChangeLog>

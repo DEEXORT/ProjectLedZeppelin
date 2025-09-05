@@ -13,6 +13,7 @@ import java.util.Collection;
 @Data
 @SuperBuilder(toBuilder = true)
 public class Player extends Character {
+    Long playerId;
     Long userId; // To bind to the user, because user overwrites player_id
     Long questSceneId;
     @Builder.Default

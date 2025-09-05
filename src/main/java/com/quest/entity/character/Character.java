@@ -17,7 +17,7 @@ import java.util.*;
 @SuperBuilder(toBuilder = true)
 public abstract class Character {
     public static final Logger logger = LogManager.getLogger(Character.class);
-    Long id;
+    Long characterId;
     String name;
     int level;
     int health;

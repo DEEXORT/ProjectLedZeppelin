@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1757048554656-1" author="d.gimaldinov">
+        <addColumn tableName="actions">
+            <column name="scene_id" type="bigint"/>
+        </addColumn>
+
+        <addForeignKeyConstraint baseTableName="actions" baseColumnNames="scene_id" constraintName="fk_actions_scene_id"
+                                 referencedTableName="scenes"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

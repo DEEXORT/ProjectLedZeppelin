@@ -46,7 +46,7 @@ public class ConfigIT {
                 .id(1L)
                 .build();
         playerTest = Player.builder()
-                .id(1L)
+                .characterId(1L)
                 .userId(userTest.getId())
                 .name("player")
                 .level(1)
@@ -55,11 +55,11 @@ public class ConfigIT {
                 .attack(10)
                 .build();
         userTest = userTest.toBuilder()
-                .playerId(playerTest.getId())
+                .playerId(playerTest.getCharacterId())
                 .build();
         monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10, Monster.MonsterType.COMMON)
                 .toBuilder()
-                .id(1L)
+                .characterId(1L)
                 .build();
 
         // config mocks

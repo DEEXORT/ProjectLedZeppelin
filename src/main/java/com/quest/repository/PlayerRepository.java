@@ -23,13 +23,13 @@ public class PlayerRepository implements Repository<Player> {
 
     @Override
     public void create(Player player) {
-        player.setId(id.incrementAndGet());
+        player.setCharacterId(id.incrementAndGet());
         update(player);
     }
 
     @Override
     public void update(Player player) {
-        repository.put(player.getId(), player);
+        repository.put(player.getCharacterId(), player);
     }
 
     @Override

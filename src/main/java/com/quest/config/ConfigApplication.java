@@ -33,7 +33,6 @@ public class ConfigApplication {
     private final UserService userService;
     private final MonsterService monsterService;
     private final PlayerService playerService;
-    private final AbilityService abilityService;
     private final AbilityConfigLoader abilityConfigLoader;
     private static final Logger logger = LogManager.getLogger(ConfigApplication.class);
 
@@ -94,13 +93,6 @@ public class ConfigApplication {
     }
 
     private void fillAbilitiesRepository() {
-//        Ability baseAttack = AbilityFactory
-//                .createDamageAbility(ResourceBundleManager.getSetting("ability.base_attack_name"),
-//                        "Наносит базовый урон",
-//                        1,
-//                        100,
-//                        0);
-//        abilityService.create(baseAttack);
         abilityConfigLoader.loadAbilities();
     }
 }

@@ -23,13 +23,13 @@ public class MonsterRepository implements Repository<Monster> {
 
     @Override
     public void create(Monster monster) {
-        monster.setId(id.incrementAndGet());
-        repository.put(monster.getId(), monster);
+        monster.setCharacterId(id.incrementAndGet());
+        repository.put(monster.getCharacterId(), monster);
     }
 
     @Override
     public void update(Monster monster) {
-        repository.put(monster.getId(), monster);
+        repository.put(monster.getCharacterId(), monster);
     }
 
     @Override

@@ -35,21 +35,21 @@
 
 
     <dependencies>
-        <!--  JUnit 5-->
+        <!-- JUnit 5-->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!--    Mockito-->
+        <!-- Mockito-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!--    Сервлет API-->
+        <!-- Servlet API-->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -64,7 +64,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!--    JSTL (Core)-->
+        <!-- JSTL (Core)-->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -76,20 +76,20 @@
             <artifactId>jakarta.servlet.jsp.jstl</artifactId>
         </dependency>
 
-        <!--        Lombok-->
+        <!-- Lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
 
-        <!--        Jackson для парсинга JSON-->
+        <!-- Jackson для парсинга JSON-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
-        <!--        Log4j-->
+        <!-- Log4j-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
@@ -100,10 +100,16 @@
             <artifactId>postgresql</artifactId>
         </dependency>
 
-        <!--        Liquibase-->
+        <!-- Liquibase-->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+        </dependency>
+
+        <!-- Hibernate-->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
         </dependency>
 
     </dependencies>

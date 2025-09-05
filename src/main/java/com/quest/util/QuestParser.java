@@ -180,7 +180,7 @@ public class QuestParser {
             String questDescription = matcher.group(EventAttribute.TEXT);
             Event event = Event.builder()
                     .type(EventType.BATTLE)
-                    .monsterId(monster.getId())
+                    .monsterId(monster.getCharacterId())
                     .description(questDescription)
                     .build();
             eventService.create(event);
