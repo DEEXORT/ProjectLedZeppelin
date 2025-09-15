@@ -14,8 +14,8 @@ public class AchievementService {
         repository.create(achievement);
     }
 
-    public void get(long id) {
-        repository.get(id);
+    public Achievement get(long id) {
+        return repository.get(id);
     }
 
     public Collection<Achievement> getAll() {

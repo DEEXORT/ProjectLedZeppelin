@@ -5,18 +5,19 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
-    <include file="db/changelog/history/2025/08/001-create-users-table.xml"/>
-    <include file="db/changelog/history/2025/08/002-create-characters-table.xml"/>
-    <include file="db/changelog/history/2025/08/003-create-players-table.xml"/>
-    <include file="db/changelog/history/2025/08/004-create-scenes-table.xml"/>
-    <include file="db/changelog/history/2025/08/005-create-achievements-table.xml"/>
-    <include file="db/changelog/history/2025/08/006-create-actions-table.xml"/>
-    <include file="db/changelog/history/2025/08/007-create-events-table.xml"/>
-    <include file="db/changelog/history/2025/08/008-create-monsters-table.xml"/>
-    <include file="db/changelog/history/2025/08/009-create-abilities-table.xml"/>
-    <include file="db/changelog/history/2025/08/010-add-fk-users-table.xml"/>
-    <include file="db/changelog/history/2025/08/011-add-fk-players-table.xml"/>
-    <include file="db/changelog/history/2025/08/012-add-fk-scenes-table.xml"/>
-    <include file="db/changelog/history/2025/08/013-add-fk-events-table.xml"/>
-    <include file="db/changelog/history/2025/09/001-alter-actions-table.xml"/>
+    <include file="/history/2025/08/001-create-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/002-create-characters-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/003-create-players-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/004-create-scenes-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/005-create-achievements-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/006-create-actions-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/007-create-events-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/008-create-monsters-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/009-create-abilities-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/010-add-fk-users-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/011-add-fk-players-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/012-add-fk-scenes-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/08/013-add-fk-events-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/09/001-alter-actions-table.xml" relativeToChangelogFile="true"/>
+    <include file="/history/2025/09/002-create-player-sprite-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
