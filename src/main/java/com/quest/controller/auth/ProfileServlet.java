@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.List;
 
 @WebServlet(Route.PROFILE)
 public class ProfileServlet extends HttpServlet {
@@ -34,7 +36,11 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getSession().setAttribute(KeyAttribute.ALL_ABILITIES, abilityService.getAll());
+        List<Ability> list = abilityService.getAll()
+                .stream()
+                .sorted(Comparator.comparingInt(Ability::getLevelRequirement))
+                .toList();
+        req.getSession().setAttribute(KeyAttribute.ALL_ABILITIES, list);
         req.getRequestDispatcher(JspPath.PROFILE).forward(req, resp);
     }
 
@@ -43,6 +49,7 @@ public class ProfileServlet extends HttpServlet {
         Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
         String[] abilityIds = req.getParameterValues(KeyAttribute.ABILITIES_IDS);
         if (abilityIds != null) {
+            player.getAbilities().clear();
             for (String abilityId : abilityIds) {
                 Ability ability = abilityService.get(Long.parseLong(abilityId));
                 player.getAbilities().add(ability);

@@ -1,7 +1,7 @@
 .ability-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  //display: grid;
+  //grid-template-columns: 1fr 1fr;
+  //gap: 15px;
   background: white;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -11,7 +11,6 @@
 }
 
 .ability-container > div:first-child {
-  border-right: 2px solid #ecf0f1;
   padding-right: 30px;
 }
 
@@ -29,7 +28,7 @@
 
 .abilities-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
   gap: 15px;
   margin: 20px 0;
 }

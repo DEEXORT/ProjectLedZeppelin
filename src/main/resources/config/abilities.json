@@ -54,6 +54,39 @@
       "value": 200,
       "cooldown": 1,
       "levelRequirement": 1
+    },
+    {
+      "id": 6,
+      "unikey": "face_spit",
+      "name": "Плевок в лицо",
+      "description": "Не самый элегантный, но эффективный способ выразить своё мнение",
+      "type": "damage",
+      "level": 1,
+      "value": 120,
+      "cooldown": 0,
+      "levelRequirement": 1
+    },
+    {
+      "id": 7,
+      "unikey": "blue_screen",
+      "name": "Синий экран смерти",
+      "description": "Противник временно отключается для перезагрузки",
+      "type": "damage",
+      "level": 1,
+      "value": 220,
+      "cooldown": 4,
+      "levelRequirement": 3
+    },
+    {
+      "id": 8,
+      "unikey": "thunder_breathing_zenitsu",
+      "name": "Дыхание грома: Громовой Раскат",
+      "description": "Атакует молниеносно, даже если в это время громко плачет от страха",
+      "type": "damage",
+      "level": 1,
+      "value": 350,
+      "cooldown": 2,
+      "levelRequirement": 3
     }
   ]
 }
