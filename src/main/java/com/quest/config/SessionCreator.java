@@ -15,6 +15,10 @@ public class SessionCreator implements AutoCloseable{
         return sessionFactory.openSession();
     }
 
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
     @Override
     public void close() {
         sessionFactory.close();

@@ -1,16 +1,19 @@
 package com.quest.entity.character;
 
 import com.quest.entity.Ability;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+//@EqualsAndHashCode(callSuper = true)
+@Entity
+@Table(name = "players")
+@Getter
+@Setter
 @SuperBuilder(toBuilder = true)
 public class Player extends Character {
     Long playerId;
@@ -20,10 +23,6 @@ public class Player extends Character {
     int experiencePoints = 0;
     @Builder.Default
     int experienceLevel = 100;
-
-//    public void attack(Character character) {
-//        character.setHealth(character.getHealth() - experiencePoints);
-//    }
 
     public void increaseExperience(int experience) {
         int experienceLevel = this.getExperienceLevel();

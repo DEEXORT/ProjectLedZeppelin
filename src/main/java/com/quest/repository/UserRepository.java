@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class UserRepository implements Repository<User> {
     private final AtomicLong id = new AtomicLong();
     private final Map<Long, User> repository = new ConcurrentHashMap<>();
-    private final SessionCreator sessionCreator;
+//    private final SessionCreator sessionCreator;
 
     @Override
     public Collection<User> getAll() {

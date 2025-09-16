@@ -21,8 +21,24 @@ public class User {
     private String login;
     @Column(nullable = false)
     private String password;
+    @OneToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(name = "player_id")
     private Long playerId;
 
     @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "user_achievements",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "achievement_id"))
     private List<Achievement> achievements = new ArrayList<>();
+
+    public void addAchievement(Achievement achievement) {
+        this.achievements.add(achievement);
+        achievement.getUsers().add(this);
+    }
+
+    public void removeAchievement(Achievement achievement) {
+        this.achievements.remove(achievement);
+        achievement.getUsers().remove(this);
+    }
 }

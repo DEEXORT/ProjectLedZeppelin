@@ -135,7 +135,6 @@ public class QuestParser {
             String achievementText = matcher.group(1);
             Achievement achievement = Achievement.builder()
                     .text(achievementText)
-                    .questSceneId(questSceneId)
                     .build();
             achievementService.create(achievement);
             logger.info("Achievement created: {}", achievement);
