@@ -21,7 +21,7 @@ public class User {
     private String login;
     @Column(nullable = false)
     private String password;
-    @OneToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @OneToOne (fetch = FetchType.LAZY, cascade = CascadeType.ALL) // еще не реализована сущность для Player!
     @Column(name = "player_id")
     private Long playerId;
 

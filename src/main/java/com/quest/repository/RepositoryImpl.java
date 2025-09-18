@@ -1,24 +1,42 @@
 package com.quest.repository;
 
-import com.quest.util.TransactionManager;
-import lombok.AllArgsConstructor;
-
-import java.util.ArrayList;
+import com.quest.config.SessionCreator;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import java.util.Collection;
-import java.util.List;
 
-@AllArgsConstructor
 public class RepositoryImpl<T> implements Repository<T> {
-    private final TransactionManager transactionManager;
+    private final SessionCreator sessionCreator;
     private final Class<T> entityClass;
+
+    public RepositoryImpl(SessionCreator sessionCreator, Class<T> entityClass) {
+        this.sessionCreator = sessionCreator;
+        this.entityClass = entityClass;
+    }
 
     @Override
     public Collection<T> getAll() {
-        List<T> list = new ArrayList<>();
-//        transactionManager.doInTransaction(() -> {
-//            T entity = transactionManager.getSession().createQuery("SELECT obj FROM Class<?> obj");
-//        });
-        return List.of();
+        Session session = sessionCreator.getSession();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
+            try {
+                CriteriaBuilder builder = session.getCriteriaBuilder();
+                CriteriaQuery<T> query = builder.createQuery(entityClass);
+                Root<T> root = query.from(entityClass);
+                query.select(root);
+                transaction.commit();
+                return session.createQuery(query).list();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw new RuntimeException("Error getting all entities", e);
+            }
+        } catch (Exception e) {
+            // Если ошибка с соединением
+            throw new RuntimeException("Error getting all", e);
+        }
     }
 
     @Override
@@ -28,7 +46,15 @@ public class RepositoryImpl<T> implements Repository<T> {
 
     @Override
     public void create(T object) {
-
+        Session session = sessionCreator.getSession();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
+            session.persist(object);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
