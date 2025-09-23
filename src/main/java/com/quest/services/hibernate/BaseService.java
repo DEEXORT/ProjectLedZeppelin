@@ -1,4 +1,4 @@
-package com.quest.services;
+package com.quest.services.hibernate;
 
 import java.util.Collection;
 import java.util.Optional;

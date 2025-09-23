@@ -1,17 +1,13 @@
-package com.quest.services;
+package com.quest.services.hibernate;
 
-import com.quest.config.ServiceLocator;
 import com.quest.repository.Repository;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 @AllArgsConstructor
-public class AbstractBaseService<T> implements BaseService<T>{
+public class AbstractBaseService<T> implements BaseService<T> {
     private final Repository<T> repository;
 
     @Override

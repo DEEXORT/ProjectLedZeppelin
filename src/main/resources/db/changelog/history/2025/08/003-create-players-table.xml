@@ -7,16 +7,21 @@
 
     <changeSet id="1755942050219-1" author="d.gimaldinov">
         <createTable tableName="players">
-            <column name="id" type="bigint" autoIncrement="true">
-                <constraints nullable="false" primaryKey="true" unique="true"/>
-            </column>
             <column name="character_id" type="bigint">
-                <constraints nullable="false"/>
+                <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="scene_id" type="bigint"/>
+            <column name="experience_level" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="experience_points" type="int">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+
     </changeSet>
 </databaseChangeLog>

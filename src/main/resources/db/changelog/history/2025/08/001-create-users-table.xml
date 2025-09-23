@@ -15,7 +15,7 @@
             <column name="password" type="varchar(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="player_id" type="int"/>
+            <column name="character_id" type="int"/>
         </createTable>
     </changeSet>
 </databaseChangeLog>

@@ -1,4 +1,4 @@
-package com.quest.services;
+package com.quest.services.hibernate;
 
 import com.quest.config.ServiceLocator;
 import com.quest.entity.User;
@@ -6,10 +6,10 @@ import com.quest.repository.RepositoryImpl;
 
 import java.util.Collection;
 
-public class TestUserService {
+public class HibernateUserService {
     private final RepositoryImpl<User> repository;
 
-    public TestUserService() {
+    public HibernateUserService() {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, User.class);
     }
 

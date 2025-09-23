@@ -5,27 +5,44 @@ import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
 import com.quest.services.AbilityService;
 import com.quest.util.ResourceBundleManager;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
-@Data
+@Entity
+@Table(name = "characters")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @SuperBuilder(toBuilder = true)
 public abstract class Character {
     public static final Logger logger = LogManager.getLogger(Character.class);
-    Long characterId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    Long characterId; // TODO: rename to id
+    @Column(name = "name")
     String name;
+    @Column(name = "level")
     int level;
+    @Column(name = "health")
     int health;
+    @Column(name = "max_health")
     int maxHealth;
+    @Column(name = "attack")
     int attack;
     @Builder.Default
+    @Transient
     List<Ability> abilities = initBaseAbilities();
     @Builder.Default
+    @Transient
     Map<Ability, Integer> cooldowns = new HashMap<>();
 
     public static List<Ability> initBaseAbilities() {
@@ -81,7 +98,7 @@ public abstract class Character {
     }
 
     private int calculateDamage(Ability ability) {
-        return ability.getValue() + ( this.getAttack() * ability.getLevel() / 10);
+        return ability.getValue() + (this.getAttack() * ability.getLevel() / 10);
     }
 
     public Ability getBaseAttack() {

@@ -9,6 +9,6 @@
         <addForeignKeyConstraint baseTableName="events" baseColumnNames="monster_id"
                                  constraintName="fk_events_monster_id"
                                  referencedTableName="monsters"
-                                 referencedColumnNames="id"/>
+                                 referencedColumnNames="character_id"/>
     </changeSet>
 </databaseChangeLog>

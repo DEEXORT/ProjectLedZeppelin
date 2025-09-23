@@ -19,7 +19,7 @@
             <column name="health" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="maxHealth" type="int">
+            <column name="max_health" type="int">
                 <constraints nullable="false"/>
             </column>
             <column name="attack" type="int">
