@@ -4,12 +4,14 @@ import com.quest.entity.Achievement;
 import com.quest.entity.User;
 import com.quest.entity.character.Character;
 import com.quest.entity.character.Player;
+import lombok.Getter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+@Getter
 public class SessionCreator implements AutoCloseable{
-    private static SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     public SessionCreator() {
         sessionFactory = new Configuration()
@@ -21,12 +23,12 @@ public class SessionCreator implements AutoCloseable{
                 .buildSessionFactory();
     }
 
-    public Session getSession() {
-        return sessionFactory.openSession();
+    public SessionCreator(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public Session getSession() {
+        return sessionFactory.openSession();
     }
 
     @Override

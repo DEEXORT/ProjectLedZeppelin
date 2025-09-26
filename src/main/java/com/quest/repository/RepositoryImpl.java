@@ -4,11 +4,15 @@ import com.quest.config.SessionCreator;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 import java.util.Collection;
 
 public class RepositoryImpl<T> implements Repository<T> {
+    private final Logger log = LogManager.getLogger(RepositoryImpl.class);
     private final SessionCreator sessionCreator;
     private final Class<T> entityClass;
 
@@ -19,29 +23,28 @@ public class RepositoryImpl<T> implements Repository<T> {
 
     @Override
     public Collection<T> getAll() {
-        Session session = sessionCreator.getSession();
-        Transaction transaction = session.beginTransaction();
-        try (session) {
-            try {
-                CriteriaBuilder builder = session.getCriteriaBuilder();
-                CriteriaQuery<T> query = builder.createQuery(entityClass);
-                Root<T> root = query.from(entityClass);
-                query.select(root);
-                transaction.commit();
-                return session.createQuery(query).list();
-            } catch (Exception e) {
-                transaction.rollback();
-                throw new RuntimeException("Error getting all entities", e);
-            }
+        try (Session session = sessionCreator.getSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<T> query = builder.createQuery(entityClass);
+            Root<T> root = query.from(entityClass);
+            query.select(root);
+            return session.createQuery(query).list();
         } catch (Exception e) {
-            // Если ошибка с соединением
-            throw new RuntimeException("Error getting all", e);
+            String message = "Error getting all entities from repository";
+            log.error(message);
+            throw new RuntimeException(message, e);
         }
     }
 
     @Override
     public T get(long id) {
-        return null;
+        try (Session session = sessionCreator.getSession()) {
+            return session.get(entityClass, id);
+        } catch (Exception e) {
+            String message = "Error getting entity by id from repository";
+            log.error(message);
+            throw new RuntimeException(message, e);
+        }
     }
 
     @Override
@@ -59,11 +62,27 @@ public class RepositoryImpl<T> implements Repository<T> {
 
     @Override
     public void update(T object) {
-
+        Session session = sessionCreator.getSession();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
+            session.merge(object);
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Error updating entity", e);
+        }
     }
 
     @Override
     public void delete(long id) {
-
+        Session session = sessionCreator.getSession();
+        Transaction transaction = session.beginTransaction();
+        try (session) {
+            session.remove(get(id));
+            transaction.commit();
+        } catch (Exception e) {
+            transaction.rollback();
+            throw new RuntimeException("Error deleting entity", e);
+        }
     }
 }
