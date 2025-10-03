@@ -12,6 +12,21 @@
             </column>
             <column name="name" type="varchar(30)"><constraints nullable="false"/></column>
             <column name="description" type="text"><constraints nullable="false"/></column>
+            <column name="type" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cooldown" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="level_requirement" type="bigint">
+                <constraints nullable="false"/>
+            </column>
 
         </createTable>
     </changeSet>

@@ -1,5 +1,6 @@
 package com.quest.config;
 
+import com.quest.entity.Ability;
 import com.quest.entity.Achievement;
 import com.quest.entity.User;
 import com.quest.entity.character.Character;
@@ -10,22 +11,23 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 @Getter
-public class SessionCreator implements AutoCloseable{
+public class SessionCreator implements AutoCloseable {
     private final SessionFactory sessionFactory;
 
-    public SessionCreator() {
+    public SessionCreator(ApplicationProperties properties) {
         sessionFactory = new Configuration()
-                .configure()
+                .addProperties(properties)
                 .addAnnotatedClass(User.class)
                 .addAnnotatedClass(Achievement.class)
                 .addAnnotatedClass(Player.class)
                 .addAnnotatedClass(Character.class)
+                .addAnnotatedClass(Ability.class)
                 .buildSessionFactory();
     }
 
-    public SessionCreator(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    public SessionCreator(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     public Session getSession() {
         return sessionFactory.openSession();

@@ -5,8 +5,9 @@ import com.quest.entity.character.Player;
 import com.quest.repository.RepositoryImpl;
 
 import java.util.Collection;
+import java.util.Optional;
 
-public class HibernatePlayerService {
+public class HibernatePlayerService implements BaseService<Player> {
     private RepositoryImpl<Player> repository;
 
     public HibernatePlayerService() {
@@ -17,5 +18,22 @@ public class HibernatePlayerService {
         repository.create(player);
     }
 
-    public Collection<Player> getAll() {return repository.getAll();}
+    public Collection<Player> getAll() {
+        return repository.getAll();
+    }
+
+    @Override
+    public Optional<Player> get(long id) {
+        return Optional.ofNullable(repository.get(id));
+    }
+
+    @Override
+    public void update(Player entity) {
+        repository.update(entity);
+    }
+
+    @Override
+    public void delete(long id) {
+        repository.delete(id);
+    }
 }

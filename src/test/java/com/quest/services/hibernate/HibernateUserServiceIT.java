@@ -1,48 +1,48 @@
 package com.quest.services.hibernate;
 
+import com.quest.config.ServiceLocator;
 import com.quest.config.SessionCreator;
 import com.quest.entity.Achievement;
 import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.*;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
-@Testcontainers
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class HibernateUserServiceIT {
+class HibernateUserServiceIT extends ContainerIT {
 
-    @Container
-    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13-alpine")
-                .withDatabaseName("database")
-                .withUsername("test")
-                .withPassword("test");
+    static HibernateUserService hibernateUserService;
 
-    private static SessionFactory sessionFactory;
-    private static HibernateUserService hibernateUserService;
-
+    //    @Container
+//    static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:13-alpine")
+//                .withDatabaseName("database")
+//                .withUsername("test")
+//                .withPassword("test");
+//
+//    private static SessionFactory sessionFactory;
+//    private static HibernateUserService hibernateUserService;
+//
     @BeforeAll
     static void setUp() {
-        sessionFactory = new Configuration()
-                .configure("hibernate-test.cfg.xml")
-                .addAnnotatedClass(User.class)
-                .addAnnotatedClass(Achievement.class)
-                .buildSessionFactory();
-        SessionCreator creator = new SessionCreator(sessionFactory);
-        RepositoryImpl<User> repository = new RepositoryImpl<>(creator, User.class);
-        hibernateUserService = new HibernateUserService(repository);
+//        sessionFactory = new Configuration()
+//                .configure("hibernate-test.cfg.xml")
+//                .addAnnotatedClass(User.class)
+//                .addAnnotatedClass(Achievement.class)
+//                .buildSessionFactory();
+//        SessionCreator creator = new SessionCreator(sessionFactory);
+//        RepositoryImpl<User> repository = new RepositoryImpl<>(creator, User.class);
+//        hibernateUserService = new HibernateUserService(repository);
+        hibernateUserService = ServiceLocator.getService(HibernateUserService.class);
     }
 
-
     @Test
-    void create() {
+    void shouldCreateUserWithoutAchievement() {
         // given
         User user = User.builder()
                 .login("testAdmin")
@@ -58,7 +58,28 @@ class HibernateUserServiceIT {
     }
 
     @Test
-    void getAll() {
+    void shouldCreateUserWithAchievement() {
+        // given
+        Achievement achievement = Achievement.builder()
+                .text("test achievement")
+                .build();
+        User user = User.builder()
+                .login("testCreateUserWithAchievement")
+                .password("testCreateUserWithAchievement")
+                .playerId(1L)
+                .build();
+        user.getAchievements().add(achievement);
+
+        // when
+        hibernateUserService.create(user);
+
+        // then
+        Assertions.assertNotNull(user.getId());
+        Assertions.assertNotNull(achievement.getId());
+    }
+
+    @Test
+    void shouldGetAllUsers() {
         // given
         User user1 = User.builder()
                 .login("testGetAll1")
@@ -81,7 +102,7 @@ class HibernateUserServiceIT {
     }
 
     @Test
-    void get() {
+    void shouldGetUserById() {
         // given
         User user = User.builder()
                 .login("testGet")
@@ -98,7 +119,7 @@ class HibernateUserServiceIT {
     }
 
     @Test
-    void update() {
+    void shouldUpdateUser() {
         // given
         User user = User.builder()
                 .login("testUpdate")
@@ -119,7 +140,7 @@ class HibernateUserServiceIT {
     }
 
     @Test
-    void delete() {
+    void shouldDeleteUserById() {
         // given
         User user = User.builder()
                 .login("testDelete")

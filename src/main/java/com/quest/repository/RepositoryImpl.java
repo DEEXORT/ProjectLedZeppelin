@@ -4,8 +4,10 @@ import com.quest.config.SessionCreator;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -52,10 +54,16 @@ public class RepositoryImpl<T> implements Repository<T> {
         Session session = sessionCreator.getSession();
         Transaction transaction = session.beginTransaction();
         try (session) {
-            session.persist(object);
-            transaction.commit();
+            try {
+                session.persist(object);
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                log.error(e);
+                throw new RuntimeException(e);
+            }
         } catch (Exception e) {
-            transaction.rollback();
+            log.error(e);
             throw new RuntimeException(e);
         }
     }
@@ -69,6 +77,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
+            log.error(e);
             throw new RuntimeException("Error updating entity", e);
         }
     }
@@ -82,6 +91,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
+            log.error(e);
             throw new RuntimeException("Error deleting entity", e);
         }
     }

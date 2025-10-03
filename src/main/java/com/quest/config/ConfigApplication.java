@@ -34,9 +34,15 @@ public class ConfigApplication {
     private final MonsterService monsterService;
     private final PlayerService playerService;
     private final AbilityConfigLoader abilityConfigLoader;
+    private final MigrationDB migrationDB;
     private static final Logger logger = LogManager.getLogger(ConfigApplication.class);
 
     public void initApplication() {
+        try {
+            migrationDB.start();
+        } catch (Exception e) {
+            throw new RuntimeException("Error starting migration database", e);
+        }
         fillAbilitiesRepository();
         fillQuestRepository();
         fillUserRepository();

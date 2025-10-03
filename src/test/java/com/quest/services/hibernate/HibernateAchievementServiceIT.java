@@ -1,5 +1,6 @@
 package com.quest.services.hibernate;
 
+import com.quest.config.ServiceLocator;
 import com.quest.config.SessionCreator;
 import com.quest.entity.Achievement;
 import com.quest.entity.User;
@@ -20,27 +21,20 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
-class HibernateAchievementServiceIT {
+class HibernateAchievementServiceIT extends ContainerIT {
     private static HibernateAchievementService achievementService;
-    private static SessionFactory sessionFactory;
-
-    @Container
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13.2")
-            .withDatabaseName("database")
-            .withUsername("test")
-            .withPassword("test");
 
     @BeforeAll
     static void setUp() {
-        sessionFactory = new Configuration()
-                .configure("hibernate-test.cfg.xml")
-                .addAnnotatedClass(Achievement.class)
-                .addAnnotatedClass(User.class)
-                .buildSessionFactory();
-        SessionCreator creator = new SessionCreator(sessionFactory);
-        RepositoryImpl<Achievement> repository = new RepositoryImpl<>(creator, Achievement.class);
-        achievementService = new HibernateAchievementService(repository);
+//        sessionFactory = new Configuration()
+//                .configure("hibernate-test.cfg.xml")
+//                .addAnnotatedClass(Achievement.class)
+//                .addAnnotatedClass(User.class)
+//                .buildSessionFactory();
+//        SessionCreator creator = new SessionCreator(sessionFactory);
+//        RepositoryImpl<Achievement> repository = new RepositoryImpl<>(sessionCreator, Achievement.class);
+//        achievementService = new HibernateAchievementService(repository);
+        achievementService = ServiceLocator.getService(HibernateAchievementService.class);
 
         Achievement defaultAchievement = Achievement.builder()
                 .text("Achievement test")
