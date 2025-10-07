@@ -9,14 +9,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 @AllArgsConstructor
-public class AbilityService implements BaseService<Ability> {
+public class AbilityService {
     private final AbilityRepository repository;
 
     public void create(Ability ability) {
         repository.create(ability);
     }
 
-    @Override
     public Optional<Ability> get(long id) {
         return Optional.ofNullable(repository.get(id));
     }

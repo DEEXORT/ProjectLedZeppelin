@@ -5,6 +5,7 @@ import com.quest.config.SessionCreator;
 import com.quest.entity.Achievement;
 import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.*;
 
 import java.util.Collection;
@@ -113,6 +114,7 @@ class HibernateUserServiceIT extends ContainerIT {
     }
 
     @Test
+    @Transactional
     void shouldDeleteUserById() {
         // given
         User user = User.builder()
@@ -122,7 +124,7 @@ class HibernateUserServiceIT extends ContainerIT {
         hibernateUserService.create(user);
 
         // when
-        hibernateUserService.delete(user.getId());
+        hibernateUserService.delete(user);
 
         // then
         Assertions.assertTrue(hibernateUserService.get(user.getId()).isEmpty());

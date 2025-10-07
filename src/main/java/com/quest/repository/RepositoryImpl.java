@@ -88,12 +88,19 @@ public class RepositoryImpl<T> implements Repository<T> {
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(T object) {
         Session session = sessionCreator.getSession();
+        session.remove(object);
         Transaction transaction = session.beginTransaction();
         try (session) {
-            session.remove(get(id));
-            transaction.commit();
+            try {
+                session.remove(object);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                log.error(e);
+                throw new RuntimeException(e);
+            }
         } catch (Exception e) {
             transaction.rollback();
             log.error(e);

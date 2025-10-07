@@ -7,5 +7,5 @@ public interface Repository<T> {
     T get(long id);
     void create(T object);
     void update(T object);
-    void delete(long id);
+    void delete(T object);
 }

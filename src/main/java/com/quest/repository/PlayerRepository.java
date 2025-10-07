@@ -7,32 +7,27 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class PlayerRepository implements Repository<Player> {
+public class PlayerRepository {
     private static AtomicLong id = new AtomicLong();
     private Map<Long, Player> repository = new ConcurrentHashMap<>();
 
-    @Override
     public Collection<Player> getAll() {
         return repository.values();
     }
 
-    @Override
     public Player get(long id) {
         return repository.get(id);
     }
 
-    @Override
     public void create(Player player) {
         player.setCharacterId(id.incrementAndGet());
         update(player);
     }
 
-    @Override
     public void update(Player player) {
         repository.put(player.getCharacterId(), player);
     }
 
-    @Override
     public void delete(long id) {
         repository.remove(id);
     }

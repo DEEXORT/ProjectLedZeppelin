@@ -39,7 +39,7 @@ public class HibernateAchievementService implements BaseService<Achievement> {
     }
 
     @Override
-    public void delete(long id) {
-        repository.delete(id);
+    public void delete(Achievement achievement) {
+        repository.delete(achievement);
     }
 }

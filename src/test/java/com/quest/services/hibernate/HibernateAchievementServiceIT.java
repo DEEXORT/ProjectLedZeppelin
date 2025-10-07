@@ -5,6 +5,7 @@ import com.quest.config.SessionCreator;
 import com.quest.entity.Achievement;
 import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
+import jakarta.transaction.Transactional;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
@@ -105,7 +106,7 @@ class HibernateAchievementServiceIT extends ContainerIT {
         achievementService.create(achievement);
 
         // when
-        achievementService.delete(achievement.getId());
+        achievementService.delete(achievement);
 
         // then
         Optional<Achievement> deleted = achievementService.get(achievement.getId());

@@ -39,7 +39,7 @@ public class HibernateUserService implements BaseService<User> {
     }
 
     @Override
-    public void delete(long id) {
-        repository.delete(id);
+    public void delete(User entity) {
+        repository.delete(entity);
     }
 }

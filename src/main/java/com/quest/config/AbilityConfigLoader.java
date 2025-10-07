@@ -19,10 +19,6 @@ public class AbilityConfigLoader {
     private static final Logger logger = LogManager.getLogger(AbilityConfigLoader.class);
     private final HibernateAbilityService abilityService;
 
-//    public AbilityConfigLoader(AbilityService abilityService) {
-//        this.abilityService = abilityService;
-//    }
-
     public AbilityConfigLoader(HibernateAbilityService abilityService) {
         this.abilityService = abilityService;
     }

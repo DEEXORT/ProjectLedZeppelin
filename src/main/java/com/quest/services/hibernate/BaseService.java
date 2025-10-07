@@ -12,5 +12,5 @@ public interface BaseService<T> {
 
     void update(T entity);
 
-    void delete(long id);
+    void delete(T entity);
 }

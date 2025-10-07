@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1759857675990-1" author="d.gimaldinov">
+        <createTable tableName="character_ability">
+            <column name="character_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ability_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="character_ability" columnNames="character_id, ability_id"
+                       constraintName="pk_character_ability_id"/>
+
+        <addForeignKeyConstraint baseTableName="character_ability" baseColumnNames="character_id"
+                                 constraintName="fk_character_id"
+                                 referencedTableName="characters"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="character_ability" baseColumnNames="ability_id"
+                                 constraintName="pk_ability_id"
+                                 referencedTableName="abilities"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

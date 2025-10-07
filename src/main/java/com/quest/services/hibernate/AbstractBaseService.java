@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @AllArgsConstructor
 public class AbstractBaseService<T> implements BaseService<T> {
-    private final Repository<T> repository;
+    protected final Repository<T> repository;
 
     @Override
     public Optional<T> get(long id) {
@@ -31,7 +31,7 @@ public class AbstractBaseService<T> implements BaseService<T> {
     }
 
     @Override
-    public void delete(long id) {
-        repository.delete(id);
+    public void delete(T entity) {
+        repository.delete(entity);
     }
 }

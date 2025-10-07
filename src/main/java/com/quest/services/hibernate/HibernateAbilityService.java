@@ -8,43 +8,14 @@ import jakarta.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
-public class HibernateAbilityService implements BaseService<Ability>{
-    private final RepositoryImpl<Ability> repository;
+public class HibernateAbilityService extends AbstractBaseService<Ability> {
 
     public HibernateAbilityService() {
-        this.repository = ServiceLocator.getService(RepositoryImpl.class, Ability.class);
+        super(ServiceLocator.getService(RepositoryImpl.class, Ability.class));
     }
 
     public HibernateAbilityService(RepositoryImpl<Ability> repository) {
-        this.repository = repository;
-    }
-
-    @Override
-    public Optional<Ability> get(long id) {
-        return Optional.ofNullable(repository.get(id));
-    }
-
-    @Override
-    public Collection<Ability> getAll() {
-        return repository.getAll();
-    }
-
-    @Override
-    @Transactional
-    public void create(Ability entity) {
-        repository.create(entity);
-    }
-
-    @Override
-    @Transactional
-    public void update(Ability entity) {
-        repository.update(entity);
-    }
-
-    @Override
-    @Transactional
-    public void delete(long id) {
-        repository.delete(id);
+        super(repository);
     }
 
     // TODO: Добавить метод find в RepositoryImpl и переписать этот метод

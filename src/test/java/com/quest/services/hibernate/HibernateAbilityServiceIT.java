@@ -1,11 +1,10 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.ServiceLocator;
-import com.quest.config.SessionCreator;
 import com.quest.entity.Ability;
 import com.quest.repository.RepositoryImpl;
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.*;
+
+import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,11 +19,25 @@ class HibernateAbilityServiceIT extends ContainerIT {
     }
 
     @Test
-    void getAbility() {
-    }
-
-    @Test
     void getAll() {
+        //given
+        Ability ability = Ability.builder()
+                .value(100)
+                .type(Ability.AbilityType.DAMAGE)
+                .name("Test GetAll Ability")
+                .description("Test GetAll Ability")
+                .cooldown(3)
+                .level(1)
+                .levelRequirement(1)
+                .build();
+        service.create(ability);
+
+        // when
+        Collection<Ability> abilities = service.getAll();
+
+        // then
+        assertNotNull(abilities);
+        assertFalse(abilities.isEmpty());
     }
 
     @Test
@@ -36,6 +49,7 @@ class HibernateAbilityServiceIT extends ContainerIT {
                 .name("Damage Ability")
                 .description("Damage Ability")
                 .cooldown(3)
+                .level(1)
                 .levelRequirement(1)
                 .build();
 
@@ -48,13 +62,44 @@ class HibernateAbilityServiceIT extends ContainerIT {
 
     @Test
     void update() {
+        //given
+        Ability ability = Ability.builder()
+                .value(100)
+                .type(Ability.AbilityType.DAMAGE)
+                .name("Test Update Ability")
+                .description("Test Update Ability")
+                .cooldown(3)
+                .level(1)
+                .levelRequirement(1)
+                .build();
+        service.create(ability);
+
+        // when
+        ability.setLevel(2);
+        service.update(ability);
+
+        // then
+        assertEquals(2, service.getByName("Test Update Ability").getLevel());
     }
 
     @Test
     void delete() {
-    }
+        //given
+        Ability ability = Ability.builder()
+                .value(100)
+                .type(Ability.AbilityType.DAMAGE)
+                .name("Test Delete Ability")
+                .description("Test Delete Ability")
+                .cooldown(3)
+                .level(1)
+                .levelRequirement(1)
+                .build();
+        service.create(ability);
 
-    @Test
-    void getByName() {
+        // when
+        service.delete(ability);
+
+        // then
+        assertTrue(service.get(ability.getId()).isEmpty());
     }
 }

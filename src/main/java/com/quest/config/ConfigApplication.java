@@ -39,7 +39,7 @@ public class ConfigApplication {
 
     public void initApplication() {
         try {
-            migrationDB.start();
+//            migrationDB.start();
         } catch (Exception e) {
             throw new RuntimeException("Error starting migration database", e);
         }
