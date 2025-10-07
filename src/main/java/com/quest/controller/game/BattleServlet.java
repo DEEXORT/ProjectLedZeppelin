@@ -5,7 +5,6 @@ import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
-import com.quest.repository.Repository;
 import com.quest.services.AbilityService;
 import com.quest.services.PlayerService;
 import com.quest.services.resolver.BattleResolver;
@@ -19,9 +18,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 @WebServlet(Route.BATTLE)
 public class BattleServlet extends HttpServlet {
@@ -64,7 +60,7 @@ public class BattleServlet extends HttpServlet {
         Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
         BattleHistory history = RequestHelper.getValueAttr(req, KeyAttribute.BATTLE_HISTORY, BattleHistory.class);
         long abilityId = Long.parseLong(req.getParameter(KeyAttribute.ABILITY_ID));
-        Ability ability = abilityService.get(abilityId);
+        Ability ability = abilityService.getAbility(abilityId);
 
         battleResolver.resolveBattle(player, monster, ability, history); // Dealing damage
         req.getSession().setAttribute(KeyAttribute.BATTLE_HISTORY, history); // Update history in session

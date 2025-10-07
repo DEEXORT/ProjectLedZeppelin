@@ -71,4 +71,7 @@ public class ServiceLocator {
         return serviceClass.getName() + "<" + genericTypes[0].getName() + ">";
     }
 
+    public static void clear() {
+        components.clear();
+    }
 }

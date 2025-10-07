@@ -8,10 +8,14 @@ import java.util.Collection;
 import java.util.Optional;
 
 public class HibernatePlayerService implements BaseService<Player> {
-    private RepositoryImpl<Player> repository;
+    private final RepositoryImpl<Player> repository;
 
     public HibernatePlayerService() {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, Player.class);
+    }
+
+    public HibernatePlayerService(RepositoryImpl<Player> repository) {
+        this.repository = repository;
     }
 
     public void create(Player player) {

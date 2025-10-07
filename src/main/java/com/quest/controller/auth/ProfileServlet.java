@@ -51,7 +51,7 @@ public class ProfileServlet extends HttpServlet {
         if (abilityIds != null) {
             player.getAbilities().clear();
             for (String abilityId : abilityIds) {
-                Ability ability = abilityService.get(Long.parseLong(abilityId));
+                Ability ability = abilityService.getAbility(Long.parseLong(abilityId));
                 player.getAbilities().add(ability);
             }
             playerService.update(player);

@@ -7,10 +7,7 @@ import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -22,19 +19,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HibernateAchievementServiceIT extends ContainerIT {
-    private static HibernateAchievementService achievementService;
+    private HibernateAchievementService achievementService;
 
-    @BeforeAll
-    static void setUp() {
-//        sessionFactory = new Configuration()
-//                .configure("hibernate-test.cfg.xml")
-//                .addAnnotatedClass(Achievement.class)
-//                .addAnnotatedClass(User.class)
-//                .buildSessionFactory();
-//        SessionCreator creator = new SessionCreator(sessionFactory);
-//        RepositoryImpl<Achievement> repository = new RepositoryImpl<>(sessionCreator, Achievement.class);
-//        achievementService = new HibernateAchievementService(repository);
-        achievementService = ServiceLocator.getService(HibernateAchievementService.class);
+
+    @BeforeEach
+    void setUp() {
+        achievementService = new HibernateAchievementService(new RepositoryImpl<>(sessionCreator, Achievement.class));
 
         Achievement defaultAchievement = Achievement.builder()
                 .text("Achievement test")
@@ -120,12 +110,5 @@ class HibernateAchievementServiceIT extends ContainerIT {
         // then
         Optional<Achievement> deleted = achievementService.get(achievement.getId());
         assertFalse(deleted.isPresent());
-    }
-
-    @AfterAll
-    public static void tearDown() {
-        if (sessionFactory != null) {
-            sessionFactory.close();
-        }
     }
 }

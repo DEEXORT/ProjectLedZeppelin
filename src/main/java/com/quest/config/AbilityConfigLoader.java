@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quest.dto.AbilityConfigDTO;
 import com.quest.entity.Ability;
 import com.quest.services.AbilityService;
+import com.quest.services.hibernate.HibernateAbilityService;
 import com.quest.util.ResourcePath;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
@@ -16,16 +17,15 @@ import java.util.List;
 
 public class AbilityConfigLoader {
     private static final Logger logger = LogManager.getLogger(AbilityConfigLoader.class);
-    private final AbilityService abilityService;
+    private final HibernateAbilityService abilityService;
 
-    public AbilityConfigLoader(AbilityService abilityService) {
+//    public AbilityConfigLoader(AbilityService abilityService) {
+//        this.abilityService = abilityService;
+//    }
+
+    public AbilityConfigLoader(HibernateAbilityService abilityService) {
         this.abilityService = abilityService;
     }
-
-//    public static void main(String[] args) {
-//        AbilityConfigLoader abilityConfigLoader = new AbilityConfigLoader(ServiceLocator.getService(AbilityService.class));
-//        abilityConfigLoader.loadAbilities();
-//    }
 
     private final URL abilitiesConfig = getClass().getResource(ResourcePath.ABILITIES);
 

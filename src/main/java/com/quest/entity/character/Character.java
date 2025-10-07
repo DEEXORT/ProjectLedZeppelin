@@ -48,7 +48,7 @@ public abstract class Character {
     @JoinTable(name = "character_ability",
             joinColumns = @JoinColumn(name = "character_id"),
             inverseJoinColumns = @JoinColumn(name = "ability_id"))
-    List<Ability> abilities = initBaseAbilities();
+    List<Ability> abilities = new ArrayList<>();
 
     @Builder.Default
     @ElementCollection
@@ -58,7 +58,7 @@ public abstract class Character {
     @Column(name = "cooldown_value")
     Map<Ability, Integer> cooldowns = new HashMap<>();
 
-    public static List<Ability> initBaseAbilities() {
+    public List<Ability> initBaseAbilities() {
         List<Ability> abilities = new ArrayList<>();
 //        AbilityService abilityService = ServiceLocator.getService(AbilityService.class);
         HibernateAbilityService abilityService = ServiceLocator.getService(HibernateAbilityService.class);

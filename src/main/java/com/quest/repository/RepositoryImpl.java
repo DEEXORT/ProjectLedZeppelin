@@ -73,10 +73,15 @@ public class RepositoryImpl<T> implements Repository<T> {
         Session session = sessionCreator.getSession();
         Transaction transaction = session.beginTransaction();
         try (session) {
-            session.merge(object);
-            transaction.commit();
+            try {
+                session.merge(object);
+                transaction.commit();
+            } catch (Exception e) {
+                transaction.rollback();
+                throw new RuntimeException(e);
+            }
+
         } catch (Exception e) {
-            transaction.rollback();
             log.error(e);
             throw new RuntimeException("Error updating entity", e);
         }

@@ -2,18 +2,22 @@ package com.quest.services.hibernate;
 
 import com.quest.config.AbilityConfigLoader;
 import com.quest.config.ServiceLocator;
+import com.quest.entity.Ability;
 import com.quest.entity.character.Player;
+import com.quest.repository.RepositoryImpl;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class HibernatePlayerServiceIT extends ContainerIT {
-    private static HibernatePlayerService hibernatePlayerService;
+    private HibernatePlayerService hibernatePlayerService;
+    private HibernateAbilityService hibernateAbilityService;
 
-    @BeforeAll
-    static void setUp() {
-        hibernatePlayerService = ServiceLocator.getService(HibernatePlayerService.class);
-        AbilityConfigLoader abilityConfigLoader = ServiceLocator.getService(AbilityConfigLoader.class);
+    @BeforeEach
+    void setUp() {
+        hibernatePlayerService = new HibernatePlayerService(new RepositoryImpl<>(sessionCreator, Player.class));
+        hibernateAbilityService = new HibernateAbilityService(new RepositoryImpl<>(sessionCreator, Ability.class));
+        AbilityConfigLoader abilityConfigLoader = new AbilityConfigLoader(hibernateAbilityService);
         abilityConfigLoader.loadAbilities();
     }
 
@@ -31,6 +35,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
                 .experienceLevel(300)
                 .experiencePoints(50)
                 .build();
+        // TODO: Присвоить способности самому, т.к. больше не инициализируется в билдере
 
         // when
         hibernatePlayerService.create(test);

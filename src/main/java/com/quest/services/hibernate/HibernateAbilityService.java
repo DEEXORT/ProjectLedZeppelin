@@ -4,11 +4,8 @@ import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
 import com.quest.repository.RepositoryImpl;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import org.hibernate.SessionFactory;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 public class HibernateAbilityService implements BaseService<Ability>{
@@ -16,6 +13,10 @@ public class HibernateAbilityService implements BaseService<Ability>{
 
     public HibernateAbilityService() {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, Ability.class);
+    }
+
+    public HibernateAbilityService(RepositoryImpl<Ability> repository) {
+        this.repository = repository;
     }
 
     @Override
