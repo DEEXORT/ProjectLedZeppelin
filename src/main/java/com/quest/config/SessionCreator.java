@@ -1,9 +1,6 @@
 package com.quest.config;
 
-import com.quest.entity.Ability;
-import com.quest.entity.Achievement;
-import com.quest.entity.Event;
-import com.quest.entity.User;
+import com.quest.entity.*;
 import com.quest.entity.character.Character;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
@@ -26,6 +23,8 @@ public class SessionCreator implements AutoCloseable {
                 .addAnnotatedClass(Ability.class)
                 .addAnnotatedClass(Monster.class)
                 .addAnnotatedClass(Event.class)
+                .addAnnotatedClass(QuestScene.class)
+                .addAnnotatedClass(Action.class)
                 .buildSessionFactory();
     }
 
