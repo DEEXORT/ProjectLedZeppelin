@@ -45,7 +45,7 @@ public class GameServlet extends HttpServlet {
                     .name(user.getLogin())
                     .build();
             playerService.create(player);
-            user.setPlayerId(player.getCharacterId());
+            user.setPlayerId(player.getId());
         } else {
             // Continue game
             Optional<Player> optionalPlayer = playerService.get(user.getPlayerId());

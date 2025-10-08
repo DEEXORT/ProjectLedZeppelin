@@ -7,7 +7,6 @@ import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-//@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "players")
 @Getter

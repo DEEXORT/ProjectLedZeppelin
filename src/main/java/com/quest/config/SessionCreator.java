@@ -2,8 +2,10 @@ package com.quest.config;
 
 import com.quest.entity.Ability;
 import com.quest.entity.Achievement;
+import com.quest.entity.Event;
 import com.quest.entity.User;
 import com.quest.entity.character.Character;
+import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
 import lombok.Getter;
 import org.hibernate.Session;
@@ -22,12 +24,10 @@ public class SessionCreator implements AutoCloseable {
                 .addAnnotatedClass(Player.class)
                 .addAnnotatedClass(Character.class)
                 .addAnnotatedClass(Ability.class)
+                .addAnnotatedClass(Monster.class)
+                .addAnnotatedClass(Event.class)
                 .buildSessionFactory();
     }
-
-//    public SessionCreator(SessionFactory sessionFactory) {
-//        this.sessionFactory = sessionFactory;
-//    }
 
     public Session getSession() {
         return sessionFactory.openSession();

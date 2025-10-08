@@ -20,12 +20,12 @@ public class PlayerRepository {
     }
 
     public void create(Player player) {
-        player.setCharacterId(id.incrementAndGet());
+        player.setId(id.incrementAndGet());
         update(player);
     }
 
     public void update(Player player) {
-        repository.put(player.getCharacterId(), player);
+        repository.put(player.getId(), player);
     }
 
     public void delete(long id) {

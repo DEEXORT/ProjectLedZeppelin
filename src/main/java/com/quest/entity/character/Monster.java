@@ -1,19 +1,26 @@
 package com.quest.entity.character;
 
-import com.quest.entity.Ability;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Collection;
-
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "monsters")
 @SuperBuilder(toBuilder = true)
+@PrimaryKeyJoinColumn(name = "character_id")
 public class Monster extends Character {
     public enum MonsterType {
         BOSS, MINI_BOSS, ELITE, COMMON
     }
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     MonsterType type;
 }

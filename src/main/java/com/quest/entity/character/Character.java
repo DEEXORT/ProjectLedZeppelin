@@ -3,7 +3,6 @@ package com.quest.entity.character;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
-import com.quest.services.AbilityService;
 import com.quest.services.hibernate.HibernateAbilityService;
 import com.quest.util.ResourceBundleManager;
 import jakarta.persistence.*;
@@ -31,7 +30,7 @@ public abstract class Character {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long characterId; // TODO: rename to id
+    Long id;
     @Column(name = "name", nullable = false, length = 50)
     String name;
     @Column(name = "level", nullable = false)

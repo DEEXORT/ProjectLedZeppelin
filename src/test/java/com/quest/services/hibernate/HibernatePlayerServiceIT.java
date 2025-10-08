@@ -1,7 +1,6 @@
 package com.quest.services.hibernate;
 
 import com.quest.config.AbilityConfigLoader;
-import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
 import com.quest.entity.User;
 import com.quest.entity.character.Player;
@@ -10,7 +9,6 @@ import com.quest.util.ResourceBundleManager;
 import org.junit.jupiter.api.*;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,7 +65,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
         hibernatePlayerService.create(player);
 
         // then
-        assertNotNull(player.getCharacterId());
+        assertNotNull(player.getId());
         assertEquals(1, hibernatePlayerService.getAll().size());
         assertEquals("player", player.getName());
         assertEquals(1, player.getLevel());
@@ -101,7 +99,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
         hibernatePlayerService.create(player);
 
         // when
-        Optional<Player> optional = hibernatePlayerService.get(player.getCharacterId());
+        Optional<Player> optional = hibernatePlayerService.get(player.getId());
 
         // then
         assertTrue(optional.isPresent());
@@ -118,7 +116,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
         hibernatePlayerService.update(player);
 
         // then
-        Optional<Player> optional = hibernatePlayerService.get(player.getCharacterId());
+        Optional<Player> optional = hibernatePlayerService.get(player.getId());
         assertEquals(player.getHealth(), optional.get().getHealth());
     }
 
@@ -132,7 +130,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
         hibernatePlayerService.delete(player);
 
         // then
-        assertTrue(hibernatePlayerService.get(player.getCharacterId()).isEmpty());
+        assertTrue(hibernatePlayerService.get(player.getId()).isEmpty());
     }
 
 }

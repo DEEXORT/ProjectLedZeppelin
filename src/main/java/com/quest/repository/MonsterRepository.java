@@ -20,12 +20,12 @@ public class MonsterRepository {
     }
 
     public void create(Monster monster) {
-        monster.setCharacterId(id.incrementAndGet());
-        repository.put(monster.getCharacterId(), monster);
+        monster.setId(id.incrementAndGet());
+        repository.put(monster.getId(), monster);
     }
 
     public void update(Monster monster) {
-        repository.put(monster.getCharacterId(), monster);
+        repository.put(monster.getId(), monster);
     }
 
     public void delete(long id) {

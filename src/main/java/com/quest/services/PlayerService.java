@@ -28,6 +28,6 @@ public class PlayerService {
         playerRepository.update(player);
     }
 
-    public void delete(Player player) { playerRepository.delete(player.getCharacterId()); }
+    public void delete(Player player) { playerRepository.delete(player.getId()); }
 
 }
