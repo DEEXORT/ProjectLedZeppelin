@@ -32,6 +32,6 @@ public class QuestScene {
     private List<Action> actions = new ArrayList<>(); // TODO: Need to get from ActionRepository instead of QuestRepository
 
     @OneToOne
-    @JoinColumn(name = "achievement_id")
+    @JoinColumn(name = "id")
     private Achievement achievement;
 }

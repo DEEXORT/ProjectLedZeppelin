@@ -1,10 +1,6 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.ApplicationProperties;
-import com.quest.config.MigrationDB;
-import com.quest.config.ServiceLocator;
-import com.quest.config.SessionCreator;
-import org.hibernate.SessionFactory;
+import com.quest.config.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -27,11 +23,6 @@ public class ContainerIT {
 
     @BeforeAll
     static void setup() throws Exception {
-//        sessionFactory = new Configuration()
-//                .configure("hibernate-test.cfg.xml")
-//                .addAnnotatedClass(Achievement.class)
-//                .addAnnotatedClass(User.class)
-//                .buildSessionFactory();
         ApplicationProperties properties = ServiceLocator.getService(ApplicationProperties.class);
         properties.setProperty(DATABASE_CONNECTION_URL, postgreSQLContainer.getJdbcUrl());
         properties.setProperty(DATABASE_CONNECTION_USERNAME, postgreSQLContainer.getUsername());

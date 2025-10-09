@@ -5,27 +5,31 @@ import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.exception.QuestNotFoundException;
-import com.quest.services.AchievementService;
-import com.quest.services.EventService;
-import com.quest.services.MonsterService;
-import com.quest.services.QuestService;
+import com.quest.services.hibernate.HibernateAchievementService;
+import com.quest.services.hibernate.HibernateEventService;
+import com.quest.services.hibernate.HibernateMonsterService;
+import com.quest.services.hibernate.HibernateQuestService;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 @Data
 public class QuestParser {
-    private final QuestService questService;
-    private final EventService eventService;
-    private final AchievementService achievementService;
-    private final MonsterService monsterService;
     private Logger logger = LogManager.getLogger(QuestParser.class);
+
+    private final HibernateQuestService questService;
+    private final HibernateEventService eventService;
+    private final HibernateAchievementService achievementService;
+    private final HibernateMonsterService monsterService;
+
     private final Pattern PATTERN_EVENT = Pattern.compile(
             "<event\\s+" +
                     "(?:" +
@@ -52,7 +56,8 @@ public class QuestParser {
                     "|(?:text=\"(?<text>[^\"]*)\")\\s*" +
                     "){5}>\\s*");
 
-    public QuestParser(QuestService questService, AchievementService achievementService, EventService eventService, MonsterService monsterService) {
+    public QuestParser(HibernateQuestService questService, HibernateAchievementService achievementService,
+                       HibernateEventService eventService, HibernateMonsterService monsterService) {
         this.questService = questService;
         this.eventService = eventService;
         this.achievementService = achievementService;
@@ -72,9 +77,13 @@ public class QuestParser {
     next_id - идентификатор сцены, к которой приведет действие
      */
 
+    @Transactional
     public void parseText(String questText) {
         // Разделяем текст сценария квеста на отдельные сцены
         String[] questScenes = questText.split(ParseConst.SCENE_DELIMITER);
+
+        Map<Long, QuestScene> graphScenes = new HashMap<>();
+
         for (int i = 1; i < questScenes.length; i++) {
 
             // Делим на составляющие: (questId + questScene) / (action + nextQuestId)
@@ -87,16 +96,20 @@ public class QuestParser {
 
             String questSceneDescription = idAndDescription[1].replace("\n", "<br>");
             QuestScene scene = QuestScene.builder()
-                    .id(questSceneId)
+                    .fileId(questSceneId)
                     .descriptionScene(questSceneDescription)
                     .actions(new ArrayList<>())
                     .build();
 
+            graphScenes.put(questSceneId, scene);
+
             // Если есть достижение в сцене, то сохранить в БД
             if (questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_START) ||
                     questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_END)) {
+
                 logger.info("Создание достижения...");
-                Achievement achievement = saveAchievement(questSceneDescription, questSceneId);
+                Achievement achievement = saveAchievement(questSceneDescription);
+
                 String updatedQuestSceneDescription =
                         questSceneDescription
                                 .replace(ParseConst.ACHIEVEMENT_DELIMITER_START, "")
@@ -111,23 +124,24 @@ public class QuestParser {
                 String actionText = actionLine[0];
                 long nextQuestSceneId = getQuestSceneId(actionLine[1]);
                 long eventId = saveEvent(actionLine[1]);
+
                 Action action = Action.builder()
                         .actionText(actionText)
                         .questSceneId(questSceneId)
                         .nextQuestSceneId(nextQuestSceneId)
                         .eventId(eventId == 0 ? null : eventId)
                         .build();
+
                 logger.info("Action: {}", action);
+
                 scene.getActions().add(action);
             }
-
-            // Сохраняем сцену и действия в БД
-            Optional<QuestScene> questScene = questService.create(scene);
-            questScene.ifPresent(value -> logger.info("QuestScene created: {}", value.getId()));
         }
+
+        questService.saveAllScenes(graphScenes);
     }
 
-    private Achievement saveAchievement(String questSceneDescription, long questSceneId) {
+    private Achievement saveAchievement(String questSceneDescription) {
         Pattern pattern = Pattern.compile("<ach>(.*?)</ach>");
         Matcher matcher = pattern.matcher(questSceneDescription);
 

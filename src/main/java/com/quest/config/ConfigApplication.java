@@ -1,17 +1,13 @@
 package com.quest.config;
 
-import com.quest.entity.Ability;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
 import com.quest.entity.User;
-import com.quest.entity.factory.AbilityFactory;
 import com.quest.entity.factory.MonsterFactory;
-import com.quest.services.AbilityService;
 import com.quest.services.MonsterService;
 import com.quest.services.PlayerService;
 import com.quest.services.UserService;
 import com.quest.util.QuestParser;
-import com.quest.util.ResourceBundleManager;
 import com.quest.util.ResourcePath;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +35,7 @@ public class ConfigApplication {
 
     public void initApplication() {
         try {
-//            migrationDB.start();
+            migrationDB.start();
         } catch (Exception e) {
             throw new RuntimeException("Error starting migration database", e);
         }
