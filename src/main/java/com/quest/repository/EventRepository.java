@@ -1,10 +1,8 @@
 package com.quest.repository;
 
-import com.quest.entity.Achievement;
 import com.quest.entity.Event;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;

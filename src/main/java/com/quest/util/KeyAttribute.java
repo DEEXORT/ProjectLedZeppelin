@@ -2,7 +2,8 @@ package com.quest.util;
 
 
 public class KeyAttribute {
-    private KeyAttribute() {}
+    private KeyAttribute() {
+    }
 
     public static final String USER = "user";
     public static final String PLAYER = "player";

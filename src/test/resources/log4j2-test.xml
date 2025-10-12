@@ -13,13 +13,13 @@
             <AppenderRef ref="Console"/>
         </Logger>
         <Logger name="com.quest.services" level="DEBUG" additivity="false">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="Console"/>
         </Logger>
         <Logger name="com.quest.controller" level="INFO" additivity="false">
             <AppenderRef ref="ControllerFileLog"/>
         </Logger>
         <Root level="ERROR">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>
