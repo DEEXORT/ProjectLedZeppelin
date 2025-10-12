@@ -2,7 +2,6 @@ package com.quest.services;
 
 import com.quest.entity.Ability;
 import com.quest.repository.AbilityRepository;
-import com.quest.services.hibernate.BaseService;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;
@@ -42,4 +41,5 @@ public class AbilityService {
     public void delete(long id) {
         repository.delete(id);
     }
+
 }

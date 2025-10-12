@@ -1,16 +1,13 @@
 package com.quest.config;
 
-import com.quest.repository.Repository;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServiceLocator {
-//    private static final Map<Class<?>, Object> components = new ConcurrentHashMap<>();
+    //    private static final Map<Class<?>, Object> components = new ConcurrentHashMap<>();
     private static final Map<String, Object> components = new ConcurrentHashMap<>();
 
     @SuppressWarnings("unchecked")

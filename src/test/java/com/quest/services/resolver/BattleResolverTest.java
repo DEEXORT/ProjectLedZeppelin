@@ -8,7 +8,7 @@ import com.quest.entity.factory.AbilityFactory;
 import com.quest.entity.factory.MonsterFactory;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BattleResolverTest {
 

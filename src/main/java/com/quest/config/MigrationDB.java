@@ -1,4 +1,5 @@
 package com.quest.config;
+
 import liquibase.Scope;
 import liquibase.command.CommandScope;
 import liquibase.resource.ClassLoaderResourceAccessor;
@@ -18,6 +19,7 @@ public class MigrationDB {
             update.addArgumentValue("url", properties.getProperty(ApplicationProperties.DATABASE_CONNECTION_URL));
             update.addArgumentValue("username", properties.getProperty(ApplicationProperties.DATABASE_CONNECTION_USERNAME));
             update.addArgumentValue("password", properties.getProperty(ApplicationProperties.DATABASE_CONNECTION_PASSWORD));
+            update.addArgumentValue("driver", properties.getProperty(ApplicationProperties.DATABASE_CONNECTION_DRIVER));
 
             update.execute();
         });

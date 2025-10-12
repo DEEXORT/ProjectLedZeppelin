@@ -3,9 +3,10 @@
 <html lang="ru">
 <head>
     <title>Проклятое подземелье</title>
-<%--    Fonts--%>
+    <%--    Fonts--%>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/fonts.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/ability.scss">
 
     <style>
@@ -64,10 +65,11 @@
             max-width: 1200px;
             margin: 10vh auto 0;
         }
+
         .card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 2rem;
             width: 1000px;
             font-family: 'Arial', sans-serif;
@@ -248,7 +250,7 @@
         .stats-container {
             background: rgba(255, 255, 255, 0.9);
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             padding: 2rem;
             margin: 100px auto 50px;
             max-width: 1200px;
@@ -260,7 +262,7 @@
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .stats-table {

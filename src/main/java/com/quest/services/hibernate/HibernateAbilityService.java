@@ -3,10 +3,6 @@ package com.quest.services.hibernate;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
 import com.quest.repository.RepositoryImpl;
-import jakarta.transaction.Transactional;
-
-import java.util.Collection;
-import java.util.Optional;
 
 public class HibernateAbilityService extends AbstractBaseService<Ability> {
 
@@ -25,4 +21,5 @@ public class HibernateAbilityService extends AbstractBaseService<Ability> {
                 .findFirst()
                 .orElse(null);
     }
+
 }

@@ -4,8 +4,8 @@ import com.quest.entity.Action;
 import com.quest.entity.Event;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
-import com.quest.services.EventService;
-import com.quest.services.MonsterService;
+import com.quest.services.hibernate.HibernateEventService;
+import com.quest.services.hibernate.HibernateMonsterService;
 import com.quest.util.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,8 +20,8 @@ import java.util.Optional;
 
 @AllArgsConstructor
 public class EventResolver {
-    private EventService eventService;
-    private MonsterService monsterService;
+    private HibernateEventService eventService;
+    private HibernateMonsterService monsterService;
 
     public void resolve(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         HttpSession session = req.getSession();
@@ -29,7 +29,13 @@ public class EventResolver {
 
         long eventId = Long.parseLong(req.getParameter(KeyAttribute.EVENT_ID));
         long nextQuestSceneId = Long.parseLong(req.getParameter(KeyAttribute.SCENE_ID));
-        Event event = eventService.get(eventId);
+
+        Event event;
+        if (eventService.get(eventId).isPresent()) {
+            event = eventService.get(eventId).get();
+        } else {
+            throw new ServletException("Event not found");
+        }
 
         switch (event.getType()) {
             case DAMAGE -> {

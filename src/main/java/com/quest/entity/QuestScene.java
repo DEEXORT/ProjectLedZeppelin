@@ -2,18 +2,22 @@ package com.quest.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Getter
-@Setter
-@Table(name = "scenes")
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "scenes")
+@Setter
+@Getter
+@Entity
 public class QuestScene {
+    public enum Type {START, DEATH, BATTLE_DEATH, STORY, COMPLETE}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,11 +31,16 @@ public class QuestScene {
     @Column(name = "description")
     private String descriptionScene;
 
+    @Fetch(FetchMode.JOIN)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "scene_id")
     private List<Action> actions = new ArrayList<>(); // TODO: Need to get from ActionRepository instead of QuestRepository
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "achievement_id")
     private Achievement achievement;
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private Type type;
 }

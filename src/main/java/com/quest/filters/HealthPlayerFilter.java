@@ -1,6 +1,9 @@
 package com.quest.filters;
 
+import com.quest.config.ServiceLocator;
 import com.quest.entity.character.Player;
+import com.quest.services.hibernate.HibernatePlayerService;
+import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.util.KeyAttribute;
 import com.quest.util.ResourcePath;
 import com.quest.util.Route;
@@ -19,6 +22,15 @@ import java.io.IOException;
 
 @WebFilter({Route.QUEST})
 public class HealthPlayerFilter extends HttpFilter {
+    private HibernateQuestService questService;
+    private HibernatePlayerService playerService;
+
+    @Override
+    public void init() throws ServletException {
+        questService = ServiceLocator.getService(HibernateQuestService.class);
+        playerService = ServiceLocator.getService(HibernatePlayerService.class);
+    }
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
@@ -28,7 +40,9 @@ public class HealthPlayerFilter extends HttpFilter {
         Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
 
         if (player != null && player.getHealth() <= 0) {
-            player.setQuestSceneId(951L);
+            player.setQuestSceneId(questService.getBattleDeathScene().getId());
+            playerService.update(player);
+
             session.setAttribute(KeyAttribute.IMG_END_GAME, ResourcePath.IMG_RIP);
             response.sendRedirect(request.getContextPath() + Route.END);
         } else {

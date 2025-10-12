@@ -1,17 +1,23 @@
 package com.quest.repository;
 
 import com.quest.config.SessionCreator;
+import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 public class RepositoryImpl<T> implements Repository<T> {
     private final Logger log = LogManager.getLogger(RepositoryImpl.class);
@@ -53,18 +59,15 @@ public class RepositoryImpl<T> implements Repository<T> {
     public void create(T object) {
         Session session = sessionCreator.getSession();
         Transaction transaction = session.beginTransaction();
-        try (session) {
-            try {
-                session.persist(object);
-                transaction.commit();
-            } catch (HibernateException e) {
-                transaction.rollback();
-                log.error(e);
-                throw new RuntimeException(e);
-            }
+        try {
+            session.persist(object);
+            transaction.commit();
         } catch (Exception e) {
+            transaction.rollback();
             log.error(e);
             throw new RuntimeException(e);
+        } finally {
+            session.close();
         }
     }
 
@@ -106,5 +109,46 @@ public class RepositoryImpl<T> implements Repository<T> {
             log.error(e);
             throw new RuntimeException("Error deleting entity", e);
         }
+    }
+
+    public Stream<T> find(T object) {
+        Session session = sessionCreator.getSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> critQuery = builder.createQuery(entityClass);
+
+        Root<T> root = critQuery.from(entityClass);
+        critQuery.select(root);
+
+        Field[] fields = object.getClass().getDeclaredFields();
+        List<Predicate> predicates = new ArrayList<>();
+        for (Field field : fields) {
+            // SELECT * FROM <entityClass> WHERE field.getName() = field.get(object)
+            try {
+                field.setAccessible(true);
+                String name = field.getName();
+                Object value = field.get(object);
+
+                if (isPredicate(field, value)) {
+                    Predicate predicate = builder.equal(root.get(name), value);
+                    predicates.add(predicate);
+                }
+            } catch (IllegalAccessException e) {
+                log.error(e);
+                throw new RuntimeException(e);
+            }
+        }
+
+        critQuery.where(predicates.toArray(new Predicate[0]));
+        Query<T> sessionQuery = session.createQuery(critQuery);
+        return sessionQuery.list().stream();
+    }
+
+    private boolean isPredicate(Field field, Object value) {
+        return Objects.nonNull(value)
+                && !field.isAnnotationPresent(Transient.class)
+                && !field.isAnnotationPresent(OneToMany.class)
+                && !field.isAnnotationPresent(OneToOne.class)
+                && !field.isAnnotationPresent(ManyToMany.class)
+                && !field.isAnnotationPresent(ManyToOne.class);
     }
 }

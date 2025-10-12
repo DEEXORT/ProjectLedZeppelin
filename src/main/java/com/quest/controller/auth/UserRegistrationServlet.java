@@ -4,7 +4,7 @@ import com.quest.config.ServiceLocator;
 import com.quest.entity.User;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
-import com.quest.services.UserService;
+import com.quest.services.hibernate.HibernateUserService;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.RequestHelper;
@@ -18,16 +18,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 @WebServlet(Route.REGISTER)
 public class UserRegistrationServlet extends HttpServlet {
 
-    private UserService userService;
+    private HibernateUserService userService;
 
     @Override
     public void init(ServletConfig config) {
-        userService = ServiceLocator.getService(UserService.class);
+        userService = ServiceLocator.getService(HibernateUserService.class);
     }
 
     @Override
@@ -48,7 +47,7 @@ public class UserRegistrationServlet extends HttpServlet {
         User user = User.builder()
                 .login(login)
                 .password(password)
-                .achievements(new ArrayList<>())
+//                .achievements(new ArrayList<>())
                 .build();
         try {
             userService.create(user);

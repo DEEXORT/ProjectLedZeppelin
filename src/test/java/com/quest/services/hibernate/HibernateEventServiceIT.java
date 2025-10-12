@@ -5,7 +5,6 @@ import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.repository.RepositoryImpl;
 import com.quest.util.EventType;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +21,11 @@ class HibernateEventServiceIT extends ContainerIT {
         monsterService = new HibernateMonsterService(new RepositoryImpl<>(sessionCreator, Monster.class));
     }
 
-    @AfterEach
-    void tearDown() {
-        eventService.getAll().forEach(eventService::delete);
-        monsterService.getAll().forEach(monsterService::delete);
-    }
+//    @AfterEach
+//    void tearDown() {
+//        eventService.getAll().forEach(eventService::delete);
+//        monsterService.getAll().forEach(monsterService::delete);
+//    }
 
     @Test
     void shouldCreateEventWithMonster() {
@@ -42,13 +41,17 @@ class HibernateEventServiceIT extends ContainerIT {
 
     private Event getEvent() {
         Monster orc = MonsterFactory.createOrcMonster();
-        monsterService.create(orc);
-        Event event = Event.builder()
+        Optional<Monster> optionalMonster = monsterService.get(orc);
+        if (optionalMonster.isPresent()) {
+            orc.setId(optionalMonster.get().getId());
+        } else {
+            monsterService.create(orc);
+        }
+        return Event.builder()
                 .monsterId(orc.getId())
                 .type(EventType.BATTLE)
                 .description("Battle description")
                 .build();
-        return event;
     }
 
     @Test

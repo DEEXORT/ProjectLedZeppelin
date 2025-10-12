@@ -20,7 +20,6 @@
     <include file="/history/2025/08/013-add-fk-events-table.xml" relativeToChangelogFile="true"/>
     <include file="/history/2025/09/001-alter-actions-table.xml" relativeToChangelogFile="true"/>
     <include file="/history/2025/09/002-create-player-sprite-table.xml" relativeToChangelogFile="true"/>
-    <include file="/history/2025/10/001-add-user-achievements-table.xml" relativeToChangelogFile="true"/>
     <include file="/history/2025/10/002-add-character-ability-table.xml" relativeToChangelogFile="true"/>
     <include file="/history/2025/10/003-add-cooldowns-table.xml" relativeToChangelogFile="true"/>
 

@@ -10,6 +10,8 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ public abstract class Character {
     @Column(name = "attack", nullable = false)
     int attack;
 
+    @Fetch(FetchMode.JOIN)
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(name = "character_ability",
@@ -49,6 +52,7 @@ public abstract class Character {
             inverseJoinColumns = @JoinColumn(name = "ability_id"))
     List<Ability> abilities = new ArrayList<>();
 
+    @Fetch(FetchMode.JOIN)
     @Builder.Default
     @ElementCollection
     @CollectionTable(name = "cooldowns",
@@ -57,13 +61,10 @@ public abstract class Character {
     @Column(name = "cooldown_value")
     Map<Ability, Integer> cooldowns = new HashMap<>();
 
-    public List<Ability> initBaseAbilities() {
-        List<Ability> abilities = new ArrayList<>();
-//        AbilityService abilityService = ServiceLocator.getService(AbilityService.class);
+    public void initBaseAbilities() {
         HibernateAbilityService abilityService = ServiceLocator.getService(HibernateAbilityService.class);
         Ability baseAttack = abilityService.getByName(ResourceBundleManager.getSetting("ability.base_attack_name"));
-        abilities.add(baseAttack);
-        return abilities;
+        this.abilities.add(baseAttack);
     }
 
     public boolean isAbilityAvailable(Ability ability) {
@@ -100,18 +101,19 @@ public abstract class Character {
 
     private void useHeal(Ability ability, Character character, BattleHistory history) {
         character.setHealth(Math.min(character.getHealth() + ability.getValue(), character.getMaxHealth()));
-        history.saveAction(this, character, ability);
+        history.saveAction(this, character, ability, ability.getValue());
     }
 
     private void useDamage(Ability ability, Character target, BattleHistory history) {
         int damage = calculateDamage(ability);
         logger.debug("{} damage", damage);
         target.setHealth(target.getHealth() - damage);
-        history.saveAction(this, target, ability);
+        history.saveAction(this, target, ability, damage);
     }
 
     private int calculateDamage(Ability ability) {
-        return ability.getValue() + (this.getAttack() * ability.getLevel() / 10);
+//        return ability.getValue() + (this.getAttack() * ability.getLevel() / 10);
+        return ability.getValue();
     }
 
     public Ability getBaseAttack() {

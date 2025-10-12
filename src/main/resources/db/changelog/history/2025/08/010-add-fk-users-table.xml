@@ -6,7 +6,8 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="1756141293272-1" author="d.gimaldinov">
-        <addForeignKeyConstraint baseTableName="users" baseColumnNames="character_id" constraintName="fk_users_character_id"
+        <addForeignKeyConstraint baseTableName="users" baseColumnNames="character_id"
+                                 constraintName="fk_users_character_id"
                                  referencedTableName="players"
                                  referencedColumnNames="character_id"/>
     </changeSet>

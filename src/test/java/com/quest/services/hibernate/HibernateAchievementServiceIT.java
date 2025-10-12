@@ -1,20 +1,11 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.ServiceLocator;
-import com.quest.config.SessionCreator;
 import com.quest.entity.Achievement;
-import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
-import jakarta.transaction.Transactional;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.*;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,11 +17,6 @@ class HibernateAchievementServiceIT extends ContainerIT {
     @BeforeEach
     void setUp() {
         achievementService = new HibernateAchievementService(new RepositoryImpl<>(sessionCreator, Achievement.class));
-
-        Achievement defaultAchievement = Achievement.builder()
-                .text("Achievement test")
-                .build();
-        achievementService.create(defaultAchievement);
     }
 
     @Test

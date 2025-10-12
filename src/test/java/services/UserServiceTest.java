@@ -3,6 +3,7 @@ package services;
 import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
+import com.quest.repository.UserRepository;
 import com.quest.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.quest.repository.UserRepository;
 
 import java.util.Optional;
 

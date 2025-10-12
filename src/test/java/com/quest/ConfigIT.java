@@ -2,10 +2,11 @@ package com.quest;
 
 import com.quest.config.ConfigApplication;
 import com.quest.config.ServiceLocator;
+import com.quest.entity.User;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
-import com.quest.entity.User;
 import com.quest.entity.factory.MonsterFactory;
+import com.quest.services.hibernate.ContainerIT;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.BeforeAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ConfigIT {
+public class ConfigIT extends ContainerIT {
     protected final HttpServletRequest request;
     protected final HttpServletResponse response;
     protected final HttpSession session;
@@ -54,6 +55,8 @@ public class ConfigIT {
                 .health(100)
                 .attack(10)
                 .build();
+        playerTest.initBaseAbilities();
+
         userTest = userTest.toBuilder()
                 .playerId(playerTest.getId())
                 .build();
@@ -61,6 +64,7 @@ public class ConfigIT {
                 .toBuilder()
                 .id(1L)
                 .build();
+        monsterTest.initBaseAbilities();
 
         // config mocks
         when(request.getSession()).thenReturn(session);

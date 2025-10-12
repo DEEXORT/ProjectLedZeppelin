@@ -1,6 +1,9 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.*;
+import com.quest.config.ApplicationProperties;
+import com.quest.config.ConfigApplication;
+import com.quest.config.ServiceLocator;
+import com.quest.config.SessionCreator;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -22,16 +25,19 @@ public class ContainerIT {
             .withPassword("postgres");
 
     @BeforeAll
-    static void setup() throws Exception {
+    static void setup() {
+
+        String urlWithP6spy = postgreSQLContainer.getJdbcUrl().replace("jdbc:postgresql", "jdbc:p6spy:postgresql");
+
         ApplicationProperties properties = ServiceLocator.getService(ApplicationProperties.class);
-        properties.setProperty(DATABASE_CONNECTION_URL, postgreSQLContainer.getJdbcUrl());
+        properties.setProperty(DATABASE_CONNECTION_URL, urlWithP6spy);
         properties.setProperty(DATABASE_CONNECTION_USERNAME, postgreSQLContainer.getUsername());
         properties.setProperty(DATABASE_CONNECTION_PASSWORD, postgreSQLContainer.getPassword());
 
         sessionCreator = new SessionCreator(properties);
 
-        MigrationDB migrationDB = new MigrationDB(properties);
-        migrationDB.start();
+        ConfigApplication config = ServiceLocator.getService(ConfigApplication.class);
+        config.initApplication();
     }
 
     @AfterAll

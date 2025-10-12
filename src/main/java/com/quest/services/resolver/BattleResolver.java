@@ -1,10 +1,12 @@
 package com.quest.services.resolver;
 
+import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
 import com.quest.entity.character.Character;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
+import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.util.ResourceBundleManager;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 @Data
 public class BattleResolver {
     private static final Logger logger = LogManager.getLogger(BattleResolver.class);
+    private final HibernatePlayerService playerService = ServiceLocator.getService(HibernatePlayerService.class);
 
     public void resolveBattle(Player player, Monster monster, Ability ability, BattleHistory history) {
         attack(player, monster, ability, history);
@@ -33,7 +36,12 @@ public class BattleResolver {
         if (isUsedAbility) {
             // Update other abilities
             attacker.getCooldowns().forEach((ability, cooldown) -> {
-                if (ability != attackAbility) attacker.updateCooldown(ability);
+                if (ability != attackAbility) {
+                    attacker.updateCooldown(ability);
+                    if (attacker instanceof Player) {
+                        playerService.update((Player) attacker);
+                    }
+                }
             });
         } else {
             logger.error("Ability was not used");

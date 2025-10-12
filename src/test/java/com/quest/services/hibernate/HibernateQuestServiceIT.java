@@ -1,7 +1,5 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.ConfigApplication;
-import com.quest.config.ServiceLocator;
 import com.quest.entity.Achievement;
 import com.quest.entity.Action;
 import com.quest.entity.Event;
@@ -14,7 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class HibernateQuestServiceIT extends ContainerIT {
     private HibernateQuestService hibernateQuestService;
@@ -30,8 +29,7 @@ class HibernateQuestServiceIT extends ContainerIT {
         hibernateEventService = new HibernateEventService(new RepositoryImpl<>(sessionCreator, Event.class));
         hibernateMonsterService = new HibernateMonsterService(new RepositoryImpl<>(sessionCreator, Monster.class));
 
-        ConfigApplication config = ServiceLocator.getService(ConfigApplication.class);
-        config.initApplication();
+
     }
 
     @AfterEach
@@ -46,7 +44,7 @@ class HibernateQuestServiceIT extends ContainerIT {
     void shouldSaveAllScenes() {
         // then
         Collection<QuestScene> scenes = hibernateQuestService.getAll();
-        assertEquals(27, scenes.size());
+        assertEquals(26, scenes.size());
     }
 
     @Test

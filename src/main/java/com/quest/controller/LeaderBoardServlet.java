@@ -1,12 +1,10 @@
 package com.quest.controller;
 
 import com.quest.config.ServiceLocator;
-import com.quest.services.PlayerService;
-import com.quest.services.QuestService;
 import com.quest.services.StatisticService;
-import com.quest.services.UserService;
-import com.quest.util.*;
-import jakarta.servlet.ServletConfig;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,14 +15,14 @@ import java.io.IOException;
 
 @WebServlet(Route.LEADER_BOARD)
 public class LeaderBoardServlet extends HttpServlet {
-    private PlayerService playerService;
-    private QuestService questService;
-    private UserService userService;
-    private StatisticService statisticService;
+    private final StatisticService statisticService;
 
-    @Override
-    public void init(ServletConfig config) {
-        statisticService = ServiceLocator.getService(StatisticService.class);
+    public LeaderBoardServlet(StatisticService statisticService) {
+        this.statisticService = statisticService;
+    }
+
+    public LeaderBoardServlet() {
+        this(ServiceLocator.getService(StatisticService.class));
     }
 
     @Override

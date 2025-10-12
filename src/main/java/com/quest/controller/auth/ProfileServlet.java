@@ -3,12 +3,12 @@ package com.quest.controller.auth;
 import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
 import com.quest.entity.character.Player;
-import com.quest.services.AbilityService;
-import com.quest.services.PlayerService;
+import com.quest.services.hibernate.HibernateAbilityService;
+import com.quest.services.hibernate.HibernatePlayerService;
+import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.RequestHelper;
 import com.quest.util.Route;
-import com.quest.util.JspPath;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -18,20 +18,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @WebServlet(Route.PROFILE)
 public class ProfileServlet extends HttpServlet {
-    private final AbilityService abilityService;
-    private final PlayerService playerService;
+    private final HibernateAbilityService abilityService;
+    private final HibernatePlayerService playerService;
 
-    public ProfileServlet(AbilityService abilityService, PlayerService playerService) {
+    public ProfileServlet(HibernateAbilityService abilityService, HibernatePlayerService playerService) {
         this.abilityService = abilityService;
         this.playerService = playerService;
     }
 
     public ProfileServlet() {
-        this(ServiceLocator.getService(AbilityService.class),
-                ServiceLocator.getService(PlayerService.class));
+        this(ServiceLocator.getService(HibernateAbilityService.class),
+                ServiceLocator.getService(HibernatePlayerService.class));
     }
 
     @Override
@@ -51,8 +52,8 @@ public class ProfileServlet extends HttpServlet {
         if (abilityIds != null) {
             player.getAbilities().clear();
             for (String abilityId : abilityIds) {
-                Ability ability = abilityService.getAbility(Long.parseLong(abilityId));
-                player.getAbilities().add(ability);
+                Optional<Ability> ability = abilityService.get(Long.parseLong(abilityId));
+                ability.ifPresent(value -> player.getAbilities().add(value));
             }
             playerService.update(player);
         }

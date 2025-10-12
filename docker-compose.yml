@@ -1,0 +1,50 @@
+services:
+  # =====================================
+  # Сервис №1 - веб-приложение квест-игры
+  # =====================================
+  app:
+    # Сборка приложения из Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Порты (внешний локальный: внутренний контейнера)
+    ports:
+      - "8080:8080"
+    # Переменные окружения для Spring Boot
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://db:5432/postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+    # Запуск приложения после запуска сервиса базы данных
+    depends_on:
+      db:
+        # Режим, определяющий в какой момент запускать сервис
+        condition: service_started
+        # После рестарта БД, сервис также перезапуститься
+        restart: true
+    # Перезапуск контейнера, если по каким-то причинам упал
+    restart: unless-stopped
+
+  # ==================================
+  # Сервис №2 - База данных PostgreSQL
+  # ==================================
+  db:
+    # Использование готового образа
+    image: postgres:15
+    # Переменные окружения для PostgreSQL
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qwerty
+    # Порты для БД
+    ports:
+      - "5432:5432"
+    # Тома
+    volumes:
+      #  Хранилище для данных БД
+      - postgres_data:/var/lib/postgresql/data
+      # Инициализация начальных данных при первом запуске
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  postgres_data:

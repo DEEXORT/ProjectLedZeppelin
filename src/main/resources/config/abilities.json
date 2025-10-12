@@ -6,7 +6,7 @@
       "description": "Наносит базовый урон",
       "type": "damage",
       "level": 1,
-      "value": 100,
+      "value": 10,
       "cooldown": 0,
       "levelRequirement": 1
     },
@@ -56,8 +56,8 @@
       "description": "Не самый элегантный, но эффективный способ выразить своё мнение",
       "type": "damage",
       "level": 1,
-      "value": 120,
-      "cooldown": 0,
+      "value": 1,
+      "cooldown": 5,
       "levelRequirement": 1
     },
     {

@@ -1,12 +1,11 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.ServiceLocator;
-import com.quest.config.SessionCreator;
-import com.quest.entity.Achievement;
 import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -34,26 +33,6 @@ class HibernateUserServiceIT extends ContainerIT {
 
         // then
         Assertions.assertNotNull(user.getId());
-    }
-
-    @Test
-    void shouldCreateUserWithAchievement() {
-        // given
-        Achievement achievement = Achievement.builder()
-                .text("test achievement")
-                .build();
-        User user = User.builder()
-                .login("testCreateUserWithAchievement")
-                .password("testCreateUserWithAchievement")
-                .build();
-        user.getAchievements().add(achievement);
-
-        // when
-        hibernateUserService.create(user);
-
-        // then
-        Assertions.assertNotNull(user.getId());
-        Assertions.assertNotNull(achievement.getId());
     }
 
     @Test
@@ -128,5 +107,21 @@ class HibernateUserServiceIT extends ContainerIT {
 
         // then
         Assertions.assertTrue(hibernateUserService.get(user.getId()).isEmpty());
+    }
+
+    @Test
+    void shouldFindUserByLogin() {
+        // given
+        User user = User.builder()
+                .login("testFindUserByLogin")
+                .password("testFindUserByLogin")
+                .build();
+        hibernateUserService.create(user);
+
+        // when
+        Optional<User> userDB = hibernateUserService.get("testFindUserByLogin", "testFindUserByLogin");
+
+        // then
+        Assertions.assertTrue(userDB.isPresent());
     }
 }

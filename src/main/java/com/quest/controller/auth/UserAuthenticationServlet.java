@@ -5,8 +5,11 @@ import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserInvalidPasswordException;
 import com.quest.exception.UserNotFoundException;
-import com.quest.services.UserService;
-import com.quest.util.*;
+import com.quest.services.hibernate.HibernateUserService;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
+import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,11 +26,11 @@ import static com.quest.util.KeyAttribute.USERNAME;
 
 @WebServlet(Route.LOGIN)
 public class UserAuthenticationServlet extends HttpServlet {
-    private UserService userService;
+    private HibernateUserService userService;
 
     @Override
     public void init(ServletConfig config) {
-        userService = ServiceLocator.getService(UserService.class);
+        userService = ServiceLocator.getService(HibernateUserService.class);
     }
 
     @Override

@@ -7,11 +7,13 @@ import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class LeaderBoardServletIT extends ConfigIT {
     private final LeaderBoardServlet leaderBoardServlet = ServiceLocator.getService(LeaderBoardServlet.class);
+
 
     @Test
     void doGet_ShouldShowLeaderBoard() throws ServletException, IOException {
@@ -23,6 +25,6 @@ class LeaderBoardServletIT extends ConfigIT {
         leaderBoardServlet.doGet(request, response);
 
         // then
-        verify(requestDispatcher).forward(request,response);
+        verify(requestDispatcher).forward(request, response);
     }
 }

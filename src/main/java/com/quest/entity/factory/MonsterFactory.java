@@ -5,7 +5,7 @@ import com.quest.entity.character.Monster;
 public class MonsterFactory {
 
     public static Monster createMonster(String name, int level, int maxHealth, int attack, Monster.MonsterType type) {
-        return Monster.builder()
+        Monster monster = Monster.builder()
                 .name(name)
                 .type(type)
                 .level(level)
@@ -13,6 +13,8 @@ public class MonsterFactory {
                 .maxHealth(maxHealth)
                 .attack(attack)
                 .build();
+        monster.initBaseAbilities();
+        return monster;
     }
 
     public static Monster createGoblinMonster() {

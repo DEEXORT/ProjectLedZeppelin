@@ -4,7 +4,6 @@ package com.quest.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quest.dto.AbilityConfigDTO;
 import com.quest.entity.Ability;
-import com.quest.services.AbilityService;
 import com.quest.services.hibernate.HibernateAbilityService;
 import com.quest.util.ResourcePath;
 import lombok.Getter;

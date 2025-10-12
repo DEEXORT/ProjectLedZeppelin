@@ -3,7 +3,6 @@ package com.quest.services.resolver;
 import com.quest.entity.QuestScene;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
-import com.quest.util.ParseConst;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,8 +20,7 @@ public class QuestResolver {
 
     public void resolve(HttpServletRequest req, HttpServletResponse resp, QuestScene questScene) throws IOException, ServletException {
         // Если сцена - концовка
-        Long questId = questScene.getId();
-        if (questId >= ParseConst.ID_END_MIN && questId < ParseConst.ID_END_MAX) {
+        if (questScene.getType() == QuestScene.Type.COMPLETE) {
             resp.sendRedirect(Route.END);
             return;
         }

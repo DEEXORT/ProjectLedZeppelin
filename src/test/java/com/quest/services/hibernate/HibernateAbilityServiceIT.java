@@ -2,7 +2,8 @@ package com.quest.services.hibernate;
 
 import com.quest.entity.Ability;
 import com.quest.repository.RepositoryImpl;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 

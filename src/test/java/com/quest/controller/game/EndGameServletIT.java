@@ -2,7 +2,6 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.character.Player;
 import com.quest.entity.User;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
@@ -10,9 +9,8 @@ import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 

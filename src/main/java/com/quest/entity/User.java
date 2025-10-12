@@ -3,9 +3,6 @@ package com.quest.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -24,20 +21,20 @@ public class User {
     @Column(name = "character_id")
     private Long playerId; // TODO: rename to character_id
 
-    @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "user_achievements",
-    joinColumns = @JoinColumn(name = "user_id"),
-    inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-    private List<Achievement> achievements = new ArrayList<>();
-
-    public void addAchievement(Achievement achievement) {
-        this.achievements.add(achievement);
-        achievement.getUsers().add(this);
-    }
-
-    public void removeAchievement(Achievement achievement) {
-        this.achievements.remove(achievement);
-        achievement.getUsers().remove(this);
-    }
+//    @Builder.Default
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JoinTable(name = "user_achievements",
+//    joinColumns = @JoinColumn(name = "user_id"),
+//    inverseJoinColumns = @JoinColumn(name = "achievement_id"))
+//    private List<Achievement> achievements = new ArrayList<>();
+//
+//    public void addAchievement(Achievement achievement) {
+//        this.achievements.add(achievement);
+//        achievement.getUsers().add(this);
+//    }
+//
+//    public void removeAchievement(Achievement achievement) {
+//        this.achievements.remove(achievement);
+//        achievement.getUsers().remove(this);
+//    }
 }

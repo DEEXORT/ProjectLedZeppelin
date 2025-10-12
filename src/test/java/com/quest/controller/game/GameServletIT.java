@@ -2,14 +2,15 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.character.Player;
 import com.quest.entity.User;
+import com.quest.entity.character.Player;
+import com.quest.services.hibernate.HibernateUserService;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static com.quest.util.KeyAttribute.PLAYER;
 import static com.quest.util.KeyAttribute.USER;
@@ -20,16 +21,21 @@ import static org.mockito.Mockito.when;
 
 class GameServletIT extends ConfigIT {
     private final GameServlet gameServlet = ServiceLocator.getService(GameServlet.class);
+    private HibernateUserService hibernateUserService;
+
+    @BeforeEach
+    void setUp() {
+        hibernateUserService = ServiceLocator.getService(HibernateUserService.class);
+    }
 
     @Test
     void doGet_ShouldCreateNewGame() throws ServletException, IOException {
         // given
         User testUserGameController = User.builder()
-                .id(5L)
-                .achievements(new ArrayList<>())
                 .login("testUserGameController")
                 .password("testUserGameController")
                 .build();
+        hibernateUserService.create(testUserGameController);
         when(session.getAttribute(USER)).thenReturn(testUserGameController);
 
         // when

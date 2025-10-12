@@ -1,6 +1,9 @@
-package com.quest.util;
+package com.quest.services.resolver;
 
-import com.quest.entity.*;
+import com.quest.entity.Achievement;
+import com.quest.entity.Action;
+import com.quest.entity.Event;
+import com.quest.entity.QuestScene;
 import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.exception.AchievementNotCreateException;
@@ -9,6 +12,9 @@ import com.quest.services.hibernate.HibernateAchievementService;
 import com.quest.services.hibernate.HibernateEventService;
 import com.quest.services.hibernate.HibernateMonsterService;
 import com.quest.services.hibernate.HibernateQuestService;
+import com.quest.util.EventAttribute;
+import com.quest.util.EventType;
+import com.quest.util.ParseConst;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import org.apache.logging.log4j.LogManager;
@@ -86,7 +92,7 @@ public class QuestParser {
 
         for (int i = 1; i < questScenes.length; i++) {
 
-            // Делим на составляющие: (questId + questScene) / (action + nextQuestId)
+            // Делим на составляющие: (questId + questScene + type) / (action + nextQuestId)
             String[] questSceneContent = questScenes[i].split(ParseConst.ACTION_DELIMITER);
             // Извлекаем текст сцены и создаем объект: questId / questScene / (action + nextQuestId)
             String[] idAndDescription = questSceneContent[0].split(ParseConst.SCENE_TEXT_DELIMITER);
@@ -94,11 +100,15 @@ public class QuestParser {
 
             logger.info("Создание сцены id = {}", questSceneId);
 
-            String questSceneDescription = idAndDescription[1].replace("\n", "<br>");
+            String[] descriptionAndType = idAndDescription[1].split(ParseConst.SCENE_TYPE_DELIMITER);
+            String questSceneDescription = descriptionAndType[0].trim().replace("\n", "<br>");
+            String type = descriptionAndType[1].trim();
+
             QuestScene scene = QuestScene.builder()
                     .fileId(questSceneId)
                     .descriptionScene(questSceneDescription)
                     .actions(new ArrayList<>())
+                    .type(QuestScene.Type.valueOf(type.toUpperCase()))
                     .build();
 
             graphScenes.put(questSceneId, scene);

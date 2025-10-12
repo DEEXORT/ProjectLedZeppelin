@@ -9,7 +9,7 @@
         .character-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             padding: 25px;
             width: 200px;
             text-align: center;
@@ -48,24 +48,42 @@
         }
 
         @keyframes characterWalk {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-5px) rotate(5deg); }
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-5px) rotate(5deg);
+            }
         }
 
         @keyframes characterSwing {
-            0% { transform: rotate(10deg); }
-            100% { transform: rotate(-10deg); }
+            0% {
+                transform: rotate(10deg);
+            }
+            100% {
+                transform: rotate(-10deg);
+            }
         }
 
         @keyframes characterBounce {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-5px); }
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-5px);
+            }
         }
 
         @keyframes characterPulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                opacity: 1;
+            }
         }
     </style>
 </head>

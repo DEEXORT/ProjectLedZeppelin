@@ -4,8 +4,8 @@ import com.quest.config.ServiceLocator;
 import com.quest.entity.QuestScene;
 import com.quest.entity.User;
 import com.quest.entity.character.Player;
-import com.quest.services.QuestService;
-import com.quest.services.UserService;
+import com.quest.services.hibernate.HibernateQuestService;
+import com.quest.services.hibernate.HibernateUserService;
 import com.quest.util.*;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @WebServlet(Route.END)
 public class EndGameServlet extends HttpServlet {
-    private QuestService questService;
-    private UserService userService;
+    private HibernateQuestService questService;
+    private HibernateUserService userService;
 
     @Override
     public void init(ServletConfig config) {
-        questService = ServiceLocator.getService(QuestService.class);
-        userService = ServiceLocator.getService(UserService.class);
+        questService = ServiceLocator.getService(HibernateQuestService.class);
+        userService = ServiceLocator.getService(HibernateUserService.class);
     }
 
     @Override
@@ -37,19 +37,18 @@ public class EndGameServlet extends HttpServlet {
         Optional<QuestScene> questScene = questService.get(player.getQuestSceneId());
         questScene.ifPresent(scene -> {
             req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, scene.getDescriptionScene());
-            Long questId = scene.getId();
             if (scene.getAchievement() != null) {
-                user.getAchievements().add(scene.getAchievement());
                 userService.update(user);
             }
             // Если сцена - сюжетная концовка
-            if (questId >= ParseConst.ID_END_MIN && questId < ParseConst.ID_END_MAX) {
+            if (scene.getType() == QuestScene.Type.COMPLETE) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
                         ResourcePath.IMG_FINISH);
             }
             // Если игрок погиб
-            else if (questId >= ParseConst.ID_END_MIN && questId < ParseConst.ID_DEATH_MAX) {
+            else if (scene.getType() == QuestScene.Type.DEATH
+                    || scene.getType() == QuestScene.Type.BATTLE_DEATH) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
                         ResourcePath.IMG_RIP);
