@@ -3,8 +3,8 @@ package services;
 import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
-import com.quest.repository.UserRepository;
-import com.quest.services.UserService;
+import com.quest.repository.RepositoryImpl;
+import com.quest.services.hibernate.HibernateUserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,13 +12,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
     @Mock
-    UserRepository userRepository;
+    RepositoryImpl<User> userRepository;
 
     @Test
     void create() {
@@ -28,13 +29,12 @@ class UserServiceTest {
     @Test
     void get_shouldReturnUserWithValidCredentials() throws UserNotFoundException {
         // given
-        UserService userService = new UserService(userRepository);
+        HibernateUserService userService = new HibernateUserService(userRepository);
         User user = User.builder()
-                .id(1L)
                 .login("admin")
                 .password("admin")
                 .build();
-        Mockito.doReturn(user).when(userRepository).find("admin");
+        Mockito.doReturn(user).when(userRepository).find(user);
 
         // when
         Optional<User> optionalUser = userService.get("admin", "admin");
@@ -47,8 +47,12 @@ class UserServiceTest {
     @Test
     void get_shouldThrowExceptionForInvalidCredentials() {
         // given
-        UserService userService = new UserService(userRepository);
-        Mockito.doReturn(null).when(userRepository).find("incorrectLogin");
+        HibernateUserService userService = new HibernateUserService(userRepository);
+        User user = User.builder()
+                .login("incorrect")
+                .password("incorrect")
+                .build();
+        Mockito.doReturn(new ArrayList<>().stream()).when(userRepository).find(user);
 
         // when + then
         Assertions.assertThrows(UserNotFoundException.class,
@@ -58,7 +62,7 @@ class UserServiceTest {
     @Test
     void get_shouldReturnExceptionForNullCredentials() {
         // given
-        UserService userService = new UserService(userRepository);
+        HibernateUserService userService = new HibernateUserService(userRepository);
 
         // when + then
         Assertions.assertThrows(UserEmptyException.class, () -> {
