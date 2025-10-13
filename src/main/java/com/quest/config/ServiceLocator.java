@@ -1,6 +1,8 @@
 package com.quest.config;
 
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServiceLocator {
     //    private static final Map<Class<?>, Object> components = new ConcurrentHashMap<>();
     private static final Map<String, Object> components = new ConcurrentHashMap<>();
+    private static final Logger logger = LogManager.getLogger(ServiceLocator.class);
 
     @SuppressWarnings("unchecked")
 //    @SneakyThrows
@@ -32,6 +35,7 @@ public class ServiceLocator {
     @SneakyThrows
     public static <T> T getService(final Class<T> serviceClass, final Class<?>... genericTypes) {
         String key = generateKey(serviceClass, genericTypes); // Имя параметризированного класса (например, Repository<User>)
+        logger.info("Get service {} with generic type {}", serviceClass, genericTypes);
 
         if (components.containsKey(key)) {
             return (T) components.get(key);

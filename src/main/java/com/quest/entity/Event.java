@@ -12,6 +12,7 @@ import lombok.*;
 @Table(name = "events")
 @Builder
 public class Event {
+    // TODO: needs to be divided into subclasses
     // -------Required Fields---------
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

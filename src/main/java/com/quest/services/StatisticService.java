@@ -1,7 +1,9 @@
 package com.quest.services;
 
-import com.quest.entity.QuestScene;
-import com.quest.entity.User;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.QuestSceneTo;
+import com.quest.dto.UserTo;
+import com.quest.entity.QuestSceneType;
 import com.quest.entity.UserStat;
 import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernatePlayerService;
@@ -23,12 +25,12 @@ public class StatisticService {
     public List<UserStat> getUserStats() {
         List<UserStat> userStats = new ArrayList<>();
         // Перебираем всех игроков из БД
-        for (Player player : playerService.getAll()) {
+        for (PlayerTo player : playerService.getAll()) {
             // Получаем пользователя, за которым закреплен игрок
-            Optional<User> user = userService.get(player.getUserId());
+            Optional<UserTo> user = userService.get(player.getUserId());
             if (user.isPresent()) {
                 // Получаем сцену, на которой закончил игрок
-                Optional<QuestScene> questScene = questService.get(player.getQuestSceneId());
+                Optional<QuestSceneTo> questScene = questService.get(player.getQuestSceneId());
                 if (questScene.isPresent()) {
                     // Игрок в прохождении игры
                     UserStat stat = UserStat.builder()
@@ -39,13 +41,13 @@ public class StatisticService {
                             .build();
 
                     Long questSceneId = questScene.get().getId();
-                    QuestScene.Type typeScene = questScene.get().getType();
-                    if (typeScene == QuestScene.Type.COMPLETE) {
+                    QuestSceneType typeScene = questScene.get().getType();
+                    if (typeScene == QuestSceneType.COMPLETE) {
                         // Если игрок завершил игру с достижением
                         stat.setAchievementText(questScene.get().getAchievement().getText());
                         stat.setStatus(StatusPlayer.FINISHED);
-                    } else if (typeScene == QuestScene.Type.DEATH
-                            || typeScene == QuestScene.Type.BATTLE_DEATH) {
+                    } else if (typeScene == QuestSceneType.DEATH
+                            || typeScene == QuestSceneType.BATTLE_DEATH) {
                         // Если игрок погиб
                         stat.setStatus(StatusPlayer.DEATH);
                     }

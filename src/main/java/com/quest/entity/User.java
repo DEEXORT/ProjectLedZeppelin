@@ -19,22 +19,5 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(name = "character_id")
-    private Long playerId; // TODO: rename to character_id
-
-//    @Builder.Default
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    @JoinTable(name = "user_achievements",
-//    joinColumns = @JoinColumn(name = "user_id"),
-//    inverseJoinColumns = @JoinColumn(name = "achievement_id"))
-//    private List<Achievement> achievements = new ArrayList<>();
-//
-//    public void addAchievement(Achievement achievement) {
-//        this.achievements.add(achievement);
-//        achievement.getUsers().add(this);
-//    }
-//
-//    public void removeAchievement(Achievement achievement) {
-//        this.achievements.remove(achievement);
-//        achievement.getUsers().remove(this);
-//    }
+    private Long characterId;
 }

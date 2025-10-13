@@ -3,7 +3,8 @@ package com.quest.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quest.dto.AbilityConfigDTO;
-import com.quest.entity.Ability;
+import com.quest.dto.AbilityTo;
+import com.quest.entity.AbilityType;
 import com.quest.services.hibernate.HibernateAbilityService;
 import com.quest.util.ResourcePath;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class AbilityConfigLoader {
         try {
             AbilityConfig config = mapper.readValue(abilitiesConfig, AbilityConfig.class);
             config.getAbilities().forEach(abilityDTO -> {
-                Ability ability = convertToEntity(abilityDTO);
+                AbilityTo ability = convertToEntity(abilityDTO);
                 abilityService.create(ability);
                 logger.info("Created Ability: {}", ability.getName());
             });
@@ -43,12 +44,12 @@ public class AbilityConfigLoader {
         private List<AbilityConfigDTO> abilities;
     }
 
-    private Ability convertToEntity(AbilityConfigDTO abilityDTO) {
-        return Ability.builder()
+    private AbilityTo convertToEntity(AbilityConfigDTO abilityDTO) {
+        return AbilityTo.builder()
                 .id(abilityDTO.getId())
                 .name(abilityDTO.getName())
                 .description(abilityDTO.getDescription())
-                .type(Ability.AbilityType.valueOf(abilityDTO.getType().toUpperCase()))
+                .type(AbilityType.valueOf(abilityDTO.getType().toUpperCase()))
                 .level(abilityDTO.getLevel())
                 .value(abilityDTO.getValue())
                 .cooldown(abilityDTO.getCooldown())

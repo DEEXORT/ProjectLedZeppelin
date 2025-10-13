@@ -2,6 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
+import com.quest.dto.UserTo;
 import com.quest.entity.User;
 import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernateUserService;
@@ -31,7 +32,7 @@ class GameServletIT extends ConfigIT {
     @Test
     void doGet_ShouldCreateNewGame() throws ServletException, IOException {
         // given
-        User testUserGameController = User.builder()
+        UserTo testUserGameController = UserTo.builder()
                 .login("testUserGameController")
                 .password("testUserGameController")
                 .build();

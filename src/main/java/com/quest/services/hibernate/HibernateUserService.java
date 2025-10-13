@@ -1,41 +1,54 @@
 package com.quest.services.hibernate;
 
 import com.quest.config.ServiceLocator;
+import com.quest.dto.UserTo;
 import com.quest.entity.User;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserInvalidPasswordException;
 import com.quest.exception.UserNotFoundException;
+import com.quest.mapping.Dto;
 import com.quest.repository.RepositoryImpl;
 import com.quest.util.KeyAttribute;
 import com.quest.util.ResourceBundleManager;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HibernateUserService extends AbstractBaseService<User> {
+public class HibernateUserService {
+    private final RepositoryImpl<User> repository;
+    private Dto dto = Dto.MAPPER;
 
     public HibernateUserService() {
-        super(ServiceLocator.getService(RepositoryImpl.class, User.class));
+        this.repository = ServiceLocator.getService(RepositoryImpl.class, User.class);
     }
 
     public HibernateUserService(RepositoryImpl<User> repository) {
-        super(repository);
+        this.repository = repository;
     }
 
-    @Override
-    public void create(User user) throws UserAlreadyExistsException, UserEmptyException {
-        validateCredentials(user.getLogin(), user.getPassword());
+    public Optional<UserTo> get(long id) {
+        return Optional.ofNullable(repository.get(id)).map(dto::from);
+    }
+
+    public void update(UserTo userTo) {
+        repository.update(dto.from(userTo));
+    }
+
+    public void create(UserTo userTo) throws UserAlreadyExistsException, UserEmptyException {
+        validateCredentials(userTo.getLogin(), userTo.getPassword());
         // Проверка на уже существующего пользователя
-        Stream<User> stream = repository.find(user);
+        Stream<User> stream = repository.find(dto.from(userTo));
         if (stream.findFirst().isPresent()) {
             throw new UserAlreadyExistsException(
-                    ResourceBundleManager.getMessage("error.user_already_exists").formatted(user.getLogin())
+                    ResourceBundleManager.getMessage("error.user_already_exists").formatted(userTo.getLogin())
             );
         }
         // Регистрация пользователя в БД
-        repository.create(user);
+        repository.create(dto.from(userTo));
     }
 
     public boolean isGuest(HttpServletRequest req) {
@@ -51,7 +64,7 @@ public class HibernateUserService extends AbstractBaseService<User> {
         }
     }
 
-    public Optional<User> get(String login, String password) throws UserEmptyException, UserNotFoundException, UserInvalidPasswordException {
+    public Optional<UserTo> get(String login, String password) throws UserEmptyException, UserNotFoundException, UserInvalidPasswordException {
         validateCredentials(login, password);
 
         User patternUser = User.builder()
@@ -59,16 +72,24 @@ public class HibernateUserService extends AbstractBaseService<User> {
                 .password(password)
                 .build();
 
-        Optional<User> userOptional = repository.find(patternUser).findFirst();
-        if (userOptional.isEmpty()) {
+        Optional<UserTo> optUserTo = repository.find(patternUser).map(dto::from).findFirst();
+        if (optUserTo.isEmpty()) {
             throw new UserNotFoundException(ResourceBundleManager.getMessage("error.user_not_found"));
         } else {
-            User user = userOptional.get();
+            UserTo user = optUserTo.get();
             if (!user.getPassword().equals(password)) {
                 throw new UserInvalidPasswordException(ResourceBundleManager.getMessage("error.invalid_credentials"));
             } else {
                 return Optional.of(user);
             }
         }
+    }
+
+    public Collection<UserTo> getAll() {
+        return repository.getAll().stream().map(dto::from).collect(Collectors.toList());
+    }
+
+    public void delete(UserTo user) {
+        repository.delete(dto.from(user));
     }
 }

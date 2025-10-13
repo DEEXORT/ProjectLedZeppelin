@@ -1,5 +1,6 @@
 package com.quest.services.hibernate;
 
+import com.quest.dto.AchievementTo;
 import com.quest.entity.Achievement;
 import com.quest.repository.RepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +23,13 @@ class HibernateAchievementServiceIT extends ContainerIT {
     @Test
     void get() {
         // given
-        Achievement achievement = Achievement.builder()
+        AchievementTo achievement = AchievementTo.builder()
                 .text("testGet")
                 .build();
         achievementService.create(achievement);
 
         // when
-        Optional<Achievement> updated = achievementService.get(achievement.getId());
+        Optional<AchievementTo> updated = achievementService.get(achievement.getId());
 
         // then
         assertTrue(updated.isPresent());
@@ -38,13 +39,13 @@ class HibernateAchievementServiceIT extends ContainerIT {
     @Test
     void getAll() {
         // given
-        Achievement achievement = Achievement.builder()
+        AchievementTo achievement = AchievementTo.builder()
                 .text("testGetAll")
                 .build();
         achievementService.create(achievement);
 
         // when
-        Collection<Achievement> achievements = achievementService.getAll();
+        Collection<AchievementTo> achievements = achievementService.getAll();
 
         // then
         assertFalse(achievements.isEmpty());
@@ -53,7 +54,7 @@ class HibernateAchievementServiceIT extends ContainerIT {
     @Test
     void create() {
         // given
-        Achievement achievement = Achievement.builder()
+        AchievementTo achievement = AchievementTo.builder()
                 .text("testCreate")
                 .build();
 
@@ -68,7 +69,7 @@ class HibernateAchievementServiceIT extends ContainerIT {
     @Test
     void update() {
         // given
-        Achievement achievement = Achievement.builder()
+        AchievementTo achievement = AchievementTo.builder()
                 .text("testCreate")
                 .build();
         achievementService.create(achievement);
@@ -78,7 +79,7 @@ class HibernateAchievementServiceIT extends ContainerIT {
         achievementService.update(achievement);
 
         // then
-        Optional<Achievement> updated = achievementService.get(achievement.getId());
+        Optional<AchievementTo> updated = achievementService.get(achievement.getId());
         assertTrue(updated.isPresent());
         assertEquals("testUpdate", updated.get().getText());
     }
@@ -86,7 +87,7 @@ class HibernateAchievementServiceIT extends ContainerIT {
     @Test
     void delete() {
         // given
-        Achievement achievement = Achievement.builder()
+        AchievementTo achievement = AchievementTo.builder()
                 .text("testDelete")
                 .build();
         achievementService.create(achievement);
@@ -95,7 +96,7 @@ class HibernateAchievementServiceIT extends ContainerIT {
         achievementService.delete(achievement);
 
         // then
-        Optional<Achievement> deleted = achievementService.get(achievement.getId());
+        Optional<AchievementTo> deleted = achievementService.get(achievement.getId());
         assertFalse(deleted.isPresent());
     }
 }

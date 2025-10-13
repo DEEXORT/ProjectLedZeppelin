@@ -1,5 +1,6 @@
 package com.quest.services.hibernate;
 
+import com.quest.dto.MonsterTo;
 import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.repository.RepositoryImpl;
@@ -27,7 +28,7 @@ class HibernateMonsterServiceIT extends ContainerIT {
     @Test
     void shouldCreateMonster() {
         // given
-        Monster monster = MonsterFactory.createGoblinMonster();
+        MonsterTo monster = MonsterFactory.createGoblinMonster();
 
         // when
         service.create(monster);
@@ -39,11 +40,11 @@ class HibernateMonsterServiceIT extends ContainerIT {
     @Test
     void shouldGetMonster() {
         // given
-        Monster monster = MonsterFactory.createGoblinMonster();
+        MonsterTo monster = MonsterFactory.createGoblinMonster();
         service.create(monster);
 
         // when
-        Optional<Monster> optional = service.get(monster.getId());
+        Optional<MonsterTo> optional = service.get(monster.getId());
 
         // then
         assertTrue(optional.isPresent());
@@ -52,7 +53,7 @@ class HibernateMonsterServiceIT extends ContainerIT {
     @Test
     void shouldUpdateMonster() {
         // given
-        Monster monster = MonsterFactory.createGoblinMonster();
+        MonsterTo monster = MonsterFactory.createGoblinMonster();
         service.create(monster);
 
         // when
@@ -60,7 +61,7 @@ class HibernateMonsterServiceIT extends ContainerIT {
         service.update(monster);
 
         // then
-        Optional<Monster> optional = service.get(monster.getId());
+        Optional<MonsterTo> optional = service.get(monster.getId());
         assertTrue(optional.isPresent());
         assertEquals(monster.getHealth(), optional.get().getHealth());
     }
@@ -68,14 +69,14 @@ class HibernateMonsterServiceIT extends ContainerIT {
     @Test
     void shouldDeleteMonster() {
         // given
-        Monster monster = MonsterFactory.createGoblinMonster();
+        MonsterTo monster = MonsterFactory.createGoblinMonster();
         service.create(monster);
 
         // when
         service.delete(monster);
 
         // then
-        Optional<Monster> optional = service.get(monster.getId());
+        Optional<MonsterTo> optional = service.get(monster.getId());
         assertFalse(optional.isPresent());
     }
 }

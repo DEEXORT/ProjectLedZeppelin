@@ -1,7 +1,7 @@
 package com.quest.controller.auth;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.User;
+import com.quest.dto.UserTo;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserInvalidPasswordException;
 import com.quest.exception.UserNotFoundException;
@@ -49,7 +49,7 @@ public class UserAuthenticationServlet extends HttpServlet {
         String login = req.getParameter(USERNAME);
         String password = req.getParameter(PASSWORD);
         try {
-            Optional<User> user = userService.get(login, password);
+            Optional<UserTo> user = userService.get(login, password);
             if (user.isPresent()) {
                 HttpSession session = req.getSession();
                 session.setAttribute(KeyAttribute.USER, user.get());

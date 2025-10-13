@@ -1,5 +1,6 @@
 package com.quest.services.hibernate;
 
+import com.quest.dto.UserTo;
 import com.quest.entity.User;
 import com.quest.repository.RepositoryImpl;
 import jakarta.transaction.Transactional;
@@ -23,7 +24,7 @@ class HibernateUserServiceIT extends ContainerIT {
     @Test
     void shouldCreateUserWithoutAchievement() {
         // given
-        User user = User.builder()
+        UserTo user = UserTo.builder()
                 .login("testAdmin")
                 .password("testAdmin")
                 .build();
@@ -38,11 +39,11 @@ class HibernateUserServiceIT extends ContainerIT {
     @Test
     void shouldGetAllUsers() {
         // given
-        User user1 = User.builder()
+        UserTo user1 = UserTo.builder()
                 .login("testGetAll1")
                 .password("testGetAll1")
                 .build();
-        User user2 = User.builder()
+        UserTo user2 = UserTo.builder()
                 .login("testGetAll2")
                 .password("testGetAll2")
                 .build();
@@ -50,7 +51,7 @@ class HibernateUserServiceIT extends ContainerIT {
         hibernateUserService.create(user2);
 
         // when
-        Collection<User> users = hibernateUserService.getAll();
+        Collection<UserTo> users = hibernateUserService.getAll();
 
         // then
         Assertions.assertNotNull(users);
@@ -59,14 +60,14 @@ class HibernateUserServiceIT extends ContainerIT {
     @Test
     void shouldGetUserById() {
         // given
-        User user = User.builder()
+        UserTo user = UserTo.builder()
                 .login("testGet")
                 .password("testGet")
                 .build();
         hibernateUserService.create(user);
 
         // when
-        Optional<User> userFromDB = hibernateUserService.get(user.getId());
+        Optional<UserTo> userFromDB = hibernateUserService.get(user.getId());
 
         // then
         Assertions.assertTrue(userFromDB.isPresent());
@@ -75,7 +76,7 @@ class HibernateUserServiceIT extends ContainerIT {
     @Test
     void shouldUpdateUser() {
         // given
-        User user = User.builder()
+        UserTo user = UserTo.builder()
                 .login("testUpdate")
                 .password("testUpdate")
                 .build();
@@ -87,7 +88,7 @@ class HibernateUserServiceIT extends ContainerIT {
         hibernateUserService.update(user);
 
         // then
-        Optional<User> userFromDB = hibernateUserService.get(user.getId());
+        Optional<UserTo> userFromDB = hibernateUserService.get(user.getId());
         Assertions.assertTrue(userFromDB.isPresent());
         Assertions.assertEquals(newLogin, userFromDB.get().getLogin());
     }
@@ -96,7 +97,7 @@ class HibernateUserServiceIT extends ContainerIT {
     @Transactional
     void shouldDeleteUserById() {
         // given
-        User user = User.builder()
+        UserTo user = UserTo.builder()
                 .login("testDelete")
                 .password("testDelete")
                 .build();
@@ -112,14 +113,14 @@ class HibernateUserServiceIT extends ContainerIT {
     @Test
     void shouldFindUserByLogin() {
         // given
-        User user = User.builder()
+        UserTo user = UserTo.builder()
                 .login("testFindUserByLogin")
                 .password("testFindUserByLogin")
                 .build();
         hibernateUserService.create(user);
 
         // when
-        Optional<User> userDB = hibernateUserService.get("testFindUserByLogin", "testFindUserByLogin");
+        Optional<UserTo> userDB = hibernateUserService.get("testFindUserByLogin", "testFindUserByLogin");
 
         // then
         Assertions.assertTrue(userDB.isPresent());

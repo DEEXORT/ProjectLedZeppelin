@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="head.jsp" %>
 <%@ include file="navbar.jsp" %>
-<jsp:useBean id="player" scope="session" type="com.quest.entity.character.Player"/>
+<jsp:useBean id="player" scope="session" type="com.quest.dto.PlayerTo"/>
 <body>
 <div class="quest-container">
     <jsp:include page="character.jsp"/>

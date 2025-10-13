@@ -31,16 +31,5 @@ public class Player extends Character {
     @Column(name = "experience_level")
     int experienceLevel = 100;
 
-    public void increaseExperience(int experience) {
-        int experienceLevel = this.getExperienceLevel();
-        this.setExperiencePoints(this.getExperiencePoints() + experience);
 
-        if (this.getExperiencePoints() >= experienceLevel) {
-            this.setLevel(this.getLevel() + 1);
-            this.setExperienceLevel(2 * experienceLevel);
-            this.setExperiencePoints(this.getExperiencePoints() - experienceLevel);
-            this.setMaxHealth(2 * this.getMaxHealth());
-            this.setHealth(this.getMaxHealth());
-        }
-    }
 }

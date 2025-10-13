@@ -1,5 +1,8 @@
 package com.quest.services.hibernate;
 
+import com.quest.dto.AchievementTo;
+import com.quest.dto.EventTo;
+import com.quest.dto.QuestSceneTo;
 import com.quest.entity.Achievement;
 import com.quest.entity.Action;
 import com.quest.entity.Event;
@@ -43,21 +46,21 @@ class HibernateQuestServiceIT extends ContainerIT {
     @Test
     void shouldSaveAllScenes() {
         // then
-        Collection<QuestScene> scenes = hibernateQuestService.getAll();
+        Collection<QuestSceneTo> scenes = hibernateQuestService.getAll();
         assertEquals(26, scenes.size());
     }
 
     @Test
     void shouldSaveAllAchievements() {
         // then
-        Collection<Achievement> achievements = hibernateAchievementService.getAll();
+        Collection<AchievementTo> achievements = hibernateAchievementService.getAll();
         assertNotEquals(0, achievements.size());
     }
 
     @Test
     void shouldSaveAllEvents() {
         // then
-        Collection<Event> events = hibernateEventService.getAll();
+        Collection<EventTo> events = hibernateEventService.getAll();
         assertNotEquals(0, events.size());
     }
 }

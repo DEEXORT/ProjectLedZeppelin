@@ -1,10 +1,8 @@
 package com.quest.services.resolver;
 
-import com.quest.entity.Achievement;
-import com.quest.entity.Action;
-import com.quest.entity.Event;
-import com.quest.entity.QuestScene;
-import com.quest.entity.character.Monster;
+import com.quest.dto.*;
+import com.quest.entity.*;
+import com.quest.entity.character.MonsterType;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.exception.QuestNotFoundException;
@@ -88,7 +86,7 @@ public class QuestParser {
         // Разделяем текст сценария квеста на отдельные сцены
         String[] questScenes = questText.split(ParseConst.SCENE_DELIMITER);
 
-        Map<Long, QuestScene> graphScenes = new HashMap<>();
+        Map<Long, QuestSceneTo> graphScenes = new HashMap<>();
 
         for (int i = 1; i < questScenes.length; i++) {
 
@@ -104,11 +102,11 @@ public class QuestParser {
             String questSceneDescription = descriptionAndType[0].trim().replace("\n", "<br>");
             String type = descriptionAndType[1].trim();
 
-            QuestScene scene = QuestScene.builder()
+            QuestSceneTo scene = QuestSceneTo.builder()
                     .fileId(questSceneId)
                     .descriptionScene(questSceneDescription)
                     .actions(new ArrayList<>())
-                    .type(QuestScene.Type.valueOf(type.toUpperCase()))
+                    .type(QuestSceneType.valueOf(type.toUpperCase()))
                     .build();
 
             graphScenes.put(questSceneId, scene);
@@ -118,7 +116,7 @@ public class QuestParser {
                     questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_END)) {
 
                 logger.info("Создание достижения...");
-                Achievement achievement = saveAchievement(questSceneDescription);
+                AchievementTo achievement = saveAchievement(questSceneDescription);
 
                 String updatedQuestSceneDescription =
                         questSceneDescription
@@ -135,9 +133,8 @@ public class QuestParser {
                 long nextQuestSceneId = getQuestSceneId(actionLine[1]);
                 long eventId = saveEvent(actionLine[1]);
 
-                Action action = Action.builder()
+                ActionTo action = ActionTo.builder()
                         .actionText(actionText)
-                        .questSceneId(questSceneId)
                         .nextQuestSceneId(nextQuestSceneId)
                         .eventId(eventId == 0 ? null : eventId)
                         .build();
@@ -151,13 +148,13 @@ public class QuestParser {
         questService.saveAllScenes(graphScenes);
     }
 
-    private Achievement saveAchievement(String questSceneDescription) {
+    private AchievementTo saveAchievement(String questSceneDescription) {
         Pattern pattern = Pattern.compile("<ach>(.*?)</ach>");
         Matcher matcher = pattern.matcher(questSceneDescription);
 
         if (matcher.find()) {
             String achievementText = matcher.group(1);
-            Achievement achievement = Achievement.builder()
+            AchievementTo achievement = AchievementTo.builder()
                     .text(achievementText)
                     .build();
             achievementService.create(achievement);
@@ -175,7 +172,7 @@ public class QuestParser {
         if (matcher.find()) {
             EventType eventType = EventType.valueOf(matcher.group(EventAttribute.TYPE).toUpperCase());
             // TODO: Add other fields for Event
-            Event event = Event.builder()
+            EventTo event = EventTo.builder()
                     .type(eventType)
                     .value(Integer.parseInt(matcher.group(EventAttribute.VALUE)))
                     .stat(matcher.group(EventAttribute.STAT) == null ? "" : matcher.group(EventAttribute.STAT))
@@ -196,12 +193,12 @@ public class QuestParser {
             int level = Integer.parseInt(matcher.group(EventAttribute.LEVEL));
             int health = Integer.parseInt(matcher.group(EventAttribute.HEALTH));
             int attack = Integer.parseInt(matcher.group(EventAttribute.ATTACK));
-            Monster monster = MonsterFactory.createMonster(nameMonster, level, health, attack, Monster.MonsterType.BOSS);
+            MonsterTo monster = MonsterFactory.createMonster(nameMonster, level, health, attack, MonsterType.BOSS);
             monsterService.create(monster);
             logger.info("Monster created: {}", monster);
 
             String questDescription = matcher.group(EventAttribute.TEXT);
-            Event event = Event.builder()
+            EventTo event = EventTo.builder()
                     .type(EventType.BATTLE)
                     .monsterId(monster.getId())
                     .description(questDescription)

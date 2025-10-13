@@ -2,8 +2,12 @@ package com.quest;
 
 import com.quest.config.ConfigApplication;
 import com.quest.config.ServiceLocator;
+import com.quest.dto.MonsterTo;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.UserTo;
 import com.quest.entity.User;
 import com.quest.entity.character.Monster;
+import com.quest.entity.character.MonsterType;
 import com.quest.entity.character.Player;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.services.hibernate.ContainerIT;
@@ -24,9 +28,9 @@ public class ConfigIT extends ContainerIT {
     protected final RequestDispatcher requestDispatcher;
     protected static final ServletConfig servletConfig = mock(ServletConfig.class);
     protected static ConfigApplication config;
-    protected Player playerTest;
-    protected User userTest;
-    protected Monster monsterTest;
+    protected PlayerTo playerTest;
+    protected UserTo userTest;
+    protected MonsterTo monsterTest;
 
     @BeforeAll
     static void initOnce() {
@@ -41,12 +45,12 @@ public class ConfigIT extends ContainerIT {
         session = mock(HttpSession.class);
         requestDispatcher = mock(RequestDispatcher.class);
 
-        userTest = User.builder()
+        userTest = UserTo.builder()
                 .login("user")
                 .password("password")
                 .id(1L)
                 .build();
-        playerTest = Player.builder()
+        playerTest = PlayerTo.builder()
                 .id(1L)
                 .userId(userTest.getId())
                 .name("player")
@@ -58,9 +62,9 @@ public class ConfigIT extends ContainerIT {
         playerTest.initBaseAbilities();
 
         userTest = userTest.toBuilder()
-                .playerId(playerTest.getId())
+                .characterId(playerTest.getId())
                 .build();
-        monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10, Monster.MonsterType.COMMON)
+        monsterTest = MonsterFactory.createMonster("monster", 1, 100, 10, MonsterType.COMMON)
                 .toBuilder()
                 .id(1L)
                 .build();

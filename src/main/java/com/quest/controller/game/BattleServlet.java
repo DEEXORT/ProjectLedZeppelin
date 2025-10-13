@@ -1,10 +1,10 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.Ability;
+import com.quest.dto.AbilityTo;
+import com.quest.dto.MonsterTo;
+import com.quest.dto.PlayerTo;
 import com.quest.entity.BattleHistory;
-import com.quest.entity.character.Monster;
-import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernateAbilityService;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
@@ -48,8 +48,8 @@ public class BattleServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Monster monster = RequestHelper.getValueAttr(req, KeyAttribute.MONSTER, Monster.class);
-        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+        MonsterTo monster = RequestHelper.getValueAttr(req, KeyAttribute.MONSTER, MonsterTo.class);
+        PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
 
         if (!RequestHelper.getValueAttr(req, KeyAttribute.BATTLE_FLAG, Boolean.class)) {
             // Start battle. Clear battle history
@@ -64,14 +64,14 @@ public class BattleServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Monster monster = RequestHelper.getValueAttr(req, KeyAttribute.MONSTER, Monster.class);
-        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+        MonsterTo monster = RequestHelper.getValueAttr(req, KeyAttribute.MONSTER, MonsterTo.class);
+        PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         BattleHistory history = RequestHelper.getValueAttr(req, KeyAttribute.BATTLE_HISTORY, BattleHistory.class);
 
         long abilityId = Long.parseLong(req.getParameter(KeyAttribute.ABILITY_ID));
-        Optional<Ability> optionalAbility = abilityService.get(abilityId);
+        Optional<AbilityTo> optionalAbility = abilityService.get(abilityId);
         if (optionalAbility.isPresent()) {
-            Ability ability = optionalAbility.get();
+            AbilityTo ability = optionalAbility.get();
 
             battleResolver.resolveBattle(player, monster, ability, history); // Dealing damage
             req.getSession().setAttribute(KeyAttribute.BATTLE_HISTORY, history); // Update history in session

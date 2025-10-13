@@ -1,9 +1,9 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.QuestScene;
-import com.quest.entity.User;
-import com.quest.entity.character.Player;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.QuestSceneTo;
+import com.quest.dto.UserTo;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.services.hibernate.HibernateUserService;
@@ -40,14 +40,14 @@ public class GameServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Проверка аутентификации пользователя
         HttpSession session = req.getSession();
-        User user = RequestHelper.getValueAttr(req, KeyAttribute.USER, User.class);
-        QuestScene scene = questService.getFirstScene();
+        UserTo user = RequestHelper.getValueAttr(req, KeyAttribute.USER, UserTo.class);
+        QuestSceneTo scene = questService.getFirstScene();
 
         // Получить текущее состояние игры из репозитория или начать новую игру
-        Player player = null;
-        if (user.getPlayerId() == null) {
+        PlayerTo player = null;
+        if (user.getCharacterId() == null) {
             // New game
-            player = Player.builder()
+            player = PlayerTo.builder()
                     .health(100)
                     .maxHealth(100)
                     .level(1)
@@ -58,11 +58,11 @@ public class GameServlet extends HttpServlet {
                     .build();
             player.initBaseAbilities();
             playerService.create(player);
-            user.setPlayerId(player.getId());
+            user.setCharacterId(player.getId());
             userService.update(user);
         } else {
             // Continue game
-            Optional<Player> optionalPlayer = playerService.get(user.getPlayerId());
+            Optional<PlayerTo> optionalPlayer = playerService.get(user.getCharacterId());
             if (optionalPlayer.isPresent()) {
                 player = optionalPlayer.get();
             } else {
