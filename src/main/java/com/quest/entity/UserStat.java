@@ -1,6 +1,7 @@
 package com.quest.entity;
 
-import com.quest.entity.character.Player;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.UserTo;
 import com.quest.util.StatusPlayer;
 import lombok.Builder;
 import lombok.Data;
@@ -8,8 +9,8 @@ import lombok.Data;
 @Data
 @Builder
 public class UserStat {
-    private User user;
-    private Player player;
+    private UserTo user;
+    private PlayerTo player;
     private String achievementText;
     private StatusPlayer status;
 }

@@ -2,6 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
+import com.quest.dto.AbilityTo;
 import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
 import com.quest.util.JspPath;
@@ -40,7 +41,7 @@ class BattleServletIT extends ConfigIT {
     void doPost_ShouldRedirectToQuest_WhenMonsterWon() throws Exception {
         // given
 //        battleServlet.init(servletConfig);
-        Ability baseAttack = playerTest.getBaseAttack();
+        AbilityTo baseAttack = playerTest.getBaseAttack();
         when(request.getParameter(KeyAttribute.ABILITY_ID)).thenReturn(String.valueOf(baseAttack.getId()));
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
@@ -61,7 +62,7 @@ class BattleServletIT extends ConfigIT {
     void doPost_ShouldUpdateBattleJsp_WhenPlayerWon() throws Exception {
         // given
 //        battleServlet.init(servletConfig);
-        Ability baseAttack = playerTest.getBaseAttack();
+        AbilityTo baseAttack = playerTest.getBaseAttack();
         when(request.getParameter(KeyAttribute.ABILITY_ID)).thenReturn(String.valueOf(baseAttack.getId()));
         when(session.getAttribute(KeyAttribute.MONSTER)).thenReturn(monsterTest);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);

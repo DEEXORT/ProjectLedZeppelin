@@ -18,9 +18,6 @@ public class Action {
     @Column(name = "event_id")
     private Long eventId; // used by quest-template.jsp
 
-    @Transient
-    private Long questSceneId; // TODO: check for usage and delete. In DB already exists relation between Scene and Action
-
     @Column(name = "text")
     private String actionText;
 

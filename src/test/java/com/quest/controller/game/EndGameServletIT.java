@@ -30,7 +30,7 @@ class EndGameServletIT extends ConfigIT {
         endGameServlet.doGet(request, response);
 
         // then
-        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getPlayerId());
+        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getCharacterId());
         verify(requestDispatcher).forward(request, response);
     }
 
@@ -47,7 +47,7 @@ class EndGameServletIT extends ConfigIT {
         endGameServlet.doGet(request, response);
 
         // then
-        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getPlayerId());
+        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getCharacterId());
         verify(requestDispatcher).forward(request, response);
     }
 }

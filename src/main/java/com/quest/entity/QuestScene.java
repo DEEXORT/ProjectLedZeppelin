@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @Entity
 public class QuestScene {
-    public enum Type {START, DEATH, BATTLE_DEATH, STORY, COMPLETE}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +41,5 @@ public class QuestScene {
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private QuestSceneType type;
 }

@@ -1,8 +1,9 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.QuestScene;
-import com.quest.entity.User;
+import com.quest.dto.QuestSceneTo;
+import com.quest.dto.UserTo;
+import com.quest.entity.QuestSceneType;
 import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.services.hibernate.HibernateUserService;
@@ -31,24 +32,24 @@ public class EndGameServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
-        User user = RequestHelper.getValueAttr(req, KeyAttribute.USER, User.class);
+        UserTo user = RequestHelper.getValueAttr(req, KeyAttribute.USER, UserTo.class);
 
         // Получение сцены с концовкой и сохранение достижения
-        Optional<QuestScene> questScene = questService.get(player.getQuestSceneId());
+        Optional<QuestSceneTo> questScene = questService.get(player.getQuestSceneId());
         questScene.ifPresent(scene -> {
             req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, scene.getDescriptionScene());
             if (scene.getAchievement() != null) {
                 userService.update(user);
             }
             // Если сцена - сюжетная концовка
-            if (scene.getType() == QuestScene.Type.COMPLETE) {
+            if (scene.getType() == QuestSceneType.COMPLETE) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
                         ResourcePath.IMG_FINISH);
             }
             // Если игрок погиб
-            else if (scene.getType() == QuestScene.Type.DEATH
-                    || scene.getType() == QuestScene.Type.BATTLE_DEATH) {
+            else if (scene.getType() == QuestSceneType.DEATH
+                    || scene.getType() == QuestSceneType.BATTLE_DEATH) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
                         ResourcePath.IMG_RIP);
@@ -56,7 +57,7 @@ public class EndGameServlet extends HttpServlet {
         });
 
         // Сброс игрока у пользователя
-        user.setPlayerId(null);
+        user.setCharacterId(null);
 
         req.getRequestDispatcher(JspPath.END_GAME).forward(req, resp);
     }

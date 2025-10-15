@@ -1,7 +1,7 @@
 package com.quest.controller.auth;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.User;
+import com.quest.dto.UserTo;
 import com.quest.exception.UserAlreadyExistsException;
 import com.quest.exception.UserEmptyException;
 import com.quest.services.hibernate.HibernateUserService;
@@ -44,7 +44,7 @@ public class UserRegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter(KeyAttribute.USERNAME);
         String password = req.getParameter(KeyAttribute.PASSWORD);
-        User user = User.builder()
+        UserTo user = UserTo.builder()
                 .login(login)
                 .password(password)
 //                .achievements(new ArrayList<>())

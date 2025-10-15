@@ -1,6 +1,7 @@
 package com.quest.filters;
 
 import com.quest.config.ServiceLocator;
+import com.quest.dto.PlayerTo;
 import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
@@ -37,7 +38,7 @@ public class HealthPlayerFilter extends HttpFilter {
         HttpServletResponse response = (HttpServletResponse) res;
         HttpSession session = request.getSession();
 
-        Player player = (Player) session.getAttribute(KeyAttribute.PLAYER);
+        PlayerTo player = (PlayerTo) session.getAttribute(KeyAttribute.PLAYER);
 
         if (player != null && player.getHealth() <= 0) {
             player.setQuestSceneId(questService.getBattleDeathScene().getId());

@@ -1,6 +1,8 @@
 package com.quest.services.hibernate;
 
+import com.quest.dto.AbilityTo;
 import com.quest.entity.Ability;
+import com.quest.entity.AbilityType;
 import com.quest.repository.RepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +24,9 @@ class HibernateAbilityServiceIT extends ContainerIT {
     @Test
     void getAll() {
         //given
-        Ability ability = Ability.builder()
+        AbilityTo ability = AbilityTo.builder()
                 .value(100)
-                .type(Ability.AbilityType.DAMAGE)
+                .type(AbilityType.DAMAGE)
                 .name("Test GetAll Ability")
                 .description("Test GetAll Ability")
                 .cooldown(3)
@@ -34,7 +36,7 @@ class HibernateAbilityServiceIT extends ContainerIT {
         service.create(ability);
 
         // when
-        Collection<Ability> abilities = service.getAll();
+        Collection<AbilityTo> abilities = service.getAll();
 
         // then
         assertNotNull(abilities);
@@ -44,9 +46,9 @@ class HibernateAbilityServiceIT extends ContainerIT {
     @Test
     void create() {
         //given
-        Ability ability = Ability.builder()
+        AbilityTo ability = AbilityTo.builder()
                 .value(100)
-                .type(Ability.AbilityType.DAMAGE)
+                .type(AbilityType.DAMAGE)
                 .name("Damage Ability")
                 .description("Damage Ability")
                 .cooldown(3)
@@ -64,9 +66,9 @@ class HibernateAbilityServiceIT extends ContainerIT {
     @Test
     void update() {
         //given
-        Ability ability = Ability.builder()
+        AbilityTo ability = AbilityTo.builder()
                 .value(100)
-                .type(Ability.AbilityType.DAMAGE)
+                .type(AbilityType.DAMAGE)
                 .name("Test Update Ability")
                 .description("Test Update Ability")
                 .cooldown(3)
@@ -86,9 +88,9 @@ class HibernateAbilityServiceIT extends ContainerIT {
     @Test
     void delete() {
         //given
-        Ability ability = Ability.builder()
+        AbilityTo ability = AbilityTo.builder()
                 .value(100)
-                .type(Ability.AbilityType.DAMAGE)
+                .type(AbilityType.DAMAGE)
                 .name("Test Delete Ability")
                 .description("Test Delete Ability")
                 .cooldown(3)

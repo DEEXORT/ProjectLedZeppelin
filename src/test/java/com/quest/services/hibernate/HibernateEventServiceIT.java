@@ -1,5 +1,7 @@
 package com.quest.services.hibernate;
 
+import com.quest.dto.EventTo;
+import com.quest.dto.MonsterTo;
 import com.quest.entity.Event;
 import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
@@ -30,7 +32,7 @@ class HibernateEventServiceIT extends ContainerIT {
     @Test
     void shouldCreateEventWithMonster() {
         // given
-        Event event = getEvent();
+        EventTo event = getEvent();
 
         // when
         eventService.create(event);
@@ -39,15 +41,15 @@ class HibernateEventServiceIT extends ContainerIT {
         Assertions.assertNotNull(event.getId());
     }
 
-    private Event getEvent() {
-        Monster orc = MonsterFactory.createOrcMonster();
-        Optional<Monster> optionalMonster = monsterService.get(orc);
+    private EventTo getEvent() {
+        MonsterTo orc = MonsterFactory.createOrcMonster();
+        Optional<MonsterTo> optionalMonster = monsterService.get(orc);
         if (optionalMonster.isPresent()) {
             orc.setId(optionalMonster.get().getId());
         } else {
             monsterService.create(orc);
         }
-        return Event.builder()
+        return EventTo.builder()
                 .monsterId(orc.getId())
                 .type(EventType.BATTLE)
                 .description("Battle description")
@@ -57,7 +59,7 @@ class HibernateEventServiceIT extends ContainerIT {
     @Test
     void shouldUpdateEventWithMonster() {
         // given
-        Event event = getEvent();
+        EventTo event = getEvent();
         eventService.create(event);
 
         // when
@@ -72,11 +74,11 @@ class HibernateEventServiceIT extends ContainerIT {
     @Test
     void shouldGetEventById() {
         // given
-        Event event = getEvent();
+        EventTo event = getEvent();
         eventService.create(event);
 
         // when
-        Optional<Event> optional = eventService.get(event.getId());
+        Optional<EventTo> optional = eventService.get(event.getId());
 
         // then
         Assertions.assertTrue(optional.isPresent());
@@ -85,14 +87,14 @@ class HibernateEventServiceIT extends ContainerIT {
     @Test
     void shouldDeleteEvent() {
         // given
-        Event event = getEvent();
+        EventTo event = getEvent();
         eventService.create(event);
 
         // when
         eventService.delete(event);
 
         // then
-        Optional<Event> optional = eventService.get(event.getId());
+        Optional<EventTo> optional = eventService.get(event.getId());
         Assertions.assertFalse(optional.isPresent());
     }
 }

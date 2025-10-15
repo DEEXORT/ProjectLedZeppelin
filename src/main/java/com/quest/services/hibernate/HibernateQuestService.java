@@ -2,8 +2,12 @@ package com.quest.services.hibernate;
 
 import com.quest.config.ConfigApplication;
 import com.quest.config.ServiceLocator;
+import com.quest.dto.ActionTo;
+import com.quest.dto.QuestSceneTo;
 import com.quest.entity.Action;
 import com.quest.entity.QuestScene;
+import com.quest.entity.QuestSceneType;
+import com.quest.mapping.Dto;
 import com.quest.repository.Repository;
 import com.quest.repository.RepositoryImpl;
 import com.quest.services.resolver.QuestParser;
@@ -22,15 +26,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
-public class HibernateQuestService extends AbstractBaseService<QuestScene> {
+public class HibernateQuestService {
     private static final Logger logger = LogManager.getLogger(ConfigApplication.class);
+    private final RepositoryImpl<QuestScene> repository;
     private final RepositoryImpl<Action> actionRepository;
+    private Dto dto = Dto.MAPPER;
+
     // TODO: replace to const from properties
     private final int percentageChanceBattle =
             ThreadLocalRandom.current().nextInt(
@@ -38,31 +43,48 @@ public class HibernateQuestService extends AbstractBaseService<QuestScene> {
             );
 
     public HibernateQuestService() {
-        super(ServiceLocator.getService(RepositoryImpl.class, QuestScene.class));
-        actionRepository = ServiceLocator.getService(RepositoryImpl.class, Action.class);
+        this.repository = ServiceLocator.getService(RepositoryImpl.class, QuestScene.class);
+        this.actionRepository = ServiceLocator.getService(RepositoryImpl.class, Action.class);
     }
 
-    public HibernateQuestService(Repository<QuestScene> repository, RepositoryImpl<Action> actionRepository) {
-        super(repository);
+    public HibernateQuestService(RepositoryImpl<QuestScene> repository, RepositoryImpl<Action> actionRepository) {
+        this.repository = repository;
         this.actionRepository = actionRepository;
     }
 
-    @Transactional
-    public void saveAllScenes(Map<Long, QuestScene> scenes) {
+    public Optional<QuestSceneTo> get(long id) {
+        return Optional.ofNullable(repository.get(id)).map(dto::from);
+    }
+
+    public Collection<QuestSceneTo> getAll() {
+        return repository.getAll().stream().map(dto::from).collect(Collectors.toList());
+    }
+
+    public void create(QuestSceneTo sceneTo) {
+        repository.create(dto.from(sceneTo));
+    }
+
+    public void update(QuestSceneTo sceneTo) {
+        repository.update(dto.from(sceneTo));
+    }
+
+    public void saveAllScenes(Map<Long, QuestSceneTo> scenes) {
         Map<Long, Long> idMapping = new HashMap<>();
-        for (QuestScene scene : scenes.values()) {
-            repository.create(scene);
+        for (QuestSceneTo scene : scenes.values()) {
+            QuestScene sceneEntity = dto.from(scene);
+            repository.create(sceneEntity);
+            scene.setId(sceneEntity.getId());
             idMapping.put(scene.getFileId(), scene.getId());
         }
         updateActions(scenes, idMapping);
     }
 
-    private void updateActions(Map<Long, QuestScene> scenes, Map<Long, Long> idMapping) {
-        for (QuestScene scene : scenes.values()) {
-            for (Action action : scene.getActions()) {
+    private void updateActions(Map<Long, QuestSceneTo> scenes, Map<Long, Long> idMapping) {
+        for (QuestSceneTo scene : scenes.values()) {
+            for (ActionTo action : scene.getActions()) {
                 // Replace fileId to generated ID by database
                 action.setNextQuestSceneId(idMapping.get(action.getNextQuestSceneId()));
-                actionRepository.update(action);
+                actionRepository.update(dto.from(action));
             }
         }
     }
@@ -91,11 +113,11 @@ public class HibernateQuestService extends AbstractBaseService<QuestScene> {
         logger.info("Loaded quest repository");
     }
 
-    public QuestScene getFirstScene() {
+    public QuestSceneTo getFirstScene() {
         QuestScene patternScene = QuestScene.builder()
-                .type(QuestScene.Type.START)
+                .type(QuestSceneType.START)
                 .build();
-        Optional<QuestScene> startScene = repository.find(patternScene).findFirst();
+        Optional<QuestSceneTo> startScene = repository.find(patternScene).map(dto::from).findFirst();
         if (startScene.isPresent()) {
             return startScene.get();
         } else {
@@ -106,7 +128,7 @@ public class HibernateQuestService extends AbstractBaseService<QuestScene> {
 
     public QuestScene getBattleDeathScene() {
         QuestScene patternScene = QuestScene.builder()
-                .type(QuestScene.Type.BATTLE_DEATH)
+                .type(QuestSceneType.BATTLE_DEATH)
                 .build();
         Optional<QuestScene> deathScene = repository.find(patternScene).findFirst();
         if (deathScene.isPresent()) {
@@ -115,5 +137,9 @@ public class HibernateQuestService extends AbstractBaseService<QuestScene> {
             logger.error("No scene with battle death found");
             throw new RuntimeException("No scene with battle death found");
         }
+    }
+
+    public void delete(QuestSceneTo sceneTo) {
+        repository.delete(dto.from(sceneTo));
     }
 }

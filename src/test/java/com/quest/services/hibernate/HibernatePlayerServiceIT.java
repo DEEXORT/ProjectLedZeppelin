@@ -1,6 +1,9 @@
 package com.quest.services.hibernate;
 
 import com.quest.config.AbilityConfigLoader;
+import com.quest.dto.AbilityTo;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.UserTo;
 import com.quest.entity.Ability;
 import com.quest.entity.User;
 import com.quest.entity.character.Player;
@@ -19,7 +22,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
     private HibernatePlayerService hibernatePlayerService;
     private HibernateAbilityService hibernateAbilityService;
     private HibernateUserService hibernateUserService;
-    private User user;
+    private UserTo user;
 
     @BeforeEach
     void setUp() {
@@ -28,15 +31,15 @@ class HibernatePlayerServiceIT extends ContainerIT {
         hibernateUserService = new HibernateUserService(new RepositoryImpl<>(sessionCreator, User.class));
         AbilityConfigLoader abilityConfigLoader = new AbilityConfigLoader(hibernateAbilityService);
         abilityConfigLoader.loadAbilities();
-        user = User.builder()
+        user = UserTo.builder()
                 .login("admin")
                 .password("admin")
                 .build();
         hibernateUserService.create(user);
     }
 
-    Player buildPlayer(String name) {
-        Player player = Player.builder()
+    PlayerTo buildPlayer(String name) {
+        PlayerTo player = PlayerTo.builder()
                 .name(name)
                 .level(1)
                 .userId(user.getId())
@@ -47,7 +50,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
                 .experienceLevel(300)
                 .experiencePoints(50)
                 .build();
-        Ability baseAttack = hibernateAbilityService.getByName(ResourceBundleManager.getSetting("ability.base_attack_name"));
+        AbilityTo baseAttack = hibernateAbilityService.getByName(ResourceBundleManager.getSetting("ability.base_attack_name"));
         player.getAbilities().add(baseAttack);
         return player;
     }
@@ -61,7 +64,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
     @Test
     void shouldCreatePlayer() {
         // given
-        Player player = buildPlayer("player");
+        PlayerTo player = buildPlayer("player");
 
         // when
         hibernatePlayerService.create(player);
@@ -82,13 +85,13 @@ class HibernatePlayerServiceIT extends ContainerIT {
     @Test
     void getAll() {
         // given
-        Player player1 = buildPlayer("player1");
-        Player player2 = buildPlayer("player2");
+        PlayerTo player1 = buildPlayer("player1");
+        PlayerTo player2 = buildPlayer("player2");
         hibernatePlayerService.create(player1);
         hibernatePlayerService.create(player2);
 
         // when
-        Collection<Player> players = hibernatePlayerService.getAll();
+        Collection<PlayerTo> players = hibernatePlayerService.getAll();
 
         // then
         assertEquals(2, players.size());
@@ -97,11 +100,11 @@ class HibernatePlayerServiceIT extends ContainerIT {
     @Test
     void get() {
         // given
-        Player player = buildPlayer("player");
+        PlayerTo player = buildPlayer("player");
         hibernatePlayerService.create(player);
 
         // when
-        Optional<Player> optional = hibernatePlayerService.get(player.getId());
+        Optional<PlayerTo> optional = hibernatePlayerService.get(player.getId());
 
         // then
         assertTrue(optional.isPresent());
@@ -110,7 +113,7 @@ class HibernatePlayerServiceIT extends ContainerIT {
     @Test
     void update() {
         // given
-        Player player = buildPlayer("player");
+        PlayerTo player = buildPlayer("player");
         hibernatePlayerService.create(player);
         player.setHealth(777);
 
@@ -118,14 +121,14 @@ class HibernatePlayerServiceIT extends ContainerIT {
         hibernatePlayerService.update(player);
 
         // then
-        Optional<Player> optional = hibernatePlayerService.get(player.getId());
+        Optional<PlayerTo> optional = hibernatePlayerService.get(player.getId());
         assertEquals(player.getHealth(), optional.get().getHealth());
     }
 
     @Test
     void delete() {
         // given
-        Player player = buildPlayer("player");
+        PlayerTo player = buildPlayer("player");
         hibernatePlayerService.create(player);
 
         // when

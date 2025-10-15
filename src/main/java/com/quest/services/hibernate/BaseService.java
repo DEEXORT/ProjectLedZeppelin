@@ -8,9 +8,9 @@ public interface BaseService<T> {
 
     Collection<T> getAll();
 
-    void create(T entity);
+    void create(T dto);
 
-    void update(T entity);
+    void update(T dto);
 
-    void delete(T entity);
+    void delete(T dto);
 }

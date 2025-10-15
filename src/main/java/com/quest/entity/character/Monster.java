@@ -16,10 +16,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder(toBuilder = true)
 @PrimaryKeyJoinColumn(name = "character_id")
 public class Monster extends Character {
-    public enum MonsterType {
-        BOSS, MINI_BOSS, ELITE, COMMON
-    }
-
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     MonsterType type;

@@ -16,9 +16,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Builder
 public class Ability {
-    public enum AbilityType {
-        DAMAGE, HEAL, DEFENSE
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,16 +32,16 @@ public class Ability {
     AbilityType type;
 
     @Column(name = "level")
-    int level;
+    Integer level;
 
     @Column(name = "value")
-    int value;
+    Integer value;
 
     @Column(name = "cooldown")
-    int cooldown;
+    Integer cooldown;
 
     @Column(name = "level_requirement")
-    int levelRequirement;
+    Integer levelRequirement;
 
     @Builder.Default
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

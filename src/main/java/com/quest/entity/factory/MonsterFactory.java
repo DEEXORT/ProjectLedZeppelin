@@ -1,11 +1,12 @@
 package com.quest.entity.factory;
 
-import com.quest.entity.character.Monster;
+import com.quest.dto.MonsterTo;
+import com.quest.entity.character.MonsterType;
 
 public class MonsterFactory {
 
-    public static Monster createMonster(String name, int level, int maxHealth, int attack, Monster.MonsterType type) {
-        Monster monster = Monster.builder()
+    public static MonsterTo createMonster(String name, int level, int maxHealth, int attack, MonsterType type) {
+        MonsterTo monster = MonsterTo.builder()
                 .name(name)
                 .type(type)
                 .level(level)
@@ -17,11 +18,11 @@ public class MonsterFactory {
         return monster;
     }
 
-    public static Monster createGoblinMonster() {
-        return createMonster("Goblin", 1, 50, 10, Monster.MonsterType.COMMON);
+    public static MonsterTo createGoblinMonster() {
+        return createMonster("Goblin", 1, 50, 10, MonsterType.COMMON);
     }
 
-    public static Monster createOrcMonster() {
-        return createMonster("Orc", 2, 300, 20, Monster.MonsterType.ELITE);
+    public static MonsterTo createOrcMonster() {
+        return createMonster("Orc", 2, 300, 20, MonsterType.ELITE);
     }
 }

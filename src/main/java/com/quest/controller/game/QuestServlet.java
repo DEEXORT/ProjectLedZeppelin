@@ -1,8 +1,8 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
-import com.quest.entity.QuestScene;
-import com.quest.entity.character.Player;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.QuestSceneTo;
 import com.quest.services.hibernate.HibernateMonsterService;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
@@ -51,7 +51,7 @@ public class QuestServlet extends HttpServlet {
         // clear attribute after battle
         req.getSession().removeAttribute(KeyAttribute.MONSTER);
 
-        Optional<QuestScene> questScene = getQuestScene(req);
+        Optional<QuestSceneTo> questScene = getQuestScene(req);
         if (questScene.isPresent()) {
             questResolver.resolve(req, resp, questScene.get());
         } else {
@@ -87,14 +87,14 @@ public class QuestServlet extends HttpServlet {
     }
 
     private void saveGameProcess(HttpServletRequest req, long nextQuestSceneId) {
-        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+        PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         player.setQuestSceneId(nextQuestSceneId);
         playerService.update(player);
     }
 
     @Transactional
-    private Optional<QuestScene> getQuestScene(HttpServletRequest req) {
-        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+    private Optional<QuestSceneTo> getQuestScene(HttpServletRequest req) {
+        PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         return questService.get(player.getQuestSceneId());
     }
 

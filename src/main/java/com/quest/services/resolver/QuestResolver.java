@@ -1,6 +1,7 @@
 package com.quest.services.resolver;
 
-import com.quest.entity.QuestScene;
+import com.quest.dto.QuestSceneTo;
+import com.quest.entity.QuestSceneType;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
@@ -18,9 +19,9 @@ import java.io.IOException;
 public class QuestResolver {
     private final Logger logger = LogManager.getLogger(QuestResolver.class);
 
-    public void resolve(HttpServletRequest req, HttpServletResponse resp, QuestScene questScene) throws IOException, ServletException {
+    public void resolve(HttpServletRequest req, HttpServletResponse resp, QuestSceneTo questScene) throws IOException, ServletException {
         // Если сцена - концовка
-        if (questScene.getType() == QuestScene.Type.COMPLETE) {
+        if (questScene.getType() == QuestSceneType.COMPLETE) {
             resp.sendRedirect(Route.END);
             return;
         }
@@ -32,7 +33,7 @@ public class QuestResolver {
         req.getRequestDispatcher(JspPath.QUEST).forward(req, resp);
     }
 
-    private void setQuestSceneToSessionAttributes(HttpSession session, QuestScene questScene) {
+    private void setQuestSceneToSessionAttributes(HttpSession session, QuestSceneTo questScene) {
         questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action));
         session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
         session.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());

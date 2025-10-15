@@ -1,6 +1,7 @@
 package com.quest.entity;
 
-import com.quest.entity.character.Character;
+import com.quest.dto.AbilityTo;
+import com.quest.dto.CharacterTo;
 import lombok.Getter;
 
 import java.util.LinkedList;
@@ -10,7 +11,7 @@ public class BattleHistory {
     @Getter
     List<String> history = new LinkedList<>();
 
-    public void saveAction(Character attacker, Character target, Ability ability, int value) {
+    public void saveAction(CharacterTo attacker, CharacterTo target, AbilityTo ability, int value) {
         switch (ability.getType()) {
             case DAMAGE ->
                     history.add("<b>%s</b> применяет способность \"<b>%s</b>\" и наносит урон <b>%s</b> в размере %d."

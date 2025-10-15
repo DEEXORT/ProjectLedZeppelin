@@ -1,5 +1,6 @@
 package services;
 
+import com.quest.dto.UserTo;
 import com.quest.entity.User;
 import com.quest.exception.UserEmptyException;
 import com.quest.exception.UserNotFoundException;
@@ -37,7 +38,7 @@ class UserServiceTest {
         Mockito.doReturn(user).when(userRepository).find(user);
 
         // when
-        Optional<User> optionalUser = userService.get("admin", "admin");
+        Optional<UserTo> optionalUser = userService.get("admin", "admin");
 
         // when + then
         Assertions.assertTrue(optionalUser.isPresent());

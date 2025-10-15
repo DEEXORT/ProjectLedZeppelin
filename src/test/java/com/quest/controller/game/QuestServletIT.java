@@ -1,6 +1,8 @@
 package com.quest.controller.game;
 
 import com.quest.ConfigIT;
+import com.quest.dto.ActionTo;
+import com.quest.dto.QuestSceneTo;
 import com.quest.entity.Action;
 import com.quest.entity.QuestScene;
 import com.quest.services.hibernate.HibernateMonsterService;
@@ -46,9 +48,9 @@ class QuestServletIT extends ConfigIT {
     void doGet_ShouldSetQuestAttributesAndForwardToJsp_WhenSceneExists() throws Exception {
         // given
         playerTest.setQuestSceneId(2L);
-        Action action = Action.builder().questSceneId(2L).actionText("TestActionText").build();
+        ActionTo action = ActionTo.builder().actionText("TestActionText").build();
 
-        QuestScene questScene = QuestScene.builder()
+        QuestSceneTo questScene = QuestSceneTo.builder()
                 .id(2L)
                 .descriptionScene("TestScene")
                 .nameScene("TestScene")

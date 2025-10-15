@@ -1,5 +1,8 @@
 package com.quest.services.resolver;
 
+import com.quest.dto.AbilityTo;
+import com.quest.dto.MonsterTo;
+import com.quest.dto.PlayerTo;
 import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
 import com.quest.entity.character.Monster;
@@ -15,15 +18,15 @@ class BattleResolverTest {
     @Test
     void attack() {
         // given
-        Player player = Player.builder()
+        PlayerTo player = PlayerTo.builder()
                 .name("Player")
                 .level(1)
                 .health(100)
                 .maxHealth(100)
                 .attack(50)
                 .build();
-        Monster monster = MonsterFactory.createGoblinMonster();
-        Ability ability = AbilityFactory
+        MonsterTo monster = MonsterFactory.createGoblinMonster();
+        AbilityTo ability = AbilityFactory
                 .createDamageAbility("Hadoooken", "Hadoooken", 1, 100, 3);
         BattleHistory history = new BattleHistory();
         BattleResolver battleResolver = new BattleResolver();
