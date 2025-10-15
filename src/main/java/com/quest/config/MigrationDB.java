@@ -4,13 +4,15 @@ import liquibase.Scope;
 import liquibase.command.CommandScope;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
+@Slf4j
 public class MigrationDB {
     private final ApplicationProperties properties;
 
     public void start() throws Exception {
-        System.out.println("Running Liquibase...");
+        log.info("Starting Liquibase...");
 
         Scope.child(Scope.Attr.resourceAccessor, new ClassLoaderResourceAccessor(), () -> {
             CommandScope update = new CommandScope("update");
@@ -24,6 +26,6 @@ public class MigrationDB {
             update.execute();
         });
 
-        System.out.println("Running Liquibase...DONE");
+        log.info("Liquibase started...DONE");
     }
 }

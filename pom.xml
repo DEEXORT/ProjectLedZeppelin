@@ -89,6 +89,16 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- Slf4j-->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+
         <!-- Log4j-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

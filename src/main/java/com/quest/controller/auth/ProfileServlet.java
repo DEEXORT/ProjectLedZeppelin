@@ -9,6 +9,7 @@ import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.RequestHelper;
 import com.quest.util.Route;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,17 +23,13 @@ import java.util.Optional;
 
 @WebServlet(Route.PROFILE)
 public class ProfileServlet extends HttpServlet {
-    private final HibernateAbilityService abilityService;
-    private final HibernatePlayerService playerService;
+    private HibernateAbilityService abilityService;
+    private HibernatePlayerService playerService;
 
-    public ProfileServlet(HibernateAbilityService abilityService, HibernatePlayerService playerService) {
-        this.abilityService = abilityService;
-        this.playerService = playerService;
-    }
-
-    public ProfileServlet() {
-        this(ServiceLocator.getService(HibernateAbilityService.class),
-                ServiceLocator.getService(HibernatePlayerService.class));
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        abilityService = ServiceLocator.getService(HibernateAbilityService.class);
+        playerService = ServiceLocator.getService(HibernatePlayerService.class);
     }
 
     @Override
@@ -41,6 +38,7 @@ public class ProfileServlet extends HttpServlet {
                 .stream()
                 .sorted(Comparator.comparingInt(AbilityTo::getLevelRequirement))
                 .toList();
+
         req.getSession().setAttribute(KeyAttribute.ALL_ABILITIES, list);
         req.getRequestDispatcher(JspPath.PROFILE).forward(req, resp);
     }
@@ -49,6 +47,7 @@ public class ProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerTo playerTo = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         String[] abilityIds = req.getParameterValues(KeyAttribute.ABILITIES_IDS);
+
         if (abilityIds != null) {
             playerTo.getAbilities().clear();
             for (String abilityId : abilityIds) {
@@ -57,6 +56,7 @@ public class ProfileServlet extends HttpServlet {
             }
             playerService.update(playerTo);
         }
+
         resp.sendRedirect(Route.PROFILE);
     }
 }

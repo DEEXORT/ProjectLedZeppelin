@@ -1,41 +1,20 @@
 package com.quest.config;
 
 import lombok.SneakyThrows;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 public class ServiceLocator {
-    //    private static final Map<Class<?>, Object> components = new ConcurrentHashMap<>();
     private static final Map<String, Object> components = new ConcurrentHashMap<>();
-    private static final Logger logger = LogManager.getLogger(ServiceLocator.class);
-
-    @SuppressWarnings("unchecked")
-//    @SneakyThrows
-//    public static <T> T getService(final Class<T> serviceClass) {
-//        if (components.containsKey(serviceClass)) {
-//            return (T) components.get(serviceClass); // Если компонент проинициализирован, возвращаем его.
-//        } else {
-//            // Иначе создаем экземпляр класса
-//            Constructor<?> constructor = serviceClass.getConstructors()[0]; // Получаем его конструктор
-//            Class<?>[] parameterTypes = constructor.getParameterTypes(); // Получаем параметры конструктора
-//            Object[] parameters = new Object[parameterTypes.length]; // Создаем массив пустых объектов для параметров
-//            for (int i = 0; i < parameterTypes.length; i++) {
-//                parameters[i] = ServiceLocator.getService(parameterTypes[i]); // Ищем рекурсивно компоненты
-//            }
-//            Object newInstance = constructor.newInstance(parameters); // Создаем экземпляр
-//            components.put(serviceClass, newInstance); // Сохраняем в контейнер компонентов
-//            return (T) newInstance;
-//        }
-//    }
 
     @SneakyThrows
     public static <T> T getService(final Class<T> serviceClass, final Class<?>... genericTypes) {
-        String key = generateKey(serviceClass, genericTypes); // Имя параметризированного класса (например, Repository<User>)
-        logger.info("Get service {} with generic type {}", serviceClass, genericTypes);
+        String key = generateKey(serviceClass, genericTypes); // Parametrized type class (For example, Repository<User>)
+        log.info("Get service {} with generic type {}", serviceClass, genericTypes);
 
         if (components.containsKey(key)) {
             return (T) components.get(key);
