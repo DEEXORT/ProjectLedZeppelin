@@ -112,6 +112,8 @@ public class QuestParser {
             graphScenes.put(questSceneId, scene);
 
             // Если есть достижение в сцене, то сохранить в БД
+            // TODO: need to move this block code (save Action, Event, Achievement)
+            //  to QuestSceneService in one transaction
             if (questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_START) ||
                     questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_END)) {
 

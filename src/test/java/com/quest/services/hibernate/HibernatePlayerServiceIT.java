@@ -1,5 +1,6 @@
 package com.quest.services.hibernate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quest.config.AbilityConfigLoader;
 import com.quest.dto.AbilityTo;
 import com.quest.dto.PlayerTo;

@@ -30,7 +30,9 @@ public class HibernatePlayerService {
     }
 
     public void create(PlayerTo playerTo) {
-        repository.create(dto.from(playerTo));
+        Player player = dto.from(playerTo);
+        repository.create(player);
+        playerTo.setId(player.getId());
     }
 
     public void update(PlayerTo playerTo) {

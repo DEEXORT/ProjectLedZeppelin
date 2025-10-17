@@ -43,6 +43,7 @@ public class GameServlet extends HttpServlet {
         UserTo user = RequestHelper.getValueAttr(req, KeyAttribute.USER, UserTo.class);
         QuestSceneTo scene = questService.getFirstScene();
 
+        // TODO: need move this block code to UserService and create Player in one transaction with User
         // Получить текущее состояние игры из репозитория или начать новую игру
         PlayerTo player = null;
         if (user.getCharacterId() == null) {

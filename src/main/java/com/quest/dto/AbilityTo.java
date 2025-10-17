@@ -1,13 +1,18 @@
 package com.quest.dto;
 
 import com.quest.entity.AbilityType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AbilityTo {
     Long id;
+    String unikey;
     String name;
     String description;
     AbilityType type;

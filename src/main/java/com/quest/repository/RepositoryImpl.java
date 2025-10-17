@@ -6,8 +6,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -19,8 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@Slf4j
 public class RepositoryImpl<T> implements Repository<T> {
-    private final Logger log = LogManager.getLogger(RepositoryImpl.class);
     private final SessionCreator sessionCreator;
     private final Class<T> entityClass;
 
@@ -39,7 +38,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             return session.createQuery(query).list();
         } catch (Exception e) {
             String message = "Error getting all entities from repository";
-            log.error(message);
+            log.error(e.getMessage(), e);
             throw new RuntimeException(message, e);
         }
     }
@@ -50,7 +49,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             return session.get(entityClass, id);
         } catch (Exception e) {
             String message = "Error getting entity by id from repository";
-            log.error(message);
+            log.error(e.getMessage(), e);
             throw new RuntimeException(message, e);
         }
     }
@@ -64,7 +63,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            log.error(e);
+            log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         } finally {
             session.close();
@@ -85,7 +84,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             }
 
         } catch (Exception e) {
-            log.error(e);
+            log.error(e.getMessage(), e);
             throw new RuntimeException("Error updating entity", e);
         }
     }
@@ -101,12 +100,12 @@ public class RepositoryImpl<T> implements Repository<T> {
                 transaction.commit();
             } catch (Exception e) {
                 transaction.rollback();
-                log.error(e);
+                log.error(e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         } catch (Exception e) {
             transaction.rollback();
-            log.error(e);
+            log.error(e.getMessage(), e);
             throw new RuntimeException("Error deleting entity", e);
         }
     }
@@ -133,7 +132,7 @@ public class RepositoryImpl<T> implements Repository<T> {
                     predicates.add(predicate);
                 }
             } catch (IllegalAccessException e) {
-                log.error(e);
+                log.error(e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }
