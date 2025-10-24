@@ -15,6 +15,7 @@ import com.quest.util.EventType;
 import com.quest.util.ParseConst;
 import jakarta.transaction.Transactional;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,10 +25,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+@Slf4j
 @Data
 public class QuestParser {
-    private Logger logger = LogManager.getLogger(QuestParser.class);
 
     private final HibernateQuestService questService;
     private final HibernateEventService eventService;
@@ -96,7 +96,7 @@ public class QuestParser {
             String[] idAndDescription = questSceneContent[0].split(ParseConst.SCENE_TEXT_DELIMITER);
             Long questSceneId = Long.parseLong(idAndDescription[0].trim());
 
-            logger.info("Создание сцены id = {}", questSceneId);
+            log.info("Создание сцены id = {}", questSceneId);
 
             String[] descriptionAndType = idAndDescription[1].split(ParseConst.SCENE_TYPE_DELIMITER);
             String questSceneDescription = descriptionAndType[0].trim().replace("\n", "<br>");
@@ -111,14 +111,12 @@ public class QuestParser {
 
             graphScenes.put(questSceneId, scene);
 
-            // Если есть достижение в сцене, то сохранить в БД
-            // TODO: need to move this block code (save Action, Event, Achievement)
-            //  to QuestSceneService in one transaction
+            // Parse achievement and update scene description
             if (questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_START) ||
                     questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_END)) {
 
-                logger.info("Создание достижения...");
-                AchievementTo achievement = saveAchievement(questSceneDescription);
+                log.info("Creating achievement...");
+                AchievementTo achievement = parseAchievement(questSceneDescription);
 
                 String updatedQuestSceneDescription =
                         questSceneDescription
@@ -141,7 +139,7 @@ public class QuestParser {
                         .eventId(eventId == 0 ? null : eventId)
                         .build();
 
-                logger.info("Action: {}", action);
+                log.info("Action: {}", action);
 
                 scene.getActions().add(action);
             }
@@ -150,21 +148,18 @@ public class QuestParser {
         questService.saveAllScenes(graphScenes);
     }
 
-    private AchievementTo saveAchievement(String questSceneDescription) {
+    private AchievementTo parseAchievement(String questSceneDescription) {
         Pattern pattern = Pattern.compile("<ach>(.*?)</ach>");
         Matcher matcher = pattern.matcher(questSceneDescription);
 
         if (matcher.find()) {
             String achievementText = matcher.group(1);
-            AchievementTo achievement = AchievementTo.builder()
+            return AchievementTo.builder()
                     .text(achievementText)
                     .build();
-            achievementService.create(achievement);
-            logger.info("Achievement created: {}", achievement);
-            return achievement;
         } else {
             String errorMessage = "Achievement not create";
-            logger.error(errorMessage);
+            log.error(errorMessage);
             throw new AchievementNotCreateException(errorMessage);
         }
     }
@@ -181,7 +176,7 @@ public class QuestParser {
                     .description(matcher.group(EventAttribute.TEXT))
                     .build();
             eventService.create(event);
-            logger.info("Event created: {}", event);
+            log.info("Event created: {}", event);
             return event.getId();
         } else {
             return saveBattleEvent(encodedQuestSceneIdAndEvent.trim());
@@ -197,7 +192,7 @@ public class QuestParser {
             int attack = Integer.parseInt(matcher.group(EventAttribute.ATTACK));
             MonsterTo monster = MonsterFactory.createMonster(nameMonster, level, health, attack, MonsterType.BOSS);
             monsterService.create(monster);
-            logger.info("Monster created: {}", monster);
+            log.info("Monster created: {}", monster);
 
             String questDescription = matcher.group(EventAttribute.TEXT);
             EventTo event = EventTo.builder()
@@ -206,7 +201,7 @@ public class QuestParser {
                     .description(questDescription)
                     .build();
             eventService.create(event);
-            logger.info("Event with battle created: {}", event);
+            log.info("Event with battle created: {}", event);
             return event.getId();
         }
         return 0;
@@ -217,7 +212,7 @@ public class QuestParser {
         if (matcher.find()) {
             return Long.parseLong(matcher.group("id"));
         } else {
-            logger.error("Not found quest scene id: {}", encodedQuestSceneIdAndEvent);
+            log.error("Not found quest scene id: {}", encodedQuestSceneIdAndEvent);
             throw new QuestNotFoundException("Not found quest scene id: " + encodedQuestSceneIdAndEvent);
         }
     }

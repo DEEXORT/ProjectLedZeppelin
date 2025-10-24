@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class HibernateQuestService {
-    private static final Logger logger = LogManager.getLogger(ConfigApplication.class);
+    private static final Logger logger = LogManager.getLogger(HibernateQuestService.class);
     private final RepositoryImpl<QuestScene> repository;
     private final RepositoryImpl<Action> actionRepository;
     private Dto dto = Dto.MAPPER;
@@ -45,11 +45,6 @@ public class HibernateQuestService {
     public HibernateQuestService() {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, QuestScene.class);
         this.actionRepository = ServiceLocator.getService(RepositoryImpl.class, Action.class);
-    }
-
-    public HibernateQuestService(RepositoryImpl<QuestScene> repository, RepositoryImpl<Action> actionRepository) {
-        this.repository = repository;
-        this.actionRepository = actionRepository;
     }
 
     public Optional<QuestSceneTo> get(long id) {
@@ -70,13 +65,13 @@ public class HibernateQuestService {
 
     public void saveAllScenes(Map<Long, QuestSceneTo> scenes) {
         Map<Long, Long> idMapping = new HashMap<>();
-        for (QuestSceneTo scene : scenes.values()) {
-            QuestScene sceneEntity = dto.from(scene);
-            repository.create(sceneEntity);
-            scene.setId(sceneEntity.getId());
-            idMapping.put(scene.getFileId(), scene.getId());
+        for (QuestSceneTo sceneTo : scenes.values()) {
+            QuestScene sceneEntity = dto.from(sceneTo);
+            repository.create(sceneEntity); // achievement and actions are saved through cascade
+            sceneTo.setId(sceneEntity.getId());
+            idMapping.put(sceneTo.getFileId(), sceneTo.getId());
         }
-        updateActions(scenes, idMapping);
+        updateActions(scenes, idMapping); // for replace fileId to databaseId
     }
 
     private void updateActions(Map<Long, QuestSceneTo> scenes, Map<Long, Long> idMapping) {

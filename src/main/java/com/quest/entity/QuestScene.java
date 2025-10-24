@@ -35,7 +35,7 @@ public class QuestScene {
     @JoinColumn(name = "scene_id")
     private List<Action> actions = new ArrayList<>(); // TODO: Need to get from ActionRepository instead of QuestRepository
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "achievement_id")
     private Achievement achievement;
 
