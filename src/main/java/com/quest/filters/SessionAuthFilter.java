@@ -27,7 +27,6 @@ public class SessionAuthFilter extends HttpFilter {
         if (session != null && session.getAttribute(KeyAttribute.USER) != null) {
             chain.doFilter(req, res);
         } else {
-            // Иначе просим залогиниться
             // Otherwise redirect to login
             response.sendRedirect(Route.LOGIN);
         }

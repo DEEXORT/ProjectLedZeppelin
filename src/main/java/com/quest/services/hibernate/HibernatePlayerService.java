@@ -7,9 +7,8 @@ import com.quest.mapping.Dto;
 import com.quest.repository.RepositoryImpl;
 
 import java.util.Collection;
-import java.util.Optional;
 
-public class HibernatePlayerService {
+public class HibernatePlayerService implements BaseService<PlayerTo> {
     private final RepositoryImpl<Player> repository;
     private final Dto dto = Dto.MAPPER;
 
@@ -17,12 +16,8 @@ public class HibernatePlayerService {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, Player.class);
     }
 
-    public HibernatePlayerService(RepositoryImpl<Player> repository) {
-        this.repository = repository;
-    }
-
-    public Optional<PlayerTo> get(long id) {
-        return Optional.ofNullable(repository.get(id)).map(dto::from);
+    public PlayerTo get(long id) {
+        return dto.from(repository.get(id));
     }
 
     public Collection<PlayerTo> getAll() {

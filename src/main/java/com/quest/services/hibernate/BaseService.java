@@ -1,10 +1,9 @@
 package com.quest.services.hibernate;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface BaseService<T> {
-    Optional<T> get(long id);
+    T get(long id);
 
     Collection<T> getAll();
 

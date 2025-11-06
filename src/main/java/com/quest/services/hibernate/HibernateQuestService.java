@@ -1,6 +1,5 @@
 package com.quest.services.hibernate;
 
-import com.quest.config.ConfigApplication;
 import com.quest.config.ServiceLocator;
 import com.quest.dto.ActionTo;
 import com.quest.dto.QuestSceneTo;
@@ -8,16 +7,13 @@ import com.quest.entity.Action;
 import com.quest.entity.QuestScene;
 import com.quest.entity.QuestSceneType;
 import com.quest.mapping.Dto;
-import com.quest.repository.Repository;
 import com.quest.repository.RepositoryImpl;
 import com.quest.services.resolver.QuestParser;
 import com.quest.util.KeyAttribute;
 import com.quest.util.ResourceBundleManager;
 import com.quest.util.ResourcePath;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,17 +22,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class HibernateQuestService {
-    private static final Logger logger = LogManager.getLogger(HibernateQuestService.class);
+@Slf4j
+public class HibernateQuestService implements BaseService<QuestSceneTo> {
     private final RepositoryImpl<QuestScene> repository;
     private final RepositoryImpl<Action> actionRepository;
     private Dto dto = Dto.MAPPER;
 
-    // TODO: replace to const from properties
     private final int percentageChanceBattle =
             ThreadLocalRandom.current().nextInt(
                     Integer.parseInt(ResourceBundleManager.getSetting("event.max_chance_battle"))
@@ -47,8 +46,8 @@ public class HibernateQuestService {
         this.actionRepository = ServiceLocator.getService(RepositoryImpl.class, Action.class);
     }
 
-    public Optional<QuestSceneTo> get(long id) {
-        return Optional.ofNullable(repository.get(id)).map(dto::from);
+    public QuestSceneTo get(long id) {
+        return dto.from(repository.get(id));
     }
 
     public Collection<QuestSceneTo> getAll() {
@@ -56,22 +55,30 @@ public class HibernateQuestService {
     }
 
     public void create(QuestSceneTo sceneTo) {
-        repository.create(dto.from(sceneTo));
+        QuestScene questScene = dto.from(sceneTo);
+        repository.create(questScene);
+        sceneTo.setId(questScene.getId());
     }
 
     public void update(QuestSceneTo sceneTo) {
         repository.update(dto.from(sceneTo));
     }
 
-    public void saveAllScenes(Map<Long, QuestSceneTo> scenes) {
+    public void saveAllScenes(Map<Long, QuestSceneTo> sceneToMap) {
         Map<Long, Long> idMapping = new HashMap<>();
-        for (QuestSceneTo sceneTo : scenes.values()) {
+        for (QuestSceneTo sceneTo : sceneToMap.values()) {
+            // Create questScene in database
             QuestScene sceneEntity = dto.from(sceneTo);
-            repository.create(sceneEntity); // achievement and actions are saved through cascade
-            sceneTo.setId(sceneEntity.getId());
+            repository.create(sceneEntity);
+
+            // Update DTO
+            sceneTo = dto.from(sceneEntity);
+            sceneToMap.put(sceneTo.getFileId(), sceneTo);
+
+            // Recording mapping between id from file and id obtained from db
             idMapping.put(sceneTo.getFileId(), sceneTo.getId());
         }
-        updateActions(scenes, idMapping); // for replace fileId to databaseId
+        updateActions(sceneToMap, idMapping);
     }
 
     private void updateActions(Map<Long, QuestSceneTo> scenes, Map<Long, Long> idMapping) {
@@ -102,10 +109,10 @@ public class HibernateQuestService {
             String dataQuest = Files.readString(pathQuestFile, StandardCharsets.UTF_8);
             questParser.parseText(dataQuest);
         } catch (IOException | URISyntaxException e) {
-            logger.error("Error reading quest file");
+            log.error("Error reading quest file");
             throw new RuntimeException("Error reading quest file", e);
         }
-        logger.info("Loaded quest repository");
+        log.info("Loaded quest repository");
     }
 
     public QuestSceneTo getFirstScene() {
@@ -116,7 +123,7 @@ public class HibernateQuestService {
         if (startScene.isPresent()) {
             return startScene.get();
         } else {
-            logger.error("No scene found");
+            log.error("No scene found");
             throw new RuntimeException("No scene found");
         }
     }
@@ -129,7 +136,7 @@ public class HibernateQuestService {
         if (deathScene.isPresent()) {
             return deathScene.get();
         } else {
-            logger.error("No scene with battle death found");
+            log.error("No scene with battle death found");
             throw new RuntimeException("No scene with battle death found");
         }
     }

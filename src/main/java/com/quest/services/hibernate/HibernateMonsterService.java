@@ -8,16 +8,19 @@ import com.quest.entity.factory.MonsterFactory;
 import com.quest.mapping.Dto;
 import com.quest.repository.Repository;
 import com.quest.repository.RepositoryImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HibernateMonsterService {
-    private static final Logger logger = LogManager.getLogger(HibernateMonsterService.class);
+@Slf4j
+public class HibernateMonsterService implements BaseService<MonsterTo> {
     private Repository<Monster> repository;
     private Dto dto = Dto.MAPPER;
 
@@ -25,12 +28,8 @@ public class HibernateMonsterService {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, Monster.class);
     }
 
-    public HibernateMonsterService(Repository<Monster> repository) {
-       this.repository = repository;
-    }
-
-    public Optional<MonsterTo> get(long id) {
-        return Optional.ofNullable(repository.get(id)).map(dto::from);
+    public MonsterTo get(long id) {
+        return dto.from(repository.get(id));
     }
 
     public Collection<MonsterTo> getAll() {
@@ -54,7 +53,7 @@ public class HibernateMonsterService {
         Collections.shuffle(monsters, ThreadLocalRandom.current());
 
         if (monsters.isEmpty()) {
-            logger.error("No monsters found");
+            log.error("No monsters found");
             throw new NoSuchElementException("No monsters found in repository");
         }
         MonsterTo monster = monsters.get(0);

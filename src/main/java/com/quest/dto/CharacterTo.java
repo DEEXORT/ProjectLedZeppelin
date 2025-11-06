@@ -9,8 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +20,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder(toBuilder = true)
+@Slf4j
 public class CharacterTo {
-    public static final Logger logger = LogManager.getLogger(CharacterTo.class);
-
     Long id;
     String name;
     int level;
@@ -76,18 +74,17 @@ public class CharacterTo {
 
     private void useDamage(AbilityTo ability, CharacterTo target, BattleHistory history) {
         int damage = calculateDamage(ability);
-        logger.debug("{} damage", damage);
+        log.debug("{} damage", damage);
         target.setHealth(target.getHealth() - damage);
         history.saveAction(this, target, ability, damage);
     }
 
     private int calculateDamage(AbilityTo ability) {
-//        return ability.getValue() + (this.getAttack() * ability.getLevel() / 10);
         return ability.getValue();
     }
 
     public AbilityTo getBaseAttack() {
-        logger.debug("Size abilities: {}", abilities.size());
+        log.debug("Size abilities: {}", abilities.size());
         return abilities.get(0);
     }
 

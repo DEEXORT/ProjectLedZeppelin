@@ -4,6 +4,7 @@ import com.quest.entity.QuestSceneType;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -13,7 +14,8 @@ public class QuestSceneTo {
     Long fileId;
     String nameScene;
     String descriptionScene;
-    List<ActionTo> actions;
+    @Builder.Default
+    List<ActionTo> actions = new ArrayList<>();
     AchievementTo achievement;
     QuestSceneType type;
 }

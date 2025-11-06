@@ -10,27 +10,25 @@ import com.quest.services.hibernate.HibernateUserService;
 import com.quest.util.KeyAttribute;
 import com.quest.util.RequestHelper;
 import com.quest.util.Route;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Optional;
 
 
 @WebServlet(Route.GAME)
 public class GameServlet extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(GameServlet.class);
-    private final HibernatePlayerService playerService;
-    private final HibernateQuestService questService;
-    private final HibernateUserService userService;
+    private  HibernatePlayerService playerService;
+    private  HibernateQuestService questService;
+    private  HibernateUserService userService;
 
-    public GameServlet() {
+    @Override
+    public void init(ServletConfig config) throws ServletException {
         playerService = ServiceLocator.getService(HibernatePlayerService.class);
         questService = ServiceLocator.getService(HibernateQuestService.class);
         userService = ServiceLocator.getService(HibernateUserService.class);
@@ -38,13 +36,12 @@ public class GameServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Проверка аутентификации пользователя
+        // Checking user authentication
         HttpSession session = req.getSession();
         UserTo user = RequestHelper.getValueAttr(req, KeyAttribute.USER, UserTo.class);
         QuestSceneTo scene = questService.getFirstScene();
 
-        // TODO: need move this block code to UserService and create Player in one transaction with User
-        // Получить текущее состояние игры из репозитория или начать новую игру
+        // Getting current game state from repository or start a new game
         PlayerTo player = null;
         if (user.getCharacterId() == null) {
             // New game
@@ -63,12 +60,7 @@ public class GameServlet extends HttpServlet {
             userService.update(user);
         } else {
             // Continue game
-            Optional<PlayerTo> optionalPlayer = playerService.get(user.getCharacterId());
-            if (optionalPlayer.isPresent()) {
-                player = optionalPlayer.get();
-            } else {
-                logger.warn("Player not found");
-            }
+            player = playerService.get(user.getCharacterId());
         }
 
         session.setAttribute(KeyAttribute.PLAYER, player);

@@ -5,6 +5,7 @@ import com.quest.services.StatisticService;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,14 +16,11 @@ import java.io.IOException;
 
 @WebServlet(Route.LEADER_BOARD)
 public class LeaderBoardServlet extends HttpServlet {
-    private final StatisticService statisticService;
+    private StatisticService statisticService;
 
-    public LeaderBoardServlet(StatisticService statisticService) {
-        this.statisticService = statisticService;
-    }
-
-    public LeaderBoardServlet() {
-        this(ServiceLocator.getService(StatisticService.class));
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        statisticService = ServiceLocator.getService(StatisticService.class);
     }
 
     @Override

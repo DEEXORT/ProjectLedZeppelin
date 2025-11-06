@@ -10,23 +10,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
 @AllArgsConstructor
+@Slf4j
 public class QuestResolver {
-    private final Logger logger = LogManager.getLogger(QuestResolver.class);
 
     public void resolve(HttpServletRequest req, HttpServletResponse resp, QuestSceneTo questScene) throws IOException, ServletException {
-        // Если сцена - концовка
+        // If end scene
         if (questScene.getType() == QuestSceneType.COMPLETE) {
             resp.sendRedirect(Route.END);
             return;
         }
 
-        // Запись сцены в атрибуты для отображения в JSP.
+        // Writing the scene to session attributes for show through JSP
         HttpSession session = req.getSession();
         session.setAttribute(KeyAttribute.BATTLE_FLAG, false);
         setQuestSceneToSessionAttributes(session, questScene);
@@ -34,7 +33,7 @@ public class QuestResolver {
     }
 
     private void setQuestSceneToSessionAttributes(HttpSession session, QuestSceneTo questScene) {
-        questScene.getActions().forEach(action -> logger.debug("QuestScene found. Actions: {}", action));
+        questScene.getActions().forEach(action -> log.debug("QuestScene found. Actions: {}", action));
         session.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
         session.setAttribute(KeyAttribute.QUEST_ACTIONS, questScene.getActions());
     }

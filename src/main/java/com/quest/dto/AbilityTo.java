@@ -8,11 +8,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AbilityTo {
     Long id;
-    String unikey;
     String name;
     String description;
     AbilityType type;

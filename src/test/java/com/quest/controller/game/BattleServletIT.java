@@ -3,7 +3,6 @@ package com.quest.controller.game;
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
 import com.quest.dto.AbilityTo;
-import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;

@@ -1,13 +1,17 @@
 package com.quest.controller.game;
 
 import com.quest.config.ServiceLocator;
+import com.quest.dto.PlayerTo;
 import com.quest.dto.QuestSceneTo;
 import com.quest.dto.UserTo;
 import com.quest.entity.QuestSceneType;
-import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.services.hibernate.HibernateUserService;
-import com.quest.util.*;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
+import com.quest.util.ResourcePath;
+import com.quest.util.Route;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet(Route.END)
 public class EndGameServlet extends HttpServlet {
@@ -31,32 +34,32 @@ public class EndGameServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Player player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, Player.class);
+        PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         UserTo user = RequestHelper.getValueAttr(req, KeyAttribute.USER, UserTo.class);
 
-        // Получение сцены с концовкой и сохранение достижения
-        Optional<QuestSceneTo> questScene = questService.get(player.getQuestSceneId());
-        questScene.ifPresent(scene -> {
-            req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, scene.getDescriptionScene());
-            if (scene.getAchievement() != null) {
+        // Getting the ending quest scene and saving the achievement for player
+        QuestSceneTo questScene = questService.get(player.getQuestSceneId());
+        if (questScene != null) {
+            req.setAttribute(KeyAttribute.QUEST_DESCRIPTION, questScene.getDescriptionScene());
+            if (questScene.getAchievement() != null) {
                 userService.update(user);
             }
-            // Если сцена - сюжетная концовка
-            if (scene.getType() == QuestSceneType.COMPLETE) {
+            // If the scene with the story ending
+            if (questScene.getType() == QuestSceneType.COMPLETE) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
                         ResourcePath.IMG_FINISH);
             }
-            // Если игрок погиб
-            else if (scene.getType() == QuestSceneType.DEATH
-                    || scene.getType() == QuestSceneType.BATTLE_DEATH) {
+            // If the player died
+            else if (questScene.getType() == QuestSceneType.DEATH
+                    || questScene.getType() == QuestSceneType.BATTLE_DEATH) {
                 req.getSession().setAttribute(
                         KeyAttribute.IMG_END_GAME,
                         ResourcePath.IMG_RIP);
             }
-        });
+        }
 
-        // Сброс игрока у пользователя
+        // Resetting player for user
         user.setCharacterId(null);
 
         req.getRequestDispatcher(JspPath.END_GAME).forward(req, resp);

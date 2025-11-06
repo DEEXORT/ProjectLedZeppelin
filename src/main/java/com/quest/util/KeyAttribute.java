@@ -1,10 +1,10 @@
 package com.quest.util;
 
 
-public class KeyAttribute {
-    private KeyAttribute() {
-    }
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
+public class KeyAttribute {
     public static final String USER = "user";
     public static final String PLAYER = "player";
     public static final String MONSTER = "monster";

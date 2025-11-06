@@ -1,11 +1,12 @@
 package com.quest.controller.auth;
 
 import com.quest.ConfigIT;
-import com.quest.config.ServiceLocator;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,8 +14,16 @@ import java.io.IOException;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@Slf4j
 class UserAuthenticationServletIT extends ConfigIT {
-    private final UserAuthenticationServlet userAuthenticationServlet = ServiceLocator.getService(UserAuthenticationServlet.class);
+
+    private static UserAuthenticationServlet userAuthenticationServlet;
+
+    @BeforeAll
+    static void setUp() {
+        userAuthenticationServlet = new UserAuthenticationServlet();
+        userAuthenticationServlet.init(servletConfig);
+    }
 
     @Test
     void doGet_ShouldRedirectToProfile_WhenUserIsAuthenticated() throws IOException, ServletException {

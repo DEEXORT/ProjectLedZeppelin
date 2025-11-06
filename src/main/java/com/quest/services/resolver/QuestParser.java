@@ -1,12 +1,15 @@
 package com.quest.services.resolver;
 
-import com.quest.dto.*;
-import com.quest.entity.*;
+import com.quest.dto.AchievementTo;
+import com.quest.dto.ActionTo;
+import com.quest.dto.EventTo;
+import com.quest.dto.MonsterTo;
+import com.quest.dto.QuestSceneTo;
+import com.quest.entity.QuestSceneType;
 import com.quest.entity.character.MonsterType;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.exception.AchievementNotCreateException;
 import com.quest.exception.QuestNotFoundException;
-import com.quest.services.hibernate.HibernateAchievementService;
 import com.quest.services.hibernate.HibernateEventService;
 import com.quest.services.hibernate.HibernateMonsterService;
 import com.quest.services.hibernate.HibernateQuestService;
@@ -16,8 +19,6 @@ import com.quest.util.ParseConst;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,13 +26,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Slf4j
+
 @Data
+@Slf4j
 public class QuestParser {
 
     private final HibernateQuestService questService;
     private final HibernateEventService eventService;
-    private final HibernateAchievementService achievementService;
     private final HibernateMonsterService monsterService;
 
     private final Pattern PATTERN_EVENT = Pattern.compile(
@@ -60,11 +61,10 @@ public class QuestParser {
                     "|(?:text=\"(?<text>[^\"]*)\")\\s*" +
                     "){5}>\\s*");
 
-    public QuestParser(HibernateQuestService questService, HibernateAchievementService achievementService,
-                       HibernateEventService eventService, HibernateMonsterService monsterService) {
+    public QuestParser(HibernateQuestService questService, HibernateEventService eventService,
+                       HibernateMonsterService monsterService) {
         this.questService = questService;
         this.eventService = eventService;
-        this.achievementService = achievementService;
         this.monsterService = monsterService;
     }
 
@@ -111,19 +111,19 @@ public class QuestParser {
 
             graphScenes.put(questSceneId, scene);
 
-            // Parse achievement and update scene description
+            // Если есть достижение в сцене, то сохранить в БД
             if (questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_START) ||
                     questSceneDescription.contains(ParseConst.ACHIEVEMENT_DELIMITER_END)) {
 
-                log.info("Creating achievement...");
-                AchievementTo achievement = parseAchievement(questSceneDescription);
+                log.info("Создание достижения...");
+                AchievementTo achievementTo = saveAchievement(questSceneDescription);
 
                 String updatedQuestSceneDescription =
                         questSceneDescription
                                 .replace(ParseConst.ACHIEVEMENT_DELIMITER_START, "")
                                 .replace(ParseConst.ACHIEVEMENT_DELIMITER_END, "");
                 scene.setDescriptionScene(updatedQuestSceneDescription);
-                scene.setAchievement(achievement);
+                scene.setAchievement(achievementTo);
             }
 
             // Извлекаем действия и создаем для них объекты
@@ -148,15 +148,16 @@ public class QuestParser {
         questService.saveAllScenes(graphScenes);
     }
 
-    private AchievementTo parseAchievement(String questSceneDescription) {
+    private AchievementTo saveAchievement(String questSceneDescription) {
         Pattern pattern = Pattern.compile("<ach>(.*?)</ach>");
         Matcher matcher = pattern.matcher(questSceneDescription);
 
         if (matcher.find()) {
             String achievementText = matcher.group(1);
-            return AchievementTo.builder()
+            AchievementTo achievement = AchievementTo.builder()
                     .text(achievementText)
                     .build();
+            return achievement;
         } else {
             String errorMessage = "Achievement not create";
             log.error(errorMessage);

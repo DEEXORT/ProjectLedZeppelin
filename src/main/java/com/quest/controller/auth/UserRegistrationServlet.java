@@ -21,7 +21,6 @@ import java.io.IOException;
 
 @WebServlet(Route.REGISTER)
 public class UserRegistrationServlet extends HttpServlet {
-
     private HibernateUserService userService;
 
     @Override
@@ -47,7 +46,6 @@ public class UserRegistrationServlet extends HttpServlet {
         UserTo user = UserTo.builder()
                 .login(login)
                 .password(password)
-//                .achievements(new ArrayList<>())
                 .build();
         try {
             userService.create(user);

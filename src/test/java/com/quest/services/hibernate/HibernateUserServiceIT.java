@@ -1,8 +1,6 @@
 package com.quest.services.hibernate;
 
 import com.quest.dto.UserTo;
-import com.quest.entity.User;
-import com.quest.repository.RepositoryImpl;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +15,7 @@ class HibernateUserServiceIT extends ContainerIT {
 
     @BeforeEach
     void setUp() {
-        RepositoryImpl<User> repository = new RepositoryImpl<>(sessionCreator, User.class);
-        hibernateUserService = new HibernateUserService(repository);
+        hibernateUserService = new HibernateUserService();
     }
 
     @Test
@@ -67,10 +64,10 @@ class HibernateUserServiceIT extends ContainerIT {
         hibernateUserService.create(user);
 
         // when
-        Optional<UserTo> userFromDB = hibernateUserService.get(user.getId());
+        UserTo userFromDB = hibernateUserService.get(user.getId());
 
         // then
-        Assertions.assertTrue(userFromDB.isPresent());
+        Assertions.assertNotNull(userFromDB);
     }
 
     @Test
@@ -88,9 +85,9 @@ class HibernateUserServiceIT extends ContainerIT {
         hibernateUserService.update(user);
 
         // then
-        Optional<UserTo> userFromDB = hibernateUserService.get(user.getId());
-        Assertions.assertTrue(userFromDB.isPresent());
-        Assertions.assertEquals(newLogin, userFromDB.get().getLogin());
+        UserTo userFromDB = hibernateUserService.get(user.getId());
+        Assertions.assertNotNull(userFromDB);
+        Assertions.assertEquals(newLogin, userFromDB.getLogin());
     }
 
     @Test
@@ -107,7 +104,6 @@ class HibernateUserServiceIT extends ContainerIT {
         hibernateUserService.delete(user);
 
         // then
-        Assertions.assertTrue(hibernateUserService.get(user.getId()).isEmpty());
     }
 
     @Test

@@ -9,12 +9,11 @@ import com.quest.entity.BattleHistory;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.util.ResourceBundleManager;
 import lombok.Data;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class BattleResolver {
-    private static final Logger logger = LogManager.getLogger(BattleResolver.class);
     private final HibernatePlayerService playerService = ServiceLocator.getService(HibernatePlayerService.class);
 
     public void resolveBattle(PlayerTo player, MonsterTo monster, AbilityTo ability, BattleHistory history) {
@@ -31,7 +30,7 @@ public class BattleResolver {
     }
 
     public void attack(CharacterTo attacker, CharacterTo target, AbilityTo attackAbility, BattleHistory history) {
-        logger.debug("{} attacking {} with ability {}", attacker.getName(), target.getName(), attackAbility.getName());
+        log.debug("{} attacking {} with ability {}", attacker.getName(), target.getName(), attackAbility.getName());
         boolean isUsedAbility = attacker.useAbility(attackAbility, target, history);
         if (isUsedAbility) {
             // Update other abilities
@@ -44,7 +43,7 @@ public class BattleResolver {
                 }
             });
         } else {
-            logger.error("Ability was not used");
+            log.error("Ability was not used");
         }
     }
 

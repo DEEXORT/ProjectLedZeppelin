@@ -5,12 +5,11 @@ import com.quest.config.ServiceLocator;
 import com.quest.dto.MonsterTo;
 import com.quest.dto.PlayerTo;
 import com.quest.dto.UserTo;
-import com.quest.entity.User;
-import com.quest.entity.character.Monster;
 import com.quest.entity.character.MonsterType;
-import com.quest.entity.character.Player;
 import com.quest.entity.factory.MonsterFactory;
 import com.quest.services.hibernate.ContainerIT;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.http.HttpServletRequest;
@@ -72,5 +71,7 @@ public class ConfigIT extends ContainerIT {
 
         // config mocks
         when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
+        when(request.getRequestDispatcher(JspPath.QUEST)).thenReturn(requestDispatcher);
     }
 }

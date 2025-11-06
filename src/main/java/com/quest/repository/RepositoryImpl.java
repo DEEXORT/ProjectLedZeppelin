@@ -1,11 +1,16 @@
 package com.quest.repository;
 
 import com.quest.config.SessionCreator;
-import jakarta.persistence.*;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,14 +24,10 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 @Slf4j
+@AllArgsConstructor
 public class RepositoryImpl<T> implements Repository<T> {
     private final SessionCreator sessionCreator;
     private final Class<T> entityClass;
-
-    public RepositoryImpl(SessionCreator sessionCreator, Class<T> entityClass) {
-        this.sessionCreator = sessionCreator;
-        this.entityClass = entityClass;
-    }
 
     @Override
     public Collection<T> getAll() {
@@ -38,7 +39,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             return session.createQuery(query).list();
         } catch (Exception e) {
             String message = "Error getting all entities from repository";
-            log.error(e.getMessage(), e);
+            log.error(message, e);
             throw new RuntimeException(message, e);
         }
     }
@@ -49,7 +50,7 @@ public class RepositoryImpl<T> implements Repository<T> {
             return session.get(entityClass, id);
         } catch (Exception e) {
             String message = "Error getting entity by id from repository";
-            log.error(e.getMessage(), e);
+            log.error(message, e);
             throw new RuntimeException(message, e);
         }
     }

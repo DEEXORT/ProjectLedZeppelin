@@ -3,28 +3,27 @@ package com.quest.controller.game;
 import com.quest.ConfigIT;
 import com.quest.dto.ActionTo;
 import com.quest.dto.QuestSceneTo;
-import com.quest.entity.Action;
-import com.quest.entity.QuestScene;
 import com.quest.services.hibernate.HibernateMonsterService;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.services.resolver.EventResolver;
-import com.quest.util.JspPath;
+import com.quest.services.resolver.QuestResolver;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class QuestServletIT extends ConfigIT {
-    private QuestServlet questServlet;
+//    private MockedStatic<ServiceLocator> serviceLocator;
 
     @Mock
     HibernateQuestService mockedQuestService;
@@ -38,11 +37,34 @@ class QuestServletIT extends ConfigIT {
     @Mock
     EventResolver mockedEventResolver;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        questServlet = new QuestServlet(mockedPlayerService, mockedMonsterService, mockedQuestService, mockedEventResolver);
-    }
+    @Mock
+    QuestResolver mockedQuestResolver;
+
+    @InjectMocks
+    private QuestServlet questServlet;
+
+//    @BeforeEach
+//    void setUp() throws ServletException {
+//        serviceLocator = Mockito.mockStatic(ServiceLocator.class);
+//        serviceLocator.when(() -> ServiceLocator.getService(HibernateQuestService.class))
+//                .thenReturn(mockedQuestService);
+//        serviceLocator.when(() -> ServiceLocator.getService(HibernateMonsterService.class))
+//                .thenReturn(mockedMonsterService);
+//        serviceLocator.when(() -> ServiceLocator.getService(HibernatePlayerService.class))
+//                .thenReturn(mockedPlayerService);
+//        serviceLocator.when(() -> ServiceLocator.getService(EventResolver.class))
+//                .thenReturn(mockedEventResolver);
+//        serviceLocator.when(() -> ServiceLocator.getService(QuestResolver.class))
+//                .thenReturn(mockedQuestResolver);
+//
+//        questServlet = new QuestServlet();
+//        questServlet.init(servletConfig);
+//    }
+//
+//    @AfterEach
+//    void tearDown() {
+//        serviceLocator.close();
+//    }
 
     @Test
     void doGet_ShouldSetQuestAttributesAndForwardToJsp_WhenSceneExists() throws Exception {
@@ -57,16 +79,13 @@ class QuestServletIT extends ConfigIT {
                 .actions(new ArrayList<>())
                 .build();
         questScene.getActions().add(action);
-
-        when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
-        when(request.getRequestDispatcher(JspPath.QUEST)).thenReturn(requestDispatcher);
-        when(mockedQuestService.get(2L)).thenReturn(Optional.of(questScene));
+        when(mockedQuestService.get(questScene.getId())).thenReturn(questScene);
 
         // when
         questServlet.doGet(request, response);
 
         // then
-        verify(requestDispatcher).forward(request, response);
+        verify(mockedQuestResolver).resolve(request, response, questScene);
     }
 
     // Тестирование POST-запросов
@@ -92,11 +111,6 @@ class QuestServletIT extends ConfigIT {
         when(session.getAttribute(KeyAttribute.BATTLE_FLAG)).thenReturn(false);
         when(session.getAttribute(KeyAttribute.PLAYER)).thenReturn(playerTest);
         when(mockedQuestService.isBattleEvent(request)).thenReturn(false);
-//        try (MockedStatic<ServiceLocator> serviceLocator = mockStatic(ServiceLocator.class)) {
-//            serviceLocator
-//                    .when(() -> ServiceLocator.getService(EventResolver.class))
-//                    .thenReturn(mockedEventResolver);
-//        }
 
         // when
         questServlet.doPost(request, response);
