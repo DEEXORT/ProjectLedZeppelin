@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HibernateUserService {
+public class HibernateUserService implements BaseService<UserTo>{
     private final RepositoryImpl<User> repository;
     private Dto dto = Dto.MAPPER;
 
@@ -26,12 +26,8 @@ public class HibernateUserService {
         this.repository = ServiceLocator.getService(RepositoryImpl.class, User.class);
     }
 
-    public HibernateUserService(RepositoryImpl<User> repository) {
-        this.repository = repository;
-    }
-
-    public Optional<UserTo> get(long id) {
-        return Optional.ofNullable(repository.get(id)).map(dto::from);
+    public UserTo get(long id) {
+        return dto.from(repository.get(id));
     }
 
     public void update(UserTo userTo) {
@@ -40,15 +36,17 @@ public class HibernateUserService {
 
     public void create(UserTo userTo) throws UserAlreadyExistsException, UserEmptyException {
         validateCredentials(userTo.getLogin(), userTo.getPassword());
-        // Проверка на уже существующего пользователя
-        Stream<User> stream = repository.find(dto.from(userTo));
+        // Checking an existing user
+        User user = dto.from(userTo);
+        Stream<User> stream = repository.find(user);
         if (stream.findFirst().isPresent()) {
             throw new UserAlreadyExistsException(
                     ResourceBundleManager.getMessage("error.user_already_exists").formatted(userTo.getLogin())
             );
         }
-        // Регистрация пользователя в БД
-        repository.create(dto.from(userTo));
+        // Registration user
+        repository.create(user);
+        userTo.setId(user.getId());
     }
 
     public boolean isGuest(HttpServletRequest req) {
@@ -89,7 +87,9 @@ public class HibernateUserService {
         return repository.getAll().stream().map(dto::from).collect(Collectors.toList());
     }
 
-    public void delete(UserTo user) {
-        repository.delete(dto.from(user));
+    public void delete(UserTo userTo) {
+        User user = dto.from(userTo);
+        repository.delete(user);
+        userTo.setId(user.getId());
     }
 }

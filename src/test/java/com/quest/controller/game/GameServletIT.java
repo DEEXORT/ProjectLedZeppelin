@@ -2,13 +2,12 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
+import com.quest.dto.PlayerTo;
 import com.quest.dto.UserTo;
-import com.quest.entity.User;
-import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernateUserService;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -21,11 +20,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class GameServletIT extends ConfigIT {
-    private final GameServlet gameServlet = ServiceLocator.getService(GameServlet.class);
-    private HibernateUserService hibernateUserService;
+    private static GameServlet gameServlet;
+    private static HibernateUserService hibernateUserService;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() throws ServletException {
+        gameServlet = ServiceLocator.getService(GameServlet.class);
+        gameServlet.init(servletConfig);
         hibernateUserService = ServiceLocator.getService(HibernateUserService.class);
     }
 
@@ -43,7 +44,7 @@ class GameServletIT extends ConfigIT {
         gameServlet.doGet(request, response);
 
         // then
-        verify(session).setAttribute(eq(PLAYER), any(Player.class));
+        verify(session).setAttribute(eq(PLAYER), any(PlayerTo.class));
         verify(response).sendRedirect(Route.QUEST);
     }
 

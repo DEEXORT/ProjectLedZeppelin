@@ -13,7 +13,7 @@ public class ServiceLocator {
 
     @SneakyThrows
     public static <T> T getService(final Class<T> serviceClass, final Class<?>... genericTypes) {
-        String key = generateKey(serviceClass, genericTypes); // Parametrized type class (For example, Repository<User>)
+        String key = generateKey(serviceClass, genericTypes); // Имя параметризированного класса (например, Repository<User>)
         log.info("Get service {} with generic type {}", serviceClass, genericTypes);
 
         if (components.containsKey(key)) {
@@ -43,7 +43,6 @@ public class ServiceLocator {
         }
     }
 
-    // ServiceLocator.getService(Repository.class, User.class)
     private static String generateKey(Class<?> serviceClass, Class<?>... genericTypes) {
         if (genericTypes.length == 0) {
             return serviceClass.getName();

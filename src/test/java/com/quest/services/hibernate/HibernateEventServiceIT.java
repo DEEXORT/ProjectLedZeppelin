@@ -2,10 +2,7 @@ package com.quest.services.hibernate;
 
 import com.quest.dto.EventTo;
 import com.quest.dto.MonsterTo;
-import com.quest.entity.Event;
-import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
-import com.quest.repository.RepositoryImpl;
 import com.quest.util.EventType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,15 +16,10 @@ class HibernateEventServiceIT extends ContainerIT {
 
     @BeforeEach
     void setUp() {
-        eventService = new HibernateEventService(new RepositoryImpl<>(sessionCreator, Event.class));
-        monsterService = new HibernateMonsterService(new RepositoryImpl<>(sessionCreator, Monster.class));
+        eventService = new HibernateEventService();
+        monsterService = new HibernateMonsterService();
     }
 
-//    @AfterEach
-//    void tearDown() {
-//        eventService.getAll().forEach(eventService::delete);
-//        monsterService.getAll().forEach(monsterService::delete);
-//    }
 
     @Test
     void shouldCreateEventWithMonster() {
@@ -78,10 +70,10 @@ class HibernateEventServiceIT extends ContainerIT {
         eventService.create(event);
 
         // when
-        Optional<EventTo> optional = eventService.get(event.getId());
+        EventTo eventFromDb = eventService.get(event.getId());
 
         // then
-        Assertions.assertTrue(optional.isPresent());
+        Assertions.assertNotNull(eventFromDb);
     }
 
     @Test
@@ -94,7 +86,7 @@ class HibernateEventServiceIT extends ContainerIT {
         eventService.delete(event);
 
         // then
-        Optional<EventTo> optional = eventService.get(event.getId());
-        Assertions.assertFalse(optional.isPresent());
+        EventTo eventFromDb = eventService.get(event.getId());
+        Assertions.assertNull(eventFromDb);
     }
 }

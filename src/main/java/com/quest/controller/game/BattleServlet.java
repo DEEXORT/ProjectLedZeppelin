@@ -13,37 +13,30 @@ import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.RequestHelper;
 import com.quest.util.Route;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @WebServlet(Route.BATTLE)
+@Slf4j
 public class BattleServlet extends HttpServlet {
-    private static final Logger logger = LogManager.getLogger(BattleServlet.class);
-    public final HibernateAbilityService abilityService;
-    public final HibernatePlayerService playerService;
-    private final BattleResolver battleResolver;
-    private final HibernateQuestService questService;
+    public HibernateAbilityService abilityService;
+    public HibernatePlayerService playerService;
+    private HibernateQuestService questService;
+    private BattleResolver battleResolver;
 
-    public BattleServlet(HibernateAbilityService abilityService, HibernatePlayerService playerService, BattleResolver battleResolver, HibernateQuestService questService) {
-        this.abilityService = abilityService;
-        this.playerService = playerService;
-        this.battleResolver = battleResolver;
-        this.questService = questService;
-    }
-
-    public BattleServlet() {
-        this(ServiceLocator.getService(HibernateAbilityService.class),
-                ServiceLocator.getService(HibernatePlayerService.class),
-                ServiceLocator.getService(BattleResolver.class),
-                ServiceLocator.getService(HibernateQuestService.class));
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        abilityService = ServiceLocator.getService(HibernateAbilityService.class);
+        playerService = ServiceLocator.getService(HibernatePlayerService.class);
+        battleResolver = ServiceLocator.getService(BattleResolver.class);
+        questService = ServiceLocator.getService(HibernateQuestService.class);
     }
 
     @Override
@@ -69,11 +62,10 @@ public class BattleServlet extends HttpServlet {
         BattleHistory history = RequestHelper.getValueAttr(req, KeyAttribute.BATTLE_HISTORY, BattleHistory.class);
 
         long abilityId = Long.parseLong(req.getParameter(KeyAttribute.ABILITY_ID));
-        Optional<AbilityTo> optionalAbility = abilityService.get(abilityId);
-        if (optionalAbility.isPresent()) {
-            AbilityTo ability = optionalAbility.get();
+        AbilityTo abilityTo = abilityService.get(abilityId);
+        if (abilityTo != null) {
 
-            battleResolver.resolveBattle(player, monster, ability, history); // Dealing damage
+            battleResolver.resolveBattle(player, monster, abilityTo, history); // Dealing damage
             req.getSession().setAttribute(KeyAttribute.BATTLE_HISTORY, history); // Update history in session
 
             if (player.getHealth() <= 0) {
@@ -84,7 +76,7 @@ public class BattleServlet extends HttpServlet {
                 resp.sendRedirect(Route.BATTLE);
             }
         } else {
-            logger.warn("Ability not found: " + abilityId);
+            log.warn("Ability not found: {}", abilityId);
             throw new RuntimeException("Ability not found");
         }
     }

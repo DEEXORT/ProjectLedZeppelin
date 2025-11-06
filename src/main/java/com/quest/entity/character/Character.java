@@ -1,17 +1,29 @@
 package com.quest.entity.character;
 
-import com.quest.config.ServiceLocator;
 import com.quest.entity.Ability;
-import com.quest.entity.BattleHistory;
-import com.quest.services.hibernate.HibernateAbilityService;
-import com.quest.util.ResourceBundleManager;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.MapKeyJoinColumn;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,17 +56,15 @@ public abstract class Character {
     @Column(name = "attack", nullable = false)
     int attack;
 
-    @Fetch(FetchMode.JOIN)
     @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "character_ability",
             joinColumns = @JoinColumn(name = "character_id"),
             inverseJoinColumns = @JoinColumn(name = "ability_id"))
     List<Ability> abilities = new ArrayList<>();
 
-    @Fetch(FetchMode.JOIN)
     @Builder.Default
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "cooldowns",
             joinColumns = @JoinColumn(name = "character_id"))
     @MapKeyJoinColumn(name = "ability_id")

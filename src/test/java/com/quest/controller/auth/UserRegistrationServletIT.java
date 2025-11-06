@@ -1,11 +1,11 @@
 package com.quest.controller.auth;
 
 import com.quest.ConfigIT;
-import com.quest.config.ServiceLocator;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import com.quest.util.Route;
 import jakarta.servlet.ServletException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -15,7 +15,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class UserRegistrationServletIT extends ConfigIT {
-    private final UserRegistrationServlet userRegistrationServlet = ServiceLocator.getService(UserRegistrationServlet.class);
+    private static UserRegistrationServlet userRegistrationServlet ;
+
+    @BeforeAll
+    static void setUp() {
+        userRegistrationServlet = new UserRegistrationServlet();
+        userRegistrationServlet.init(servletConfig);
+    }
 
     @Test
     void doGet_ShouldRedirectToProfile_WhenUserIsAuthenticated() throws ServletException, IOException {

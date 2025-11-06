@@ -1,19 +1,17 @@
 package com.quest.services.resolver;
 
+import com.quest.ConfigIT;
 import com.quest.dto.AbilityTo;
 import com.quest.dto.MonsterTo;
 import com.quest.dto.PlayerTo;
-import com.quest.entity.Ability;
 import com.quest.entity.BattleHistory;
-import com.quest.entity.character.Monster;
-import com.quest.entity.character.Player;
 import com.quest.entity.factory.AbilityFactory;
 import com.quest.entity.factory.MonsterFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BattleResolverTest {
+class BattleResolverIT extends ConfigIT {
 
     @Test
     void attack() {

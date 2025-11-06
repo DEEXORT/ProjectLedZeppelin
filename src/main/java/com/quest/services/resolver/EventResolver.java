@@ -4,10 +4,14 @@ import com.quest.dto.ActionTo;
 import com.quest.dto.EventTo;
 import com.quest.dto.MonsterTo;
 import com.quest.dto.PlayerTo;
-import com.quest.entity.Event;
 import com.quest.services.hibernate.HibernateEventService;
 import com.quest.services.hibernate.HibernateMonsterService;
-import com.quest.util.*;
+import com.quest.util.EventAttribute;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
+import com.quest.util.ResourceBundleManager;
+import com.quest.util.Route;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +21,6 @@ import lombok.AllArgsConstructor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 
 @AllArgsConstructor
 public class EventResolver {
@@ -31,10 +34,8 @@ public class EventResolver {
         long eventId = Long.parseLong(req.getParameter(KeyAttribute.EVENT_ID));
         long nextQuestSceneId = Long.parseLong(req.getParameter(KeyAttribute.SCENE_ID));
 
-        Optional<EventTo> optEvent = eventService.get(eventId);
-        if (optEvent.isPresent()) {
-            EventTo event = optEvent.get();
-
+        EventTo event = eventService.get(eventId);
+        if (event != null) {
             switch (event.getType()) {
                 case DAMAGE -> {
                     player.setHealth(player.getHealth() - event.getValue());
@@ -57,11 +58,10 @@ public class EventResolver {
                     }
                 }
                 case BATTLE -> {
-                    Optional<MonsterTo> optionalMonster = monsterService.get(event.getMonsterId());
-                    if (optionalMonster.isPresent()) {
-                        MonsterTo monster = optionalMonster.get();
-                        monster.setHealth(monster.getMaxHealth());
-                        session.setAttribute(KeyAttribute.MONSTER, monster);
+                    MonsterTo monsterTo = monsterService.get(event.getMonsterId());
+                    if (monsterTo != null) {
+                        monsterTo.setHealth(monsterTo.getMaxHealth());
+                        session.setAttribute(KeyAttribute.MONSTER, monsterTo);
                         setEventAttributes(event, session, nextQuestSceneId);
                         resp.sendRedirect(Route.BATTLE);
                     }

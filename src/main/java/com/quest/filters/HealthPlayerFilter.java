@@ -2,7 +2,6 @@ package com.quest.filters;
 
 import com.quest.config.ServiceLocator;
 import com.quest.dto.PlayerTo;
-import com.quest.entity.character.Player;
 import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.util.KeyAttribute;

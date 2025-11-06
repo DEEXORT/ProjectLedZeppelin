@@ -2,7 +2,7 @@ package com.quest.controller.game;
 
 import com.quest.ConfigIT;
 import com.quest.config.ServiceLocator;
-import com.quest.entity.User;
+import com.quest.dto.UserTo;
 import com.quest.util.JspPath;
 import com.quest.util.KeyAttribute;
 import jakarta.servlet.ServletException;
@@ -30,7 +30,7 @@ class EndGameServletIT extends ConfigIT {
         endGameServlet.doGet(request, response);
 
         // then
-        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getCharacterId());
+        assertNull(((UserTo) request.getSession().getAttribute(KeyAttribute.USER)).getCharacterId());
         verify(requestDispatcher).forward(request, response);
     }
 
@@ -47,7 +47,7 @@ class EndGameServletIT extends ConfigIT {
         endGameServlet.doGet(request, response);
 
         // then
-        assertNull(((User) request.getSession().getAttribute(KeyAttribute.USER)).getCharacterId());
+        assertNull(((UserTo) request.getSession().getAttribute(KeyAttribute.USER)).getCharacterId());
         verify(requestDispatcher).forward(request, response);
     }
 }

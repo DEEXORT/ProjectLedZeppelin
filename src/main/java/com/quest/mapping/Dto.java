@@ -1,11 +1,23 @@
 package com.quest.mapping;
 
-import com.quest.dto.*;
-import com.quest.entity.*;
+import com.quest.dto.AbilityTo;
+import com.quest.dto.AchievementTo;
+import com.quest.dto.ActionTo;
+import com.quest.dto.CharacterTo;
+import com.quest.dto.EventTo;
+import com.quest.dto.MonsterTo;
+import com.quest.dto.PlayerTo;
+import com.quest.dto.QuestSceneTo;
+import com.quest.dto.UserTo;
+import com.quest.entity.Ability;
+import com.quest.entity.Achievement;
+import com.quest.entity.Action;
+import com.quest.entity.Event;
+import com.quest.entity.QuestScene;
+import com.quest.entity.User;
 import com.quest.entity.character.Monster;
 import com.quest.entity.character.Player;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper

@@ -17,5 +17,10 @@
             </column>
             <column name="character_id" type="int"/>
         </createTable>
+
+        <insert tableName="users">
+            <column name="login">admin</column>
+            <column name="password">admin</column>
+        </insert>
     </changeSet>
 </databaseChangeLog>

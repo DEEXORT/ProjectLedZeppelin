@@ -8,54 +8,51 @@ import com.quest.services.hibernate.HibernatePlayerService;
 import com.quest.services.hibernate.HibernateQuestService;
 import com.quest.services.resolver.EventResolver;
 import com.quest.services.resolver.QuestResolver;
-import com.quest.util.*;
+import com.quest.util.JspPath;
+import com.quest.util.KeyAttribute;
+import com.quest.util.RequestHelper;
+import com.quest.util.ResourceBundleManager;
+import com.quest.util.Route;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.util.Optional;
 
 
 @WebServlet(Route.QUEST)
+@Slf4j
 public class QuestServlet extends HttpServlet {
-    private final Logger logger = LogManager.getLogger(QuestServlet.class);
-    private final HibernatePlayerService playerService;
-    private final HibernateMonsterService monsterService;
-    private final HibernateQuestService questService;
-    private final EventResolver eventResolver;
+    private HibernatePlayerService playerService;
+    private HibernateMonsterService monsterService;
+    private HibernateQuestService questService;
+    private EventResolver eventResolver;
+    private QuestResolver questResolver;
 
-    public QuestServlet(HibernatePlayerService playerService, HibernateMonsterService monsterService, HibernateQuestService questService, EventResolver eventResolver) {
-        this.playerService = playerService;
-        this.monsterService = monsterService;
-        this.questService = questService;
-        this.eventResolver = eventResolver;
-    }
-
-    public QuestServlet() {
-        this(ServiceLocator.getService(HibernatePlayerService.class),
-                ServiceLocator.getService(HibernateMonsterService.class),
-                ServiceLocator.getService(HibernateQuestService.class),
-                ServiceLocator.getService(EventResolver.class));
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        playerService = ServiceLocator.getService(HibernatePlayerService.class);
+        monsterService = ServiceLocator.getService(HibernateMonsterService.class);
+        questService = ServiceLocator.getService(HibernateQuestService.class);
+        eventResolver = ServiceLocator.getService(EventResolver.class);
+        questResolver = ServiceLocator.getService(QuestResolver.class);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        QuestResolver questResolver = ServiceLocator.getService(QuestResolver.class);
         // clear attribute after battle
         req.getSession().removeAttribute(KeyAttribute.MONSTER);
 
-        Optional<QuestSceneTo> questScene = getQuestScene(req);
-        if (questScene.isPresent()) {
-            questResolver.resolve(req, resp, questScene.get());
+        QuestSceneTo questScene = getQuestScene(req);
+        if (questScene != null) {
+            questResolver.resolve(req, resp, questScene);
         } else {
-            logger.error("Quest scene not found");
+            log.error("Quest scene not found");
             // TODO: Сделать неожиданную концовку с несчастным случаем :)
             req.setAttribute(KeyAttribute.ERROR, "Quest scene not found");
             req.getRequestDispatcher(JspPath.ERROR).forward(req, resp);
@@ -89,11 +86,13 @@ public class QuestServlet extends HttpServlet {
     private void saveGameProcess(HttpServletRequest req, long nextQuestSceneId) {
         PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         player.setQuestSceneId(nextQuestSceneId);
+        // Update object in database
         playerService.update(player);
+        // Update object in session
+        req.getSession().setAttribute(KeyAttribute.PLAYER, player);
     }
 
-    @Transactional
-    private Optional<QuestSceneTo> getQuestScene(HttpServletRequest req) {
+    private QuestSceneTo getQuestScene(HttpServletRequest req) {
         PlayerTo player = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         return questService.get(player.getQuestSceneId());
     }

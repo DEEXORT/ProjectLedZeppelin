@@ -1,9 +1,7 @@
 package com.quest.services.hibernate;
 
 import com.quest.dto.AbilityTo;
-import com.quest.entity.Ability;
 import com.quest.entity.AbilityType;
-import com.quest.repository.RepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +15,7 @@ class HibernateAbilityServiceIT extends ContainerIT {
 
     @BeforeEach
     void setUp() {
-        RepositoryImpl<Ability> repository = new RepositoryImpl<>(sessionCreator, Ability.class);
-        service = new HibernateAbilityService(repository);
+        service = new HibernateAbilityService();
     }
 
     @Test
@@ -103,6 +100,6 @@ class HibernateAbilityServiceIT extends ContainerIT {
         service.delete(ability);
 
         // then
-        assertTrue(service.get(ability.getId()).isEmpty());
+        assertNull(service.get(ability.getId()));
     }
 }

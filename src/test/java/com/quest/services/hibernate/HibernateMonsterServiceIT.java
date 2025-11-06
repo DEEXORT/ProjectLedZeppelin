@@ -1,14 +1,9 @@
 package com.quest.services.hibernate;
 
 import com.quest.dto.MonsterTo;
-import com.quest.entity.character.Monster;
 import com.quest.entity.factory.MonsterFactory;
-import com.quest.repository.RepositoryImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,12 +12,7 @@ class HibernateMonsterServiceIT extends ContainerIT {
 
     @BeforeEach
     void setUp() {
-        service = new HibernateMonsterService(new RepositoryImpl<>(sessionCreator, Monster.class));
-    }
-
-    @AfterEach
-    void tearDown() {
-        service.getAll().forEach(service::delete);
+        service = new HibernateMonsterService();
     }
 
     @Test
@@ -44,10 +34,10 @@ class HibernateMonsterServiceIT extends ContainerIT {
         service.create(monster);
 
         // when
-        Optional<MonsterTo> optional = service.get(monster.getId());
+        MonsterTo monsterFromDb = service.get(monster.getId());
 
         // then
-        assertTrue(optional.isPresent());
+        assertNotNull(monsterFromDb);
     }
 
     @Test
@@ -61,9 +51,9 @@ class HibernateMonsterServiceIT extends ContainerIT {
         service.update(monster);
 
         // then
-        Optional<MonsterTo> optional = service.get(monster.getId());
-        assertTrue(optional.isPresent());
-        assertEquals(monster.getHealth(), optional.get().getHealth());
+        MonsterTo monsterFromDb = service.get(monster.getId());
+        assertNotNull(monsterFromDb);
+        assertEquals(monster.getHealth(), monsterFromDb.getHealth());
     }
 
     @Test
@@ -76,7 +66,7 @@ class HibernateMonsterServiceIT extends ContainerIT {
         service.delete(monster);
 
         // then
-        Optional<MonsterTo> optional = service.get(monster.getId());
-        assertFalse(optional.isPresent());
+        MonsterTo monsterFromDb = service.get(monster.getId());
+        assertNull(monsterFromDb);
     }
 }

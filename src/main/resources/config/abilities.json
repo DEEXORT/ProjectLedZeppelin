@@ -1,80 +1,72 @@
 {
   "abilities": [
     {
-      "unikey": "baseAttack",
       "name": "Базовая атака",
       "description": "Наносит базовый урон",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 10,
       "cooldown": 0,
       "levelRequirement": 1
     },
     {
-      "unikey": "heal",
       "name": "Лечение",
       "description": "Восстанавливает здоровье",
-      "type": "heal",
+      "type": "HEAL",
       "level": 1,
       "value": 50,
       "cooldown": 3,
       "levelRequirement": 1
     },
     {
-      "unikey": "hadouken",
       "name": "Хадууукен!",
       "description": "Заклинание неизвестных технологий",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 1000,
       "cooldown": 2,
       "levelRequirement": 2
     },
     {
-      "unikey": "fus_ro_dah",
       "name": "Фус Ро Дах",
       "description": "Используй силу голоса, но не перестарайся",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 500,
       "cooldown": 2,
       "levelRequirement": 2
     },
     {
-      "unikey": "expeliarmus",
       "name": "Экспеллиармус",
       "description": "Защита от тёмных искусств и надоедливых мух",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 200,
       "cooldown": 1,
       "levelRequirement": 1
     },
     {
-      "unikey": "face_spit",
       "name": "Плевок в лицо",
       "description": "Не самый элегантный, но эффективный способ выразить своё мнение",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 1,
       "cooldown": 5,
       "levelRequirement": 1
     },
     {
-      "unikey": "blue_screen",
       "name": "Синий экран смерти",
       "description": "Противник временно отключается для перезагрузки",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 220,
       "cooldown": 4,
       "levelRequirement": 3
     },
     {
-      "unikey": "thunder_breathing_zenitsu",
       "name": "Дыхание грома: Громовой Раскат",
       "description": "Атакует молниеносно, даже если в это время громко плачет от страха",
-      "type": "damage",
+      "type": "DAMAGE",
       "level": 1,
       "value": 350,
       "cooldown": 2,

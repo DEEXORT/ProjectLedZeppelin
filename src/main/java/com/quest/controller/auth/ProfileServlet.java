@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet(Route.PROFILE)
 public class ProfileServlet extends HttpServlet {
@@ -28,8 +27,8 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        abilityService = ServiceLocator.getService(HibernateAbilityService.class);
-        playerService = ServiceLocator.getService(HibernatePlayerService.class);
+        this.abilityService = ServiceLocator.getService(HibernateAbilityService.class);
+        this.playerService = ServiceLocator.getService(HibernatePlayerService.class);
     }
 
     @Override
@@ -38,7 +37,6 @@ public class ProfileServlet extends HttpServlet {
                 .stream()
                 .sorted(Comparator.comparingInt(AbilityTo::getLevelRequirement))
                 .toList();
-
         req.getSession().setAttribute(KeyAttribute.ALL_ABILITIES, list);
         req.getRequestDispatcher(JspPath.PROFILE).forward(req, resp);
     }
@@ -47,16 +45,16 @@ public class ProfileServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         PlayerTo playerTo = RequestHelper.getValueAttr(req, KeyAttribute.PLAYER, PlayerTo.class);
         String[] abilityIds = req.getParameterValues(KeyAttribute.ABILITIES_IDS);
-
         if (abilityIds != null) {
             playerTo.getAbilities().clear();
             for (String abilityId : abilityIds) {
-                Optional<AbilityTo> ability = abilityService.get(Long.parseLong(abilityId));
-                ability.ifPresent(value -> playerTo.getAbilities().add(value));
+                AbilityTo ability = abilityService.get(Long.parseLong(abilityId));
+                if (ability != null) {
+                    playerTo.getAbilities().add(ability);
+                }
             }
             playerService.update(playerTo);
         }
-
         resp.sendRedirect(Route.PROFILE);
     }
 }
